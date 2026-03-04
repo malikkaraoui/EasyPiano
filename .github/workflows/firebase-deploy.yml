@@ -38,12 +38,10 @@ jobs:
         run: |
           env | grep '^VITE_' > .env
 
-      - name: Lint (main only)
-        if: github.ref_name == 'main'
+      - name: Lint
         run: npm run lint
 
-      - name: Test (main only)
-        if: github.ref_name == 'main'
+      - name: Test
         run: npm run test
 
       - run: npm run build
