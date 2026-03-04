@@ -65,8 +65,8 @@ export default function Home() {
           </div>
           <div className="trust-item">
             <span className="trust-icon">📍</span>
-            <h3>Partout en France</h3>
-            <p>Des accordeurs disponibles dans toute la France</p>
+            <h3>Suisse & France</h3>
+            <p>Des accordeurs disponibles en Suisse et en France</p>
           </div>
         </div>
       </section>

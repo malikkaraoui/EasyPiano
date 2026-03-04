@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getActiveProfessionals } from "../services/database";
 import { formatPrice, formatRating } from "../utils/format";
+import CityPostalAutocomplete from "@components/UI/CityPostalAutocomplete";
 
 export default function Search() {
   const [pros, setPros] = useState([]);
@@ -26,14 +27,22 @@ export default function Search() {
   }, []);
 
   useEffect(() => {
-    let results = pros.filter(
-      (p) =>
-        p.city?.toLowerCase().includes(search.toLowerCase()) ||
-        p.postalCode?.startsWith(search) ||
-        `${p.firstName} ${p.lastName}`
-          .toLowerCase()
-          .includes(search.toLowerCase()),
-    );
+    const terms = search.toLowerCase().trim().split(/\s+/).filter(Boolean);
+
+    let results = pros.filter((p) => {
+      const city = (p.city || "").toLowerCase();
+      const postalCode = String(p.postalCode || "").toLowerCase();
+      const fullName = `${p.firstName || ""} ${p.lastName || ""}`.toLowerCase();
+
+      if (terms.length === 0) return true;
+
+      return terms.every(
+        (term) =>
+          city.includes(term) ||
+          postalCode.startsWith(term) ||
+          fullName.includes(term),
+      );
+    });
 
     results.sort((a, b) => {
       if (sortBy === "rating") return (b.rating || 0) - (a.rating || 0);
@@ -54,12 +63,17 @@ export default function Search() {
       <h1>Trouver un accordeur de piano</h1>
 
       <div className="search-controls">
-        <input
-          type="text"
-          placeholder="Rechercher par ville, code postal ou nom..."
+        <CityPostalAutocomplete
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="search-input"
+          onChange={setSearch}
+          onSelect={(selection) => {
+            const nextValue = [selection.city, selection.postalCode]
+              .filter(Boolean)
+              .join(" ");
+            setSearch(
+              nextValue || selection.city || selection.postalCode || "",
+            );
+          }}
         />
         <select
           value={sortBy}

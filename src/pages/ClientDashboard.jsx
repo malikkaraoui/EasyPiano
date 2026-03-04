@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { getBookingsByClient } from "../services/database";
 import { formatPrice, formatDate } from "../utils/format";
+import { BUSINESS_RULES } from "@shared/constants/businessRules";
 
 const STATUS_LABELS = {
   pending: "En attente",
@@ -41,6 +42,11 @@ export default function ClientDashboard() {
   return (
     <div className="client-dashboard">
       <h1>Mes rendez-vous</h1>
+      <p className="dashboard-policy">
+        Annulation sans frais jusqu'à{" "}
+        {BUSINESS_RULES.CANCELLATION.FREE_CANCELLATION_DAYS} jours avant
+        l'intervention.
+      </p>
 
       <div className="dashboard-filters">
         {["all", "pending", "confirmed", "completed", "cancelled"].map((f) => (

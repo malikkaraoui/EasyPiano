@@ -25,3 +25,13 @@ npm run dev
 - `npm run test` — Tests
 - `npm run lint` — ESLint
 - `npm run format` — Prettier
+
+## Architecture (web app)
+
+- `src/app` — Composition globale (providers + router)
+- `src/components` — Composants UI web
+- `src/pages` — Pages web
+- `src/services` — Firebase / Stripe
+- `src/shared` — Constantes/règles métier côté web
+
+Voir `docs/architecture-web-app.md` pour le détail.

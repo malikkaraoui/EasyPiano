@@ -386,6 +386,17 @@ fieldset legend {
   padding: var(--space-xl) var(--space-md);
 }
 
+.config-banner {
+  max-width: var(--container);
+  margin: var(--space-md) auto 0;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid #f1c40f;
+  background: #fff9e6;
+  color: #6b5600;
+  font-size: 0.9rem;
+}
+
 /* Header */
 .header {
   background: var(--white);
@@ -850,8 +861,13 @@ fieldset legend {
   margin-bottom: var(--space-lg);
 }
 
-.search-input {
+.search-input-wrapper {
+  position: relative;
   flex: 1;
+}
+
+.search-input {
+  width: 100%;
   padding: 0.85rem 1.25rem;
   border: 2px solid var(--gray-100);
   border-radius: var(--radius-lg);
@@ -864,6 +880,65 @@ fieldset legend {
 .search-input:focus {
   border-color: var(--gold);
   box-shadow: 0 0 0 3px var(--gold-glow);
+}
+
+.search-loading-indicator {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--gray-200);
+  border-top-color: var(--gold-dark);
+  transform: translateY(-50%);
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: translateY(-50%) rotate(360deg);
+  }
+}
+
+.search-suggestions {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  list-style: none;
+  background: var(--white);
+  border: 1px solid var(--gray-100);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 6px;
+}
+
+.search-suggestion-item {
+  width: 100%;
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.search-suggestion-item:hover {
+  background: var(--gold-glow);
+}
+
+.search-suggestion-main {
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.search-suggestion-meta {
+  font-size: 0.8rem;
+  color: var(--text-muted);
 }
 
 .sort-select {

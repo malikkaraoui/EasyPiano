@@ -12,6 +12,14 @@ author: Malik
 
 EasyPiano est une plateforme de réservation en ligne qui connecte les propriétaires de piano en Europe occidentale avec des accordeurs qualifiés d'Europe de l'Est. Face à une pénurie critique d'accordeurs dans des pays comme la Suisse, la France et l'Allemagne — métier en voie de disparition faute de renouvellement — EasyPiano exploite le libre-échange européen pour organiser une main-d'œuvre qualifiée mais sous-exploitée. La plateforme propose un prix disruptif de 125 CHF (contre 230 CHF sur le marché traditionnel), un système de réservation instantanée par demi-journée, et un paiement en ligne via Stripe. Chaque accordeur est personnellement rencontré et validé par l'équipe, garantissant un niveau de confiance premium. EasyPiano opère sur un marché 100% vierge en digital.
 
+## Décisions produit validées (2026-03-04)
+
+- Lancement en **français uniquement** (FR-only).
+- Authentification MVP côté client : **Google Auth uniquement** (SMS hors MVP).
+- Politique d'annulation MVP : **annulation sans frais jusqu'à 10 jours avant** l'intervention.
+- Supplément « piano en mauvais état » : **hors MVP** (traité en v2).
+- Cadre juridique/opérationnel transfrontalier : **géré en interne** ; un pro n'est référencé qu'après vérification complète des pièces justificatives et rencontre physique par l'équipe EasyPiano.
+
 ---
 
 ## Core Vision
@@ -84,7 +92,7 @@ EasyPiano est une plateforme web responsive qui :
 | Étape | Client (Sophie) | Pro (Tomasz) |
 | --- | --- | --- |
 | **Découverte** | Google, bouche-à-oreille | Lien "Devenez accordeur" en bas de page |
-| **Inscription** | Google Auth ou SMS | Formulaire pro (photo, bio, certificats) |
+| **Inscription** | Google Auth (MVP) | Formulaire pro (photo, bio, certificats) |
 | **Onboarding** | Recherche immédiate lieu + date | Validation par l'équipe EasyPiano |
 | **Usage principal** | Rechercher → Voir profils → Réserver → Payer | Publier dispos → Recevoir réservations → Tournée |
 | **Moment de valeur** | Piano accordé à 125 CHF, sans galère | Semaine de tournée à 1 700+ CHF net |
@@ -167,7 +175,7 @@ EasyPiano est une plateforme web responsive qui :
 
 - Prochains RDV
 - Historique des réservations
-- Annulation sans frais jusqu'à X jours avant
+- Annulation sans frais jusqu'à 10 jours avant
 - Messagerie vers le pro et la plateforme
 - Notifications par email
 - Gestion profil (modifier/supprimer compte)
@@ -193,6 +201,7 @@ EasyPiano est une plateforme web responsive qui :
 **8. Admin**
 
 - Validation des profils pro (via Firebase RTDB directement ou interface simple)
+- Vérification juridique/opérationnelle complète avant référencement (pièces justificatives + rencontre physique)
 - Accès dashboard Stripe
 
 ### Out of Scope pour le MVP
