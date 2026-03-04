@@ -1,5 +1,8 @@
 # EasyPiano
 
+[![Deploy to Firebase Hosting (main)](https://github.com/malikkaraoui/EasyPiano/actions/workflows/firebase-deploy.yml/badge.svg?branch=main)](https://github.com/malikkaraoui/EasyPiano/actions/workflows/firebase-deploy.yml)
+[![Deploy to Firebase Hosting (dev)](https://github.com/malikkaraoui/EasyPiano/actions/workflows/firebase-deploy.yml/badge.svg?branch=dev)](https://github.com/malikkaraoui/EasyPiano/actions/workflows/firebase-deploy.yml)
+
 Plateforme de mise en relation entre particuliers et accordeurs de piano professionnels.
 
 ## Stack
