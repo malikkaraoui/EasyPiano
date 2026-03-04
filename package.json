@@ -12,6 +12,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "hosting:deploy:dev": "npm run build && firebase hosting:channel:deploy dev",
+    "hosting:deploy:live": "npm run build && firebase deploy --only hosting",
+    "hosting:channels": "firebase hosting:channel:list",
     "prepare": "husky"
   },
   "lint-staged": {
