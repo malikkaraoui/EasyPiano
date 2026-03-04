@@ -2,7 +2,12 @@ name: Deploy to Firebase Hosting
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev]
+  workflow_dispatch:
+
+concurrency:
+  group: firebase-hosting-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build-and-deploy:
@@ -33,8 +38,14 @@ jobs:
         run: |
           env | grep '^VITE_' > .env
 
-      - run: npm run lint
-      - run: npm run test
+      - name: Lint (main only)
+        if: github.ref_name == 'main'
+        run: npm run lint
+
+      - name: Test (main only)
+        if: github.ref_name == 'main'
+        run: npm run test
+
       - run: npm run build
 
       - name: Warn if Firebase service account is missing
@@ -42,10 +53,20 @@ jobs:
         run: |
           echo "⚠️ Déploiement Firebase ignoré : le secret FIREBASE_SERVICE_ACCOUNT est manquant."
 
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        if: env.FIREBASE_SERVICE_ACCOUNT != ''
+      - name: Deploy live (main)
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        if: env.FIREBASE_SERVICE_ACCOUNT != '' && github.ref_name == 'main'
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ env.FIREBASE_SERVICE_ACCOUNT }}
           channelId: live
+          projectId: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+
+      - name: Deploy dev channel (dev)
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        if: env.FIREBASE_SERVICE_ACCOUNT != '' && github.ref_name == 'dev'
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ env.FIREBASE_SERVICE_ACCOUNT }}
+          channelId: dev
           projectId: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
