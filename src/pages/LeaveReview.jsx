@@ -1,5 +1,7 @@
+"use client";
+
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "../hooks/useAuth";
 import { createReview } from "../services/database";
 import StarRating from "../components/UI/StarRating";
@@ -7,7 +9,7 @@ import StarRating from "../components/UI/StarRating";
 export default function LeaveReview() {
   const { bookingId } = useParams();
   const { user } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     rating: 0,
@@ -31,7 +33,7 @@ export default function LeaveReview() {
         clientName: user.displayName,
         ...form,
       });
-      navigate("/dashboard");
+      router.push("/dashboard");
     } catch (err) {
       console.error("Erreur:", err);
     } finally {

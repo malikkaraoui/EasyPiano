@@ -1,5 +1,6 @@
+"use client";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { getProfessionals, getAllBookings } from "../../services/database";
 import { formatPrice } from "../../utils/format";
 
@@ -73,19 +74,19 @@ export default function AdminDashboard() {
       </div>
 
       <div className="admin-nav">
-        <Link to="/admin/pros" className="admin-nav-card">
+        <Link href="/admin/pros" className="admin-nav-card">
           <h3>Gérer les professionnels</h3>
           <p>Ajouter, modifier, activer/désactiver</p>
         </Link>
-        <Link to="/admin/bookings" className="admin-nav-card">
+        <Link href="/admin/bookings" className="admin-nav-card">
           <h3>Réservations</h3>
           <p>Voir toutes les réservations</p>
         </Link>
-        <Link to="/admin/reviews" className="admin-nav-card">
+        <Link href="/admin/reviews" className="admin-nav-card">
           <h3>Avis</h3>
           <p>Modérer les avis signalés</p>
         </Link>
-        <Link to="/admin/transactions" className="admin-nav-card">
+        <Link href="/admin/transactions" className="admin-nav-card">
           <h3>Transactions</h3>
           <p>Suivi des paiements et commissions</p>
         </Link>

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -13,8 +13,8 @@ export default function Footer() {
         </div>
 
         <div className="footer-links">
-          <Link to="/search">Trouver un accordeur</Link>
-          <Link to="/login">Connexion</Link>
+          <Link href="/search">Trouver un accordeur</Link>
+          <Link href="/login">Connexion</Link>
         </div>
 
         <div className="footer-legal">

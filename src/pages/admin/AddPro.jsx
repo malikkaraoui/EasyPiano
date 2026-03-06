@@ -1,5 +1,6 @@
+"use client";
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "../../hooks/useAuth";
 import {
   createProfessional,
@@ -11,7 +12,7 @@ import { uploadProPhoto } from "../../services/storage";
 export default function AddPro() {
   const { proId } = useParams();
   const { user } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
   const isEdit = Boolean(proId);
   const [submitting, setSubmitting] = useState(false);
   const [photoFile, setPhotoFile] = useState(null);
@@ -94,7 +95,7 @@ export default function AddPro() {
         await updateProfessional(id, { photoURL: url, photoPath: path });
       }
 
-      navigate("/admin/pros");
+      router.push("/admin/pros");
     } catch (err) {
       console.error("Erreur:", err);
     } finally {

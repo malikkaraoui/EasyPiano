@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from "react";
 import { getAllBookings, updateBookingStatus } from "../../services/database";
 import { formatPrice, formatDate } from "../../utils/format";

@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from "react";
 import { ref, get, update, remove } from "firebase/database";
 import { db } from "../../services/firebase";

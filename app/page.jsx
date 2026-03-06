@@ -1,6 +1,12 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
-export default function Home() {
+export const metadata = {
+  title: "EasyPiano - Accordeur de Piano en Suisse | Réservation en ligne",
+  description:
+    "Trouvez et réservez un accordeur de piano qualifié en Suisse. Prix fixe 125 CHF, booking instantané, pros validés.",
+};
+
+export default function HomePage() {
   return (
     <div className="home-page">
       <section className="hero">
@@ -14,7 +20,7 @@ export default function Home() {
             EasyPiano met en relation particuliers et professionnels de
             l&apos;accord de piano. Simple, rapide et fiable.
           </p>
-          <Link to="/search" className="btn-primary btn-lg">
+          <Link href="/search" className="btn-primary btn-lg">
             Trouver un accordeur
           </Link>
         </div>
@@ -77,7 +83,7 @@ export default function Home() {
           Réservez dès maintenant votre accord de piano avec un professionnel
           certifié
         </p>
-        <Link to="/search" className="btn-primary btn-lg">
+        <Link href="/search" className="btn-primary btn-lg">
           Commencer
         </Link>
       </section>

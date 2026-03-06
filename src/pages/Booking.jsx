@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "../hooks/useAuth";
 import { getProfessionalById, createBooking } from "../services/database";
 import { calculateCommission } from "../services/stripe";
@@ -8,7 +10,7 @@ import { formatPrice } from "../utils/format";
 export default function Booking() {
   const { proId } = useParams();
   const { user } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [pro, setPro] = useState(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -60,7 +62,7 @@ export default function Booking() {
         netAmount,
       });
 
-      navigate("/dashboard");
+      router.push("/dashboard");
     } catch (err) {
       console.error("Erreur réservation:", err);
     } finally {

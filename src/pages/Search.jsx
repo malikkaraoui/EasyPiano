@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { getActiveProfessionals } from "../services/database";
 import { formatPrice, formatRating } from "../utils/format";
 import CityPostalAutocomplete from "@components/UI/CityPostalAutocomplete";
@@ -93,7 +95,7 @@ export default function Search() {
 
       <div className="pros-grid">
         {filtered.map((pro) => (
-          <Link to={`/pro/${pro.id}`} key={pro.id} className="pro-card">
+          <Link href={`/pro/${pro.id}`} key={pro.id} className="pro-card">
             <div className="pro-card-photo">
               {pro.photoURL ? (
                 <img

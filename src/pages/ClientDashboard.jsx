@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { useAuth } from "../hooks/useAuth";
 import { getBookingsByClient } from "../services/database";
 import { formatPrice, formatDate } from "../utils/format";
@@ -63,7 +65,7 @@ export default function ClientDashboard() {
       {filtered.length === 0 && (
         <div className="empty-state">
           <p>Aucune réservation {filter !== "all" ? "avec ce statut" : ""}</p>
-          <Link to="/search" className="btn-primary">
+          <Link href="/search" className="btn-primary">
             Trouver un accordeur
           </Link>
         </div>
@@ -88,7 +90,7 @@ export default function ClientDashboard() {
                 {STATUS_LABELS[booking.status]}
               </span>
               {booking.status === "completed" && (
-                <Link to={`/review/${booking.id}`} className="btn-review">
+                <Link href={`/review/${booking.id}`} className="btn-review">
                   Laisser un avis
                 </Link>
               )}

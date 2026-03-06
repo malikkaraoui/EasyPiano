@@ -1,5 +1,6 @@
+"use client";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import {
   getProfessionals,
   updateProfessional,
@@ -48,7 +49,7 @@ export default function ManagePros() {
     <div className="manage-pros">
       <div className="page-header">
         <h1>Professionnels ({pros.length})</h1>
-        <Link to="/admin/pros/add" className="btn-primary">
+        <Link href="/admin/pros/add" className="btn-primary">
           + Ajouter un pro
         </Link>
       </div>
@@ -98,7 +99,10 @@ export default function ManagePros() {
                   </button>
                 </td>
                 <td className="actions">
-                  <Link to={`/admin/pros/edit/${pro.id}`} className="btn-edit">
+                  <Link
+                    href={`/admin/pros/edit/${pro.id}`}
+                    className="btn-edit"
+                  >
                     Modifier
                   </Link>
                   <button

@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+"use client";
+
+import Link from "next/link";
 import { useAuth } from "../../hooks/useAuth";
 import { logout } from "../../services/auth";
 
@@ -8,23 +10,23 @@ export default function Header() {
   return (
     <header className="header">
       <div className="header-container">
-        <Link to="/" className="logo">
+        <Link href="/" className="logo">
           <span className="logo-icon">🎹</span>
           <span className="logo-text">EasyPiano</span>
         </Link>
 
         <nav className="nav">
-          <Link to="/search" className="nav-link">
+          <Link href="/search" className="nav-link">
             Trouver un accordeur
           </Link>
 
           {user ? (
             <>
-              <Link to="/dashboard" className="nav-link">
+              <Link href="/dashboard" className="nav-link">
                 Mes rendez-vous
               </Link>
               {isAdmin && (
-                <Link to="/admin" className="nav-link nav-admin">
+                <Link href="/admin" className="nav-link nav-admin">
                   Admin
                 </Link>
               )}
@@ -40,7 +42,7 @@ export default function Header() {
               </div>
             </>
           ) : (
-            <Link to="/login" className="btn-login">
+            <Link href="/login" className="btn-login">
               Connexion
             </Link>
           )}

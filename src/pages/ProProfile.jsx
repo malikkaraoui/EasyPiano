@@ -1,5 +1,8 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "next/navigation";
+import Link from "next/link";
 import { getProfessionalById, getReviewsByPro } from "../services/database";
 import { useAuth } from "../hooks/useAuth";
 import { formatPrice, formatRating, formatDate } from "../utils/format";
@@ -65,12 +68,12 @@ export default function ProProfile() {
           </p>
 
           {user && (
-            <Link to={`/booking/${pro.id}`} className="btn-primary">
+            <Link href={`/booking/${pro.id}`} className="btn-primary">
               Réserver un accord
             </Link>
           )}
           {!user && (
-            <Link to="/login" className="btn-primary">
+            <Link href="/login" className="btn-primary">
               Se connecter pour réserver
             </Link>
           )}

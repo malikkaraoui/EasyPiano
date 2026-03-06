@@ -1,20 +1,22 @@
-import { useNavigate } from "react-router-dom";
+"use client";
+
+import { useRouter } from "next/navigation";
 import { useAuth } from "../hooks/useAuth";
 import { loginWithGoogle } from "../services/auth";
 import { useEffect } from "react";
 
 export default function Login() {
   const { user } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   useEffect(() => {
-    if (user) navigate("/dashboard", { replace: true });
-  }, [user, navigate]);
+    if (user) router.replace("/dashboard");
+  }, [user, router]);
 
   async function handleLogin() {
     try {
       await loginWithGoogle();
-      navigate("/dashboard");
+      router.push("/dashboard");
     } catch (err) {
       console.error("Erreur de connexion:", err);
     }
