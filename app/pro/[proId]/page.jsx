@@ -1,6 +1,6 @@
 "use client";
 
-import ProProfile from "@pages/ProProfile";
+import ProProfile from "@views/ProProfile";
 
 export default function ProProfilePage() {
   return <ProProfile />;

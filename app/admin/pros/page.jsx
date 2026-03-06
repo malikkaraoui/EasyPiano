@@ -1,7 +1,7 @@
 "use client";
 
 import AdminRoute from "@components/Auth/AdminRoute";
-import ManagePros from "@pages/admin/ManagePros";
+import ManagePros from "@views/admin/ManagePros";
 
 export default function ManageProsPage() {
   return (

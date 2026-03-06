@@ -1,7 +1,7 @@
 "use client";
 
 import AdminRoute from "@components/Auth/AdminRoute";
-import Transactions from "@pages/admin/Transactions";
+import Transactions from "@views/admin/Transactions";
 
 export default function TransactionsPage() {
   return (

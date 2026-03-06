@@ -1,7 +1,7 @@
 "use client";
 
 import AdminRoute from "@components/Auth/AdminRoute";
-import AdminDashboard from "@pages/admin/AdminDashboard";
+import AdminDashboard from "@views/admin/AdminDashboard";
 
 export default function AdminPage() {
   return (
