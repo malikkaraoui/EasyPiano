@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+/*
+ * EasyPiano Design Tokens
+ * Source: UX Design Specification — Customization Strategy
+ */
+
+@layer base {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #fafafa;
+    --card: #111111;
+    --accent: #d4c5a0;
+    --accent-hover: #e0d4b4;
+    --muted: #888888;
+    --border: #222222;
+    --destructive: #ef4444;
+    --success: #22c55e;
+    --radius: 0.75rem;
+    --font-heading: "Playfair Display", serif;
+    --font-body: "Inter", sans-serif;
+  }
+
+  html {
+    font-family: var(--font-body);
+    color: var(--foreground);
+    background-color: var(--background);
+  }
+
+  body {
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}

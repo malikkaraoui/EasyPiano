@@ -1,4 +1,4 @@
-import "@/index.css";
+import "./globals.css";
 import AuthProvider from "@context/AuthProvider";
 import Header from "@components/Layout/Header";
 import Footer from "@components/Layout/Footer";
