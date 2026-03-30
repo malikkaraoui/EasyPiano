@@ -84,15 +84,15 @@ development_status:
   epic-5-retrospective: optional
 
   # Epic 6: Réservation & Paiement
-  epic-6: backlog
-  6-1-selection-creneau-recapitulatif: backlog
-  6-2-paiement-stripe-checkout: backlog
-  6-3-confirmation-webhooks: backlog
+  epic-6: in-progress
+  6-1-selection-creneau-recapitulatif: review
+  6-2-paiement-stripe-checkout: review
+  6-3-confirmation-webhooks: review
   epic-6-retrospective: optional
 
   # Epic 7: Dashboard Client
-  epic-7: backlog
-  7-1-vue-prochains-rdv: backlog
+  epic-7: in-progress
+  7-1-vue-prochains-rdv: in-progress
   7-2-annulation-manuelle: backlog
   epic-7-retrospective: optional
 
