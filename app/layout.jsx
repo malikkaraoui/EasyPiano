@@ -1,9 +1,22 @@
 import "./globals.css";
+import { Playfair_Display, Inter } from "next/font/google";
 import { initSentry } from "@/lib/sentry";
 import AuthProvider from "@context/AuthProvider";
 import Header from "@components/Layout/Header";
 import Footer from "@components/Layout/Footer";
 import ConfigBanner from "@components/UI/ConfigBanner";
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-heading",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
+});
 
 initSentry();
 
@@ -28,12 +41,12 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="fr">
-      <body>
+    <html lang="fr" className={`${playfair.variable} ${inter.variable}`}>
+      <body className="font-body bg-background text-foreground min-h-screen antialiased">
         <AuthProvider>
-          <div className="app-layout">
+          <div className="flex min-h-screen flex-col">
             <Header />
-            <main className="main-content">
+            <main className="flex-1">
               <ConfigBanner />
               {children}
             </main>
