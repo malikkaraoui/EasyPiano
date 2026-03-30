@@ -1,6 +1,6 @@
 # Story 1.2: Setup API Routes & Infrastructure Backend
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
