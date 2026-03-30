@@ -69,11 +69,11 @@ development_status:
   epic-3-retrospective: optional
 
   # Epic 4: Disponibilités Pro & Dashboard Pro
-  epic-4: backlog
-  4-1-publication-disponibilites: backlog
-  4-2-gestion-modification-disponibilites: backlog
-  4-3-emploi-du-temps-pro-adresses-protegees: backlog
-  4-4-chiffrement-adresses-clients: backlog
+  epic-4: in-progress
+  4-1-publication-disponibilites: review
+  4-2-gestion-modification-disponibilites: review
+  4-3-emploi-du-temps-pro-adresses-protegees: review
+  4-4-chiffrement-adresses-clients: review
   epic-4-retrospective: optional
 
   # Epic 5: Recherche & Découverte
