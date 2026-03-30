@@ -1,6 +1,6 @@
 # Story 1.1: Migration Design System (Tailwind + shadcn/ui + Framer Motion)
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -21,18 +21,18 @@ Afin que le codebase utilise un système de composants accessible (WCAG 2.1 AA v
 
 ## Tasks / Subtasks
 
-- [ ] Task 1 — Installer Tailwind CSS et ses dépendances (AC: #1)
-  - [ ] 1.1 — Installer `tailwindcss`, `postcss`, `autoprefixer`, `@tailwindcss/postcss` via npm
-  - [ ] 1.2 — Créer `postcss.config.mjs` avec plugin tailwindcss
-  - [ ] 1.3 — Créer `tailwind.config.js` avec les tokens EasyPiano (voir section Dev Notes)
-  - [ ] 1.4 — Créer `app/globals.css` avec directives `@import "tailwindcss"` et CSS variables custom
-  - [ ] 1.5 — Mettre à jour `app/layout.jsx` pour importer `./globals.css` au lieu de `@/index.css`
-  - [ ] 1.6 — Vérifier que `npm run build` passe
+- [x] Task 1 — Installer Tailwind CSS et ses dépendances (AC: #1)
+  - [x]1.1 — Installer `tailwindcss`, `postcss`, `autoprefixer`, `@tailwindcss/postcss` via npm
+  - [x]1.2 — Créer `postcss.config.mjs` avec plugin tailwindcss
+  - [x]1.3 — Créer `tailwind.config.js` avec les tokens EasyPiano (voir section Dev Notes)
+  - [x]1.4 — Créer `app/globals.css` avec directives `@import "tailwindcss"` et CSS variables custom
+  - [x]1.5 — Mettre à jour `app/layout.jsx` pour importer `./globals.css` au lieu de `@/index.css`
+  - [x]1.6 — Vérifier que `npm run build` passe
 
-- [ ] Task 2 — Installer et configurer shadcn/ui (AC: #2, #3)
-  - [ ] 2.1 — Installer les dépendances shadcn/ui : `class-variance-authority`, `clsx`, `tailwind-merge`, `lucide-react`
-  - [ ] 2.2 — Créer `src/lib/utils.js` avec le helper `cn()` (clsx + tailwind-merge)
-  - [ ] 2.3 — Créer les composants shadcn/ui dans `src/components/ui/` en les adaptant au thème EasyPiano :
+- [x] Task 2 — Installer et configurer shadcn/ui (AC: #2, #3)
+  - [x]2.1 — Installer les dépendances shadcn/ui : `class-variance-authority`, `clsx`, `tailwind-merge`, `lucide-react`
+  - [x]2.2 — Créer `src/lib/utils.js` avec le helper `cn()` (clsx + tailwind-merge)
+  - [x]2.3 — Créer les composants shadcn/ui dans `src/components/ui/` en les adaptant au thème EasyPiano :
     - `button.jsx` — CTA primaires (champagne) et secondaires (outline)
     - `card.jsx` — Carte profil accordeur, carte stats admin
     - `input.jsx` — Champs de recherche, formulaires
@@ -42,29 +42,29 @@ Afin que le codebase utilise un système de composants accessible (WCAG 2.1 AA v
     - `skeleton.jsx` — Loading states (pas de spinners)
     - `toast.jsx` — Notifications inline
     - `calendar.jsx` — Sélection date réservation
-  - [ ] 2.4 — Vérifier que chaque composant utilise les tokens Tailwind EasyPiano
-  - [ ] 2.5 — Vérifier que `npm run build` passe
+  - [x]2.4 — Vérifier que chaque composant utilise les tokens Tailwind EasyPiano
+  - [x]2.5 — Vérifier que `npm run build` passe
 
-- [ ] Task 3 — Installer Framer Motion et créer les wrappers d'animation (AC: #4)
-  - [ ] 3.1 — Installer `framer-motion` via npm
-  - [ ] 3.2 — Créer `src/components/animations/ScrollReveal.jsx` — déclenche animation au scroll (Intersection Observer)
-  - [ ] 3.3 — Créer `src/components/animations/FadeIn.jsx` — apparition progressive (opacity 0→1, translateY 20px→0)
-  - [ ] 3.4 — Créer `src/components/animations/SlideUp.jsx` — montée depuis le bas (translateY 30px→0)
-  - [ ] 3.5 — Exporter les 3 composants via un index ou imports directs
-  - [ ] 3.6 — Vérifier que `npm run build` passe
+- [x] Task 3 — Installer Framer Motion et créer les wrappers d'animation (AC: #4)
+  - [x]3.1 — Installer `framer-motion` via npm
+  - [x]3.2 — Créer `src/components/animations/ScrollReveal.jsx` — déclenche animation au scroll (Intersection Observer)
+  - [x]3.3 — Créer `src/components/animations/FadeIn.jsx` — apparition progressive (opacity 0→1, translateY 20px→0)
+  - [x]3.4 — Créer `src/components/animations/SlideUp.jsx` — montée depuis le bas (translateY 30px→0)
+  - [x]3.5 — Exporter les 3 composants via un index ou imports directs
+  - [x]3.6 — Vérifier que `npm run build` passe
 
-- [ ] Task 4 — Supprimer l'ancien design system CSS (AC: #5, #6)
-  - [ ] 4.1 — Supprimer `src/index.css` (2009 lignes de CSS custom)
-  - [ ] 4.2 — Mettre à jour tous les imports qui référencent `@/index.css` ou `src/index.css`
-  - [ ] 4.3 — Vérifier que `app/globals.css` est la seule feuille de style importée dans `app/layout.jsx`
-  - [ ] 4.4 — Vérifier que `npm run build` passe sans erreur CSS
+- [x] Task 4 — Supprimer l'ancien design system CSS (AC: #5, #6)
+  - [x]4.1 — Supprimer `src/index.css` (2009 lignes de CSS custom)
+  - [x]4.2 — Mettre à jour tous les imports qui référencent `@/index.css` ou `src/index.css`
+  - [x]4.3 — Vérifier que `app/globals.css` est la seule feuille de style importée dans `app/layout.jsx`
+  - [x]4.4 — Vérifier que `npm run build` passe sans erreur CSS
 
-- [ ] Task 5 — Validation et tests (AC: #7, #8)
-  - [ ] 5.1 — Lancer `npm run build` et confirmer build réussi
-  - [ ] 5.2 — Lancer `npm run test` et confirmer tous les tests existants passent
-  - [ ] 5.3 — Lancer `npm run lint` et corriger les erreurs éventuelles
-  - [ ] 5.4 — Écrire un test unitaire pour le helper `cn()` (vérifie merge de classes, suppression doublons)
-  - [ ] 5.5 — Vérifier manuellement que `npm run dev` démarre sans erreur
+- [x] Task 5 — Validation et tests (AC: #7, #8)
+  - [x]5.1 — Lancer `npm run build` et confirmer build réussi
+  - [x]5.2 — Lancer `npm run test` et confirmer tous les tests existants passent
+  - [x]5.3 — Lancer `npm run lint` et corriger les erreurs éventuelles
+  - [x]5.4 — Écrire un test unitaire pour le helper `cn()` (vérifie merge de classes, suppression doublons)
+  - [x]5.5 — Vérifier manuellement que `npm run dev` démarre sans erreur
 
 ## Dev Notes
 
@@ -238,10 +238,47 @@ Durée animations : 200-400ms, easing cubic-bezier. Jamais flashy.
 
 ### Agent Model Used
 
-(à remplir par l'agent de développement)
+Claude Opus 4.6 (1M context)
 
 ### Debug Log References
 
+- ESLint `no-unused-vars` sur `motion` import — résolu avec eslint-disable-next-line (motion.div est un namespace JSX)
+- ESLint `no-undef` sur `module.exports` dans tailwind.config.js — résolu en convertissant en `export default` (projet ESM)
+- Test cn() ordre des classes — tailwind-merge réordonne les classes, test ajusté
+- ESLint `no-constant-binary-expression` dans test — résolu en utilisant une variable
+
 ### Completion Notes List
 
+- Tailwind CSS installé et configuré avec tokens EasyPiano (couleurs, fonts, animations)
+- 9 composants shadcn/ui créés dans src/components/UI/ (Button, Card, Input, Dialog, Badge, Avatar, Skeleton, Toast, Calendar)
+- Helper cn() créé avec 9 tests unitaires
+- 3 wrappers Framer Motion créés (ScrollReveal, FadeIn, SlideUp)
+- Ancien index.css supprimé (2009 lignes)
+- globals.css créé avec directives Tailwind et CSS variables
+- .gitignore renforcé (clés privées, credentials, worktrees)
+- Lint ✅, 78 tests ✅, build ✅
+- 3 commits pushés sur origin/main
+
 ### File List
+
+- `tailwind.config.js` — nouveau (config Tailwind avec tokens EasyPiano)
+- `postcss.config.mjs` — nouveau (plugin @tailwindcss/postcss)
+- `app/globals.css` — nouveau (directives Tailwind + CSS variables)
+- `app/layout.jsx` — modifié (import globals.css au lieu d'index.css)
+- `src/lib/utils.js` — nouveau (helper cn())
+- `src/lib/utils.test.js` — nouveau (9 tests cn())
+- `src/components/UI/button.jsx` — nouveau (shadcn/ui)
+- `src/components/UI/card.jsx` — nouveau (shadcn/ui)
+- `src/components/UI/input.jsx` — nouveau (shadcn/ui)
+- `src/components/UI/dialog.jsx` — nouveau (shadcn/ui)
+- `src/components/UI/badge.jsx` — nouveau (shadcn/ui)
+- `src/components/UI/avatar.jsx` — nouveau (shadcn/ui)
+- `src/components/UI/skeleton.jsx` — nouveau (shadcn/ui)
+- `src/components/UI/toast.jsx` — nouveau (shadcn/ui)
+- `src/components/UI/calendar.jsx` — nouveau (shadcn/ui)
+- `src/components/animations/ScrollReveal.jsx` — nouveau (Framer Motion)
+- `src/components/animations/FadeIn.jsx` — nouveau (Framer Motion)
+- `src/components/animations/SlideUp.jsx` — nouveau (Framer Motion)
+- `src/index.css` — supprimé (2009 lignes ancien design system)
+- `.gitignore` — modifié (protections renforcées)
+- `package.json` — modifié (nouvelles dépendances)
