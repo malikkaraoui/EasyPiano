@@ -92,8 +92,8 @@ development_status:
 
   # Epic 7: Dashboard Client
   epic-7: in-progress
-  7-1-vue-prochains-rdv: in-progress
-  7-2-annulation-manuelle: backlog
+  7-1-vue-prochains-rdv: review
+  7-2-annulation-manuelle: review
   epic-7-retrospective: optional
 
   # ═══════════════════════════════════════════════════════
