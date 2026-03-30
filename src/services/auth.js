@@ -15,6 +15,7 @@ export async function loginWithGoogle() {
       email: user.email,
       photoURL: user.photoURL,
       role: "client",
+      isB2B: false,
       createdAt: new Date().toISOString(),
       lastLoginAt: new Date().toISOString(),
     });

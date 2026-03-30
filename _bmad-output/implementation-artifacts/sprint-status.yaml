@@ -53,8 +53,8 @@ development_status:
   epic-1-retrospective: optional
 
   # Epic 2: Authentification & Profils Utilisateurs
-  epic-2: backlog
-  2-1-authentification-google: backlog
+  epic-2: in-progress
+  2-1-authentification-google: in-progress
   2-2-profil-client: backlog
   2-3-gestion-sessions-securite: backlog
   epic-2-retrospective: optional

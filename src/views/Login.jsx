@@ -3,11 +3,13 @@
 import { useRouter } from "next/navigation";
 import { useAuth } from "../hooks/useAuth";
 import { loginWithGoogle } from "../services/auth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/UI/button";
 
 export default function Login() {
   const { user } = useAuth();
   const router = useRouter();
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (user) router.replace("/dashboard");
@@ -15,20 +17,41 @@ export default function Login() {
 
   async function handleLogin() {
     try {
+      setError(null);
       await loginWithGoogle();
       router.push("/dashboard");
     } catch (err) {
-      console.error("Erreur de connexion:", err);
+      console.error("[Auth] Erreur de connexion:", err);
+      setError("Erreur lors de la connexion. Veuillez réessayer.");
     }
   }
 
   return (
-    <div className="login-page">
-      <div className="login-card">
-        <h1>Connexion</h1>
-        <p>Connectez-vous pour réserver un accordeur de piano</p>
-        <button onClick={handleLogin} className="btn-google">
-          <svg viewBox="0 0 24 24" width="20" height="20">
+    <div className="flex min-h-[70vh] items-center justify-center px-4">
+      <div className="w-full max-w-md rounded-lg border border-border bg-card p-8 text-center">
+        <h1 className="font-heading text-2xl font-bold text-foreground">
+          Connexion
+        </h1>
+        <p className="mt-2 text-sm text-muted">
+          Connectez-vous pour réserver un accordeur de piano
+        </p>
+
+        {error && (
+          <p
+            className="mt-4 rounded border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive"
+            role="alert"
+          >
+            {error}
+          </p>
+        )}
+
+        <Button
+          onClick={handleLogin}
+          variant="secondary"
+          size="lg"
+          className="mt-6 w-full gap-3"
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
             <path
               fill="#4285F4"
               d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
@@ -47,7 +70,7 @@ export default function Login() {
             />
           </svg>
           Continuer avec Google
-        </button>
+        </Button>
       </div>
     </div>
   );
