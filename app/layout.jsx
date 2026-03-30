@@ -1,8 +1,11 @@
 import "./globals.css";
+import { initSentry } from "@/lib/sentry";
 import AuthProvider from "@context/AuthProvider";
 import Header from "@components/Layout/Header";
 import Footer from "@components/Layout/Footer";
 import ConfigBanner from "@components/UI/ConfigBanner";
+
+initSentry();
 
 export const metadata = {
   metadataBase: new URL("https://easypiano.ch"),
