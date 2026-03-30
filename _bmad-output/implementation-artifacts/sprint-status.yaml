@@ -131,11 +131,11 @@ development_status:
   # Epic 12: Features Growth
   epic-12: in-progress
   12-1-authentification-sms: backlog
-  12-2-internationalisation: backlog
-  12-3-recherche-par-nom: backlog
+  12-2-internationalisation: review
+  12-3-recherche-par-nom: review
   12-4-supplement-piano-mauvais-etat: review
-  12-5-programme-parrainage: backlog
-  12-6-carnet-entretien-piano: backlog
+  12-5-programme-parrainage: review
+  12-6-carnet-entretien-piano: review
   epic-12-retrospective: optional
 
   # ═══════════════════════════════════════════════════════
