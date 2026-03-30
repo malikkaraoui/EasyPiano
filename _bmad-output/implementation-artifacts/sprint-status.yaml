@@ -101,10 +101,10 @@ development_status:
   # ═══════════════════════════════════════════════════════
 
   # Epic 8: Système d'Avis & Confiance
-  epic-8: backlog
-  8-1-laisser-avis: backlog
-  8-2-reponse-pro-avis: backlog
-  8-3-note-moyenne-affichage-profil: backlog
+  epic-8: in-progress
+  8-1-laisser-avis: review
+  8-2-reponse-pro-avis: review
+  8-3-note-moyenne-affichage-profil: review
   epic-8-retrospective: optional
 
   # Epic 9: Notifications & Emails Automatiques
