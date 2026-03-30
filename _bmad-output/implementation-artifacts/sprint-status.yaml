@@ -61,11 +61,11 @@ development_status:
 
   # Epic 3: Onboarding Pro & Validation Admin
   epic-3: in-progress
-  3-1-formulaire-inscription-pro: in-progress
-  3-2-dashboard-admin-validation-pros: backlog
-  3-3-badge-valide-easypiano: backlog
-  3-4-onboarding-stripe-connect: backlog
-  3-5-2fa-pro-obligatoire: backlog
+  3-1-formulaire-inscription-pro: review
+  3-2-dashboard-admin-validation-pros: review
+  3-3-badge-valide-easypiano: review
+  3-4-onboarding-stripe-connect: review
+  3-5-2fa-pro-obligatoire: in-progress
   epic-3-retrospective: optional
 
   # Epic 4: Disponibilités Pro & Dashboard Pro
