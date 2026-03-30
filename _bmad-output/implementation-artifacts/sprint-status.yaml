@@ -65,7 +65,7 @@ development_status:
   3-2-dashboard-admin-validation-pros: review
   3-3-badge-valide-easypiano: review
   3-4-onboarding-stripe-connect: review
-  3-5-2fa-pro-obligatoire: in-progress
+  3-5-2fa-pro-obligatoire: review
   epic-3-retrospective: optional
 
   # Epic 4: Disponibilités Pro & Dashboard Pro
