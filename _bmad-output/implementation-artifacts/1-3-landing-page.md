@@ -1,6 +1,6 @@
 # Story 1.3: Landing Page
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
