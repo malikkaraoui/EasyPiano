@@ -40,3 +40,17 @@ Thumbs.db
 
 # Local
 *.local
+
+# Secrets & credentials (NEVER commit)
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+firebase-adminsdk*.json
+.env.*
+!.env.example
+
+# Claude worktrees
+.claude/worktrees/
