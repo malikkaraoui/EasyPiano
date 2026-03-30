@@ -108,32 +108,32 @@ development_status:
   epic-8-retrospective: optional
 
   # Epic 9: Notifications & Emails Automatiques
-  epic-9: backlog
-  9-1-emails-transactionnels-automatiques: backlog
-  9-2-rappel-annuel-11-mois: backlog
-  9-3-communication-externe: backlog
+  epic-9: in-progress
+  9-1-emails-transactionnels-automatiques: review
+  9-2-rappel-annuel-11-mois: review
+  9-3-communication-externe: review
   epic-9-retrospective: optional
 
   # Epic 10: Annulation & Remboursement Automatisé
-  epic-10: backlog
-  10-1-historique-rdv: backlog
-  10-2-annulation-automatisee-motif: backlog
+  epic-10: in-progress
+  10-1-historique-rdv: review
+  10-2-annulation-automatisee-motif: review
   epic-10-retrospective: optional
 
   # Epic 11: Admin Dashboard & Analytics
-  epic-11: backlog
-  11-1-dashboard-admin-principal: backlog
-  11-2-gestion-incidents: backlog
-  11-3-analytics-motifs-annulation: backlog
-  11-4-monitoring-avis-alertes: backlog
+  epic-11: in-progress
+  11-1-dashboard-admin-principal: review
+  11-2-gestion-incidents: review
+  11-3-analytics-motifs-annulation: review
+  11-4-monitoring-avis-alertes: review
   epic-11-retrospective: optional
 
   # Epic 12: Features Growth
-  epic-12: backlog
+  epic-12: in-progress
   12-1-authentification-sms: backlog
   12-2-internationalisation: backlog
   12-3-recherche-par-nom: backlog
-  12-4-supplement-piano-mauvais-etat: backlog
+  12-4-supplement-piano-mauvais-etat: review
   12-5-programme-parrainage: backlog
   12-6-carnet-entretien-piano: backlog
   epic-12-retrospective: optional
