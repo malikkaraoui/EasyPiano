@@ -55,8 +55,8 @@ development_status:
   # Epic 2: Authentification & Profils Utilisateurs
   epic-2: in-progress
   2-1-authentification-google: review
-  2-2-profil-client: in-progress
-  2-3-gestion-sessions-securite: backlog
+  2-2-profil-client: review
+  2-3-gestion-sessions-securite: review
   epic-2-retrospective: optional
 
   # Epic 3: Onboarding Pro & Validation Admin
