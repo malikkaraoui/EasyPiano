@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EasyPiano — Design Directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --background: #0a0a0a;
+    --background-alt: #0f0f0f;
+    --card: #111111;
+    --card-hover: #1a1a1a;
+    --foreground: #ffffff;
+    --foreground-alt: #fafafa;
+    --muted: #999999;
+    --muted-light: #666666;
+    --accent: #d4c5a0;
+    --accent-hover: #e0d4b4;
+    --accent-muted: #b8a882;
+    --border: #1e1e1e;
+    --border-hover: #333333;
+    --success: #22c55e;
+    --destructive: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--background);
+    color: var(--foreground);
+    overflow-x: hidden;
+  }
+
+  /* ═══════════════════════════════════════
+     NAVIGATION SELECTOR
+  ═══════════════════════════════════════ */
+  .direction-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(10, 10, 10, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .direction-nav h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  .nav-tabs {
+    display: flex;
+    gap: 8px;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .nav-tab {
+    padding: 8px 20px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .nav-tab:hover {
+    border-color: var(--border-hover);
+    color: var(--foreground-alt);
+  }
+
+  .nav-tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--background);
+    font-weight: 600;
+  }
+
+  .nav-badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 100px;
+    background: var(--card);
+    color: var(--muted);
+    border: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  /* ═══════════════════════════════════════
+     DIRECTION SECTIONS
+  ═══════════════════════════════════════ */
+  .direction {
+    display: none;
+    min-height: 100vh;
+    padding-top: 72px;
+  }
+
+  .direction.active {
+    display: block;
+  }
+
+  /* ═══════════════════════════════════════
+     DIRECTION 1 — PIANO NOIR
+     Full dark, minimaliste extrême
+  ═══════════════════════════════════════ */
+
+  /* Hero */
+  .d1-hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .d1-hero::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(212, 197, 160, 0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .d1-hero-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 32px;
+    opacity: 0.8;
+  }
+
+  .d1-hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 7vw, 80px);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--foreground);
+    margin-bottom: 24px;
+    max-width: 700px;
+  }
+
+  .d1-hero-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .d1-hero-desc {
+    font-size: 18px;
+    color: var(--muted);
+    max-width: 480px;
+    line-height: 1.6;
+    margin-bottom: 48px;
+    font-weight: 300;
+  }
+
+  /* Search bar minimaliste */
+  .d1-search {
+    display: flex;
+    align-items: center;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 6px 6px 6px 24px;
+    width: 100%;
+    max-width: 560px;
+    transition: border-color 0.3s;
+  }
+
+  .d1-search:hover {
+    border-color: var(--border-hover);
+  }
+
+  .d1-search-icon {
+    color: var(--muted-light);
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+
+  .d1-search input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    color: var(--foreground);
+    padding: 12px 0;
+  }
+
+  .d1-search input::placeholder {
+    color: var(--muted-light);
+  }
+
+  .d1-search-btn {
+    padding: 12px 28px;
+    background: var(--accent);
+    color: var(--background);
+    border: none;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+
+  .d1-search-btn:hover {
+    background: var(--accent-hover);
+  }
+
+  .d1-scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted-light);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    animation: d1-float 2s ease-in-out infinite;
+  }
+
+  @keyframes d1-float {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-8px); }
+  }
+
+  /* Section valeur */
+  .d1-section {
+    padding: 120px 32px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .d1-section-label {
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-muted);
+    margin-bottom: 16px;
+  }
+
+  .d1-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 400;
+    margin-bottom: 64px;
+    line-height: 1.2;
+  }
+
+  /* Cards grille */
+  .d1-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .d1-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px 32px;
+    transition: all 0.3s ease;
+  }
+
+  .d1-card:hover {
+    background: var(--card-hover);
+    border-color: var(--border-hover);
+    transform: translateY(-4px);
+  }
+
+  .d1-card-icon {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+
+  .d1-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+
+  .d1-card p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* Pro card preview */
+  .d1-pro-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 64px;
+  }
+
+  .d1-pro-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .d1-pro-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-4px);
+  }
+
+  .d1-pro-photo {
+    height: 220px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #252525 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted-light);
+    font-size: 48px;
+  }
+
+  .d1-pro-info {
+    padding: 24px;
+  }
+
+  .d1-pro-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .d1-pro-location {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .d1-pro-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .d1-pro-rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    color: var(--accent);
+  }
+
+  .d1-pro-price {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--foreground);
+  }
+
+  .d1-pro-price span {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* ═══════════════════════════════════════
+     DIRECTION 2 — DEPTH STAGE
+     Depth layering hero (Apple-style)
+  ═══════════════════════════════════════ */
+
+  .d2-hero {
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Layer 1: Title (behind) */
+  .d2-title-layer {
+    position: absolute;
+    z-index: 1;
+    text-align: center;
+    top: 50%;
+    transform: translateY(-60%);
+  }
+
+  .d2-title-layer h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(48px, 8vw, 96px);
+    font-weight: 400;
+    line-height: 1.05;
+    color: var(--foreground);
+  }
+
+  .d2-title-layer h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  /* Layer 2: Piano image (in front, covers bottom of title) */
+  .d2-piano-layer {
+    position: absolute;
+    z-index: 2;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    max-width: 800px;
+    height: 55vh;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .d2-piano-visual {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, transparent 0%, rgba(17, 17, 17, 0.3) 30%, rgba(17, 17, 17, 0.8) 60%, var(--card) 100%);
+    border-radius: 24px 24px 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 40px;
+    position: relative;
+  }
+
+  .d2-piano-icon {
+    font-size: 120px;
+    opacity: 0.15;
+    position: absolute;
+    top: 30%;
+  }
+
+  /* Layer 3: Search (on top of everything) */
+  .d2-search-layer {
+    position: absolute;
+    z-index: 3;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 600px;
+  }
+
+  .d2-search {
+    display: flex;
+    align-items: center;
+    background: rgba(17, 17, 17, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(212, 197, 160, 0.2);
+    border-radius: 20px;
+    padding: 8px 8px 8px 28px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  }
+
+  .d2-search input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    color: var(--foreground);
+    padding: 14px 0;
+  }
+
+  .d2-search input::placeholder {
+    color: var(--muted-light);
+  }
+
+  .d2-search-btn {
+    padding: 14px 32px;
+    background: var(--accent);
+    color: var(--background);
+    border: none;
+    border-radius: 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .d2-search-btn:hover {
+    background: var(--accent-hover);
+  }
+
+  .d2-scroll-cue {
+    position: absolute;
+    z-index: 3;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--muted-light);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    animation: d1-float 2s ease-in-out infinite;
+  }
+
+  /* Storytelling section */
+  .d2-story {
+    padding: 140px 32px;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .d2-story-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--accent-muted);
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+  }
+
+  .d2-story h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 24px;
+  }
+
+  .d2-story p {
+    font-size: 18px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 600px;
+    margin: 0 auto;
+    font-weight: 300;
+  }
+
+  /* Steps horizontaux */
+  .d2-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 80px;
+  }
+
+  .d2-step {
+    background: var(--card);
+    padding: 48px 32px;
+    text-align: center;
+    transition: background 0.3s;
+    position: relative;
+  }
+
+  .d2-step:first-child { border-radius: 20px 0 0 20px; }
+  .d2-step:last-child { border-radius: 0 20px 20px 0; }
+
+  .d2-step:hover { background: var(--card-hover); }
+
+  .d2-step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: var(--accent);
+    opacity: 0.3;
+    margin-bottom: 16px;
+  }
+
+  .d2-step h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  .d2-step p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ═══════════════════════════════════════
+     DIRECTION 3 — WARM ELEGANCE
+     More champagne, larger photos, warmer
+  ═══════════════════════════════════════ */
+
+  .d3-hero {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .d3-hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 64px;
+    position: relative;
+  }
+
+  .d3-hero-left::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(212, 197, 160, 0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .d3-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(212, 197, 160, 0.08);
+    border: 1px solid rgba(212, 197, 160, 0.15);
+    border-radius: 100px;
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: 32px;
+    width: fit-content;
+  }
+
+  .d3-hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 4vw, 56px);
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 20px;
+  }
+
+  .d3-hero-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .d3-hero-desc {
+    font-size: 17px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 40px;
+    max-width: 440px;
+    font-weight: 300;
+  }
+
+  /* Search dans hero gauche */
+  .d3-search {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .d3-search-input {
+    flex: 1;
+    padding: 16px 24px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    color: var(--foreground);
+    outline: none;
+    transition: border-color 0.3s;
+  }
+
+  .d3-search-input::placeholder {
+    color: var(--muted-light);
+  }
+
+  .d3-search-input:focus {
+    border-color: var(--accent-muted);
+  }
+
+  .d3-search-btn {
+    padding: 16px 32px;
+    background: var(--accent);
+    color: var(--background);
+    border: none;
+    border-radius: 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .d3-search-btn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+  }
+
+  .d3-trust-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .d3-trust-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .d3-trust-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-muted);
+  }
+
+  /* Hero droite: visual */
+  .d3-hero-right {
+    position: relative;
+    background: linear-gradient(135deg, #111 0%, #1a1a1a 50%, #111 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .d3-hero-right::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, var(--background) 0%, transparent 20%);
+    z-index: 1;
+  }
+
+  .d3-hero-visual {
+    font-size: 160px;
+    opacity: 0.08;
+    position: absolute;
+  }
+
+  .d3-hero-card-preview {
+    position: relative;
+    z-index: 2;
+    background: rgba(17, 17, 17, 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 32px;
+    width: 320px;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+  }
+
+  .d3-preview-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--accent-muted), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--background);
+    margin-bottom: 16px;
+  }
+
+  .d3-preview-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .d3-preview-loc {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .d3-preview-stars {
+    color: var(--accent);
+    font-size: 14px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .d3-preview-stars span {
+    color: var(--foreground);
+    font-weight: 600;
+    margin-left: 4px;
+  }
+
+  .d3-preview-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 16px 0;
+  }
+
+  .d3-preview-price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .d3-preview-price {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px;
+    font-weight: 500;
+  }
+
+  .d3-preview-price small {
+    font-size: 13px;
+    color: var(--muted);
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+  }
+
+  .d3-preview-book {
+    padding: 10px 24px;
+    background: var(--accent);
+    color: var(--background);
+    border: none;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* D3 features section */
+  .d3-features {
+    padding: 120px 64px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .d3-features-header {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+
+  .d3-features-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 3.5vw, 40px);
+    font-weight: 400;
+    margin-bottom: 16px;
+  }
+
+  .d3-features-header p {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .d3-feature-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .d3-feature {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 40px;
+    display: flex;
+    gap: 20px;
+    transition: all 0.3s ease;
+  }
+
+  .d3-feature:hover {
+    border-color: rgba(212, 197, 160, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .d3-feature-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: rgba(212, 197, 160, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .d3-feature h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  .d3-feature p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ═══════════════════════════════════════
+     DIRECTION LABEL
+  ═══════════════════════════════════════ */
+  .direction-label {
+    padding: 32px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    background: var(--background-alt);
+  }
+
+  .direction-label h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+
+  .direction-label p {
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+
+  .direction-label .tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 12px;
+  }
+
+  .tag-minimal { background: rgba(255,255,255,0.05); color: var(--muted); }
+  .tag-immersive { background: rgba(212,197,160,0.1); color: var(--accent); }
+  .tag-warm { background: rgba(212,197,160,0.15); color: var(--accent-hover); }
+
+  /* ═══════════════════════════════════════
+     RESPONSIVE
+  ═══════════════════════════════════════ */
+  @media (max-width: 768px) {
+    .d1-cards, .d1-pro-grid, .d2-steps { grid-template-columns: 1fr; }
+    .d3-hero { grid-template-columns: 1fr; }
+    .d3-hero-right { display: none; }
+    .d3-hero-left { padding: 0 24px; }
+    .d3-search { flex-direction: column; }
+    .d3-feature-grid { grid-template-columns: 1fr; }
+    .d3-features { padding: 80px 24px; }
+    .direction-nav { padding: 12px 16px; gap: 12px; flex-wrap: wrap; }
+    .direction-nav h1 { font-size: 15px; }
+    .nav-tabs { gap: 4px; }
+    .nav-tab { padding: 6px 14px; font-size: 13px; }
+    .nav-badge { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     NAVIGATION
+═══════════════════════════════════════ -->
+<nav class="direction-nav">
+  <h1>EasyPiano</h1>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showDirection(1)">1. Piano Noir</button>
+    <button class="nav-tab" onclick="showDirection(2)">2. Depth Stage</button>
+    <button class="nav-tab" onclick="showDirection(3)">3. Warm Elegance</button>
+  </div>
+  <span class="nav-badge">Design Directions</span>
+</nav>
+
+<!-- ═══════════════════════════════════════
+     DIRECTION 1 — PIANO NOIR
+═══════════════════════════════════════ -->
+<section class="direction active" id="direction-1">
+  <div class="direction-label">
+    <h2>Direction 1 — Piano Noir</h2>
+    <p>Full dark, minimalisme extrême. Chaque élément respire. L'espace négatif est le design. Ambiance feutrée, luxe discret.</p>
+    <span class="tag tag-minimal">Minimaliste</span>
+  </div>
+
+  <div class="d1-hero">
+    <div class="d1-hero-subtitle">Accordage professionnel</div>
+    <h1 class="d1-hero-title">On accorde<br>votre <em>piano</em></h1>
+    <p class="d1-hero-desc">Trouvez un accordeur certifié près de chez vous en moins de 3 minutes.</p>
+    <div class="d1-search">
+      <svg class="d1-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" placeholder="Votre ville ou code postal">
+      <button class="d1-search-btn">Rechercher</button>
+    </div>
+    <div class="d1-scroll-hint">
+      <span>Découvrir</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+    </div>
+  </div>
+
+  <div class="d1-section">
+    <div class="d1-section-label">Pourquoi EasyPiano</div>
+    <h2 class="d1-section-title">Votre piano mérite le meilleur</h2>
+    <div class="d1-cards">
+      <div class="d1-card">
+        <div class="d1-card-icon">🎯</div>
+        <h3>Simple & Rapide</h3>
+        <p>Réservez en 3 minutes. Choisissez votre créneau, confirmez, c'est fait.</p>
+      </div>
+      <div class="d1-card">
+        <div class="d1-card-icon">✨</div>
+        <h3>Pros Certifiés</h3>
+        <p>Chaque accordeur est vérifié, noté et suivi par notre communauté.</p>
+      </div>
+      <div class="d1-card">
+        <div class="d1-card-icon">💳</div>
+        <h3>Prix Transparent</h3>
+        <p>Pas de surprise. Le prix affiché est le prix payé. Paiement sécurisé en ligne.</p>
+      </div>
+    </div>
+
+    <div class="d1-pro-grid">
+      <div class="d1-pro-card">
+        <div class="d1-pro-photo">🎹</div>
+        <div class="d1-pro-info">
+          <div class="d1-pro-name">Marc Dupont</div>
+          <div class="d1-pro-location">Paris 11e · 15 ans d'expérience</div>
+          <div class="d1-pro-meta">
+            <div class="d1-pro-rating">★★★★★ <span style="color: var(--foreground); font-weight: 600; margin-left: 4px;">4.9</span></div>
+            <div class="d1-pro-price">85€ <span>/ accord</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="d1-pro-card">
+        <div class="d1-pro-photo">🎹</div>
+        <div class="d1-pro-info">
+          <div class="d1-pro-name">Sophie Martin</div>
+          <div class="d1-pro-location">Lyon 3e · 8 ans d'expérience</div>
+          <div class="d1-pro-meta">
+            <div class="d1-pro-rating">★★★★★ <span style="color: var(--foreground); font-weight: 600; margin-left: 4px;">4.8</span></div>
+            <div class="d1-pro-price">75€ <span>/ accord</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="d1-pro-card">
+        <div class="d1-pro-photo">🎹</div>
+        <div class="d1-pro-info">
+          <div class="d1-pro-name">Jean-Pierre Leblanc</div>
+          <div class="d1-pro-location">Marseille · 22 ans d'expérience</div>
+          <div class="d1-pro-meta">
+            <div class="d1-pro-rating">★★★★★ <span style="color: var(--foreground); font-weight: 600; margin-left: 4px;">5.0</span></div>
+            <div class="d1-pro-price">90€ <span>/ accord</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     DIRECTION 2 — DEPTH STAGE
+═══════════════════════════════════════ -->
+<section class="direction" id="direction-2">
+  <div class="direction-label">
+    <h2>Direction 2 — Depth Stage</h2>
+    <p>Effet de profondeur Apple-style. Le titre disparaît derrière le piano. Immersif, cinématique, scroll storytelling.</p>
+    <span class="tag tag-immersive">Immersif</span>
+  </div>
+
+  <div class="d2-hero">
+    <div class="d2-title-layer">
+      <h1>On accorde<br>votre <em>piano</em></h1>
+    </div>
+
+    <div class="d2-piano-layer">
+      <div class="d2-piano-visual">
+        <div class="d2-piano-icon">🎹</div>
+      </div>
+    </div>
+
+    <div class="d2-search-layer">
+      <div class="d2-search">
+        <input type="text" placeholder="Où se trouve votre piano ?">
+        <button class="d2-search-btn">Trouver un pro</button>
+      </div>
+    </div>
+
+    <div class="d2-scroll-cue">Scroll pour découvrir</div>
+  </div>
+
+  <div class="d2-story">
+    <div class="d2-story-number">01</div>
+    <h2>Votre piano mérite<br>une attention d'exception</h2>
+    <p>Un instrument désaccordé perd son âme. Nos accordeurs certifiés lui redonnent sa voix, avec la précision et le soin qu'il mérite.</p>
+  </div>
+
+  <div style="max-width: 900px; margin: 0 auto; padding: 0 32px 120px;">
+    <div class="d2-steps">
+      <div class="d2-step">
+        <div class="d2-step-num">1</div>
+        <h3>Localisez</h3>
+        <p>Entrez votre adresse et découvrez les pros disponibles près de chez vous.</p>
+      </div>
+      <div class="d2-step">
+        <div class="d2-step-num">2</div>
+        <h3>Choisissez</h3>
+        <p>Comparez les profils, les avis et les tarifs. Sélectionnez votre créneau.</p>
+      </div>
+      <div class="d2-step">
+        <div class="d2-step-num">3</div>
+        <h3>Confirmez</h3>
+        <p>Paiement sécurisé, confirmation instantanée. Votre piano va chanter.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="d2-story" style="border-top: 1px solid var(--border); padding-top: 120px;">
+    <div class="d2-story-number">02</div>
+    <h2>Des professionnels<br>triés sur le volet</h2>
+    <p>Chaque accordeur est certifié, évalué par la communauté et engagé dans une démarche qualité. Nous ne travaillons qu'avec les meilleurs.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     DIRECTION 3 — WARM ELEGANCE
+═══════════════════════════════════════ -->
+<section class="direction" id="direction-3">
+  <div class="direction-label">
+    <h2>Direction 3 — Warm Elegance</h2>
+    <p>Plus de champagne, split hero gauche/droite, carte pro flottante. Plus chaleureux, confiance immédiate, photos mises en avant.</p>
+    <span class="tag tag-warm">Chaleureux</span>
+  </div>
+
+  <div class="d3-hero">
+    <div class="d3-hero-left">
+      <div class="d3-badge">
+        <span style="color: var(--accent);">✦</span>
+        Accordeurs certifiés dans toute la France
+      </div>
+      <h1 class="d3-hero-title">On accorde<br>votre <em>piano</em></h1>
+      <p class="d3-hero-desc">Trouvez un professionnel de confiance près de chez vous. Réservation simple, prix transparent, résultat garanti.</p>
+      <div class="d3-search">
+        <input class="d3-search-input" type="text" placeholder="Votre ville ou code postal">
+        <button class="d3-search-btn">Rechercher</button>
+      </div>
+      <div class="d3-trust-row">
+        <div class="d3-trust-item">
+          <span class="d3-trust-dot"></span>
+          +200 accordeurs
+        </div>
+        <div class="d3-trust-item">
+          <span class="d3-trust-dot"></span>
+          4.9/5 satisfaction
+        </div>
+        <div class="d3-trust-item">
+          <span class="d3-trust-dot"></span>
+          Paiement sécurisé
+        </div>
+      </div>
+    </div>
+
+    <div class="d3-hero-right">
+      <div class="d3-hero-visual">🎹</div>
+      <div class="d3-hero-card-preview">
+        <div class="d3-preview-avatar">M</div>
+        <div class="d3-preview-name">Marc Dupont</div>
+        <div class="d3-preview-loc">Paris 11e · Disponible cette semaine</div>
+        <div class="d3-preview-stars">
+          ★★★★★ <span>4.9</span> · 127 avis
+        </div>
+        <hr class="d3-preview-divider">
+        <div class="d3-preview-price-row">
+          <div class="d3-preview-price">85€ <small>/ accord</small></div>
+          <button class="d3-preview-book">Réserver</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="d3-features">
+    <div class="d3-features-header">
+      <h2>Pourquoi choisir EasyPiano</h2>
+      <p>Une expérience pensée pour vous simplifier la vie, de A à Z.</p>
+    </div>
+    <div class="d3-feature-grid">
+      <div class="d3-feature">
+        <div class="d3-feature-icon">⚡</div>
+        <div>
+          <h3>Réservation en 3 min</h3>
+          <p>Localisation, choix du pro, créneau, confirmation. Rapide comme un accord parfait.</p>
+        </div>
+      </div>
+      <div class="d3-feature">
+        <div class="d3-feature-icon">🛡️</div>
+        <div>
+          <h3>Pros vérifiés</h3>
+          <p>Certification, avis clients, suivi qualité. Zéro risque, 100% confiance.</p>
+        </div>
+      </div>
+      <div class="d3-feature">
+        <div class="d3-feature-icon">💰</div>
+        <div>
+          <h3>Prix juste & transparent</h3>
+          <p>Pas de frais cachés. Le prix affiché est le prix final. Paiement sécurisé en ligne.</p>
+        </div>
+      </div>
+      <div class="d3-feature">
+        <div class="d3-feature-icon">📅</div>
+        <div>
+          <h3>Rappel automatique</h3>
+          <p>Votre piano a besoin d'un accord tous les 6 mois. On vous le rappelle au bon moment.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function showDirection(num) {
+  document.querySelectorAll('.direction').forEach(d => d.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('direction-' + num).classList.add('active');
+  document.querySelectorAll('.nav-tab')[num - 1].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>

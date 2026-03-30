@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EasyPiano — Direction Finale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --background: #0a0a0a;
+    --background-alt: #0f0f0f;
+    --card: #111111;
+    --card-hover: #1a1a1a;
+    --foreground: #ffffff;
+    --foreground-alt: #fafafa;
+    --muted: #999999;
+    --muted-light: #666666;
+    --accent: #d4c5a0;
+    --accent-hover: #e0d4b4;
+    --accent-muted: #b8a882;
+    --border: #1e1e1e;
+    --border-hover: #333333;
+    --success: #22c55e;
+    --destructive: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--background);
+    color: var(--foreground);
+    overflow-x: hidden;
+  }
+
+  /* ═══════════════════════════════════════
+     DIRECTION LABEL
+  ═══════════════════════════════════════ */
+  .direction-label {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(10, 10, 10, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .direction-label h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .direction-label span {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .direction-label .tag {
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 100px;
+    background: rgba(212,197,160,0.1);
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* ═══════════════════════════════════════
+     HERO — DEPTH STAGE + PIANO NOIR
+     Title behind piano, minimal aesthetic
+  ═══════════════════════════════════════ */
+  .hero {
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 56px;
+  }
+
+  /* Subtle radial glow behind title */
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 700px;
+    height: 500px;
+    background: radial-gradient(ellipse, rgba(212, 197, 160, 0.03) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Layer 1 — Title (BEHIND piano) */
+  .hero-title-layer {
+    position: absolute;
+    z-index: 1;
+    text-align: center;
+    top: 50%;
+    transform: translateY(-65%);
+  }
+
+  .hero-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    opacity: 0.7;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(48px, 8vw, 92px);
+    font-weight: 400;
+    line-height: 1.05;
+    color: var(--foreground);
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  /* Layer 2 — Piano visual (IN FRONT, covers bottom of title) */
+  .hero-piano-layer {
+    position: absolute;
+    z-index: 2;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 65%;
+    max-width: 750px;
+    height: 50vh;
+  }
+
+  .hero-piano-visual {
+    width: 100%;
+    height: 100%;
+    /* Gradient simulating a grand piano silhouette emerging from bottom */
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(15, 15, 15, 0.2) 20%,
+      rgba(15, 15, 15, 0.5) 40%,
+      rgba(17, 17, 17, 0.85) 65%,
+      var(--card) 100%
+    );
+    border-radius: 40px 40px 0 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Piano key hints at bottom of the visual */
+  .piano-keys {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 2px;
+    padding: 0 40px 40px;
+  }
+
+  .piano-key {
+    width: 32px;
+    height: 80px;
+    background: linear-gradient(180deg, #1e1e1e 0%, #161616 100%);
+    border-radius: 0 0 4px 4px;
+    border: 1px solid var(--border);
+    border-top: none;
+    position: relative;
+  }
+
+  .piano-key.black {
+    width: 20px;
+    height: 52px;
+    background: linear-gradient(180deg, #0a0a0a 0%, #050505 100%);
+    border: 1px solid #0f0f0f;
+    border-radius: 0 0 3px 3px;
+    margin: 0 -10px;
+    z-index: 1;
+  }
+
+  /* Layer 3 — Search (ON TOP of everything) */
+  .hero-search-layer {
+    position: absolute;
+    z-index: 3;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 560px;
+  }
+
+  .hero-search {
+    display: flex;
+    align-items: center;
+    background: rgba(17, 17, 17, 0.85);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(212, 197, 160, 0.12);
+    border-radius: 16px;
+    padding: 6px 6px 6px 24px;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+    transition: border-color 0.3s;
+  }
+
+  .hero-search:hover,
+  .hero-search:focus-within {
+    border-color: rgba(212, 197, 160, 0.25);
+  }
+
+  .hero-search-icon {
+    color: var(--muted-light);
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+
+  .hero-search input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    color: var(--foreground);
+    padding: 14px 0;
+  }
+
+  .hero-search input::placeholder {
+    color: var(--muted-light);
+  }
+
+  .hero-search-btn {
+    padding: 14px 28px;
+    background: var(--accent);
+    color: var(--background);
+    border: none;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+
+  .hero-search-btn:hover {
+    background: var(--accent-hover);
+  }
+
+  /* Scroll hint */
+  .scroll-hint {
+    position: absolute;
+    z-index: 3;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted-light);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    animation: float 2.5s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.5; }
+    50% { transform: translateX(-50%) translateY(-6px); opacity: 1; }
+  }
+
+  /* ═══════════════════════════════════════
+     SECTIONS — PIANO NOIR MINIMAL STYLE
+  ═══════════════════════════════════════ */
+  .section {
+    padding: 120px 32px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-muted);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 400;
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+
+  .section-desc {
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.6;
+    margin-bottom: 64px;
+    font-weight: 300;
+  }
+
+  /* ═══════════════════════════════════════
+     VALUE CARDS
+  ═══════════════════════════════════════ */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px 32px;
+    transition: all 0.3s ease;
+  }
+
+  .card:hover {
+    background: var(--card-hover);
+    border-color: var(--border-hover);
+    transform: translateY(-4px);
+  }
+
+  .card-icon {
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+
+  .card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+
+  .card p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ═══════════════════════════════════════
+     STORYTELLING — HOW IT WORKS
+  ═══════════════════════════════════════ */
+  .steps-section {
+    padding: 0 32px 120px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .step {
+    background: var(--card);
+    padding: 48px 28px;
+    text-align: center;
+    transition: background 0.3s;
+    position: relative;
+  }
+
+  .step:first-child { border-radius: 20px 0 0 20px; }
+  .step:last-child { border-radius: 0 20px 20px 0; }
+
+  .step:hover { background: var(--card-hover); }
+
+  .step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 44px;
+    font-weight: 300;
+    color: var(--accent);
+    opacity: 0.25;
+    margin-bottom: 16px;
+  }
+
+  .step h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  .step p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ═══════════════════════════════════════
+     PRO CARDS
+  ═══════════════════════════════════════ */
+  .pro-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .pro-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .pro-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-4px);
+  }
+
+  .pro-photo {
+    height: 220px;
+    background: linear-gradient(135deg, #141414 0%, #1c1c1c 50%, #141414 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pro-photo-icon {
+    font-size: 48px;
+    opacity: 0.12;
+  }
+
+  .pro-photo-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    background: rgba(34, 197, 94, 0.15);
+    color: var(--success);
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .pro-info {
+    padding: 24px;
+  }
+
+  .pro-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .pro-location {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .pro-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .pro-rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    color: var(--accent);
+  }
+
+  .pro-rating-val {
+    color: var(--foreground);
+    font-weight: 600;
+    margin-left: 4px;
+    font-size: 14px;
+  }
+
+  .pro-price {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--foreground);
+  }
+
+  .pro-price span {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+  }
+
+  /* ═══════════════════════════════════════
+     TRUST BANNER
+  ═══════════════════════════════════════ */
+  .trust-banner {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    padding: 48px 32px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .trust-item {
+    text-align: center;
+  }
+
+  .trust-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--foreground);
+    margin-bottom: 4px;
+  }
+
+  .trust-label {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* ═══════════════════════════════════════
+     CTA FINAL
+  ═══════════════════════════════════════ */
+  .cta-section {
+    padding: 140px 32px;
+    text-align: center;
+  }
+
+  .cta-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 400;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+
+  .cta-desc {
+    font-size: 17px;
+    color: var(--muted);
+    margin-bottom: 40px;
+    font-weight: 300;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    padding: 16px 40px;
+    background: var(--accent);
+    color: var(--background);
+    border: none;
+    border-radius: 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+
+  .cta-btn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(212, 197, 160, 0.15);
+  }
+
+  /* ═══════════════════════════════════════
+     FOOTER
+  ═══════════════════════════════════════ */
+  .footer {
+    padding: 48px 32px;
+    text-align: center;
+    border-top: 1px solid var(--border);
+  }
+
+  .footer-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .footer p {
+    font-size: 13px;
+    color: var(--muted-light);
+  }
+
+  /* ═══════════════════════════════════════
+     RESPONSIVE
+  ═══════════════════════════════════════ */
+  @media (max-width: 768px) {
+    .cards, .pro-grid { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr; gap: 0; }
+    .step { border-radius: 0 !important; }
+    .step:first-child { border-radius: 20px 20px 0 0 !important; }
+    .step:last-child { border-radius: 0 0 20px 20px !important; }
+    .trust-banner { flex-direction: column; gap: 24px; }
+    .hero-piano-layer { width: 90%; }
+    .piano-keys { display: none; }
+    .section { padding: 80px 20px; }
+    .direction-label { padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Direction Label -->
+<div class="direction-label">
+  <h1>EasyPiano</h1>
+  <span>—</span>
+  <span>Piano Noir + Depth Stage</span>
+  <span class="tag">Direction Finale</span>
+</div>
+
+<!-- ═══════════════════════════════════════
+     HERO — DEPTH LAYERING
+     Title "On accorde votre piano" disappears
+     behind the piano visual (iOS clock effect)
+═══════════════════════════════════════ -->
+<section class="hero">
+
+  <!-- Layer 1: Title (BEHIND) -->
+  <div class="hero-title-layer">
+    <div class="hero-subtitle">Accordage professionnel</div>
+    <h1 class="hero-title">On accorde<br>votre <em>piano</em></h1>
+  </div>
+
+  <!-- Layer 2: Piano visual (IN FRONT — covers bottom of title) -->
+  <div class="hero-piano-layer">
+    <div class="hero-piano-visual">
+      <div class="piano-keys">
+        <div class="piano-key"></div>
+        <div class="piano-key black"></div>
+        <div class="piano-key"></div>
+        <div class="piano-key black"></div>
+        <div class="piano-key"></div>
+        <div class="piano-key"></div>
+        <div class="piano-key black"></div>
+        <div class="piano-key"></div>
+        <div class="piano-key black"></div>
+        <div class="piano-key"></div>
+        <div class="piano-key black"></div>
+        <div class="piano-key"></div>
+        <div class="piano-key"></div>
+        <div class="piano-key black"></div>
+        <div class="piano-key"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layer 3: Search (ON TOP of everything) -->
+  <div class="hero-search-layer">
+    <div class="hero-search">
+      <svg class="hero-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" placeholder="Votre ville ou code postal">
+      <button class="hero-search-btn">Rechercher</button>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Découvrir</span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     VALUE PROPOSITION
+═══════════════════════════════════════ -->
+<section class="section">
+  <div class="section-label">Pourquoi EasyPiano</div>
+  <h2 class="section-title">Votre piano mérite le meilleur</h2>
+  <p class="section-desc">Un service pensé pour vous simplifier la vie. De la recherche à la confirmation, tout est fluide.</p>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">⚡</div>
+      <h3>Simple & Rapide</h3>
+      <p>Réservez en 3 minutes. Choisissez votre créneau, confirmez, c'est fait. Pas de va-et-vient.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">✦</div>
+      <h3>Pros Certifiés</h3>
+      <p>Chaque accordeur est vérifié, noté et suivi. Des profils tirés à quatre épingles.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">◆</div>
+      <h3>Prix Transparent</h3>
+      <p>Pas de surprise. Le prix affiché est le prix payé. Paiement sécurisé en ligne.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     HOW IT WORKS — 3 STEPS
+═══════════════════════════════════════ -->
+<section class="section" style="padding-bottom: 0;">
+  <div class="section-label">Comment ça marche</div>
+  <h2 class="section-title">Trois étapes, c'est tout</h2>
+</section>
+
+<div class="steps-section">
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Localisez</h3>
+      <p>Entrez votre adresse et trouvez les accordeurs disponibles près de chez vous.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Choisissez</h3>
+      <p>Comparez les profils, les avis et les tarifs. Sélectionnez votre créneau idéal.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Confirmez</h3>
+      <p>Paiement sécurisé, confirmation instantanée. Votre piano va chanter.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     TRUST METRICS
+═══════════════════════════════════════ -->
+<div class="trust-banner">
+  <div class="trust-item">
+    <div class="trust-value">200+</div>
+    <div class="trust-label">Accordeurs certifiés</div>
+  </div>
+  <div class="trust-item">
+    <div class="trust-value">4.9<span style="font-size: 18px; color: var(--accent);">/5</span></div>
+    <div class="trust-label">Satisfaction client</div>
+  </div>
+  <div class="trust-item">
+    <div class="trust-value">&lt;3 min</div>
+    <div class="trust-label">Pour réserver</div>
+  </div>
+  <div class="trust-item">
+    <div class="trust-value">100%</div>
+    <div class="trust-label">Paiement sécurisé</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PRO CARDS PREVIEW
+═══════════════════════════════════════ -->
+<section class="section">
+  <div class="section-label">Nos accordeurs</div>
+  <h2 class="section-title">Des professionnels triés sur le volet</h2>
+  <p class="section-desc">Certifiés, évalués par la communauté, engagés dans une démarche qualité.</p>
+
+  <div class="pro-grid">
+    <div class="pro-card">
+      <div class="pro-photo">
+        <span class="pro-photo-icon">🎹</span>
+        <div class="pro-photo-badge">● Disponible</div>
+      </div>
+      <div class="pro-info">
+        <div class="pro-name">Marc Dupont</div>
+        <div class="pro-location">Paris 11e · 15 ans d'expérience</div>
+        <div class="pro-meta">
+          <div class="pro-rating">★★★★★ <span class="pro-rating-val">4.9</span></div>
+          <div class="pro-price">85€ <span>/ accord</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="pro-card">
+      <div class="pro-photo">
+        <span class="pro-photo-icon">🎹</span>
+        <div class="pro-photo-badge">● Disponible</div>
+      </div>
+      <div class="pro-info">
+        <div class="pro-name">Sophie Martin</div>
+        <div class="pro-location">Lyon 3e · 8 ans d'expérience</div>
+        <div class="pro-meta">
+          <div class="pro-rating">★★★★★ <span class="pro-rating-val">4.8</span></div>
+          <div class="pro-price">75€ <span>/ accord</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="pro-card">
+      <div class="pro-photo">
+        <span class="pro-photo-icon">🎹</span>
+        <div class="pro-photo-badge">● Disponible</div>
+      </div>
+      <div class="pro-info">
+        <div class="pro-name">Jean-Pierre Leblanc</div>
+        <div class="pro-location">Marseille · 22 ans d'expérience</div>
+        <div class="pro-meta">
+          <div class="pro-rating">★★★★★ <span class="pro-rating-val">5.0</span></div>
+          <div class="pro-price">90€ <span>/ accord</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     CTA FINAL
+═══════════════════════════════════════ -->
+<section class="cta-section">
+  <h2 class="cta-title">Votre piano va enfin chanter<br>comme à ses premiers jours</h2>
+  <p class="cta-desc">Trouvez un accordeur près de chez vous en moins de 3 minutes.</p>
+  <button class="cta-btn">Trouver un accordeur</button>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-brand">EasyPiano</div>
+  <p>Accordage professionnel, simplifié.</p>
+</footer>
+
+</body>
+</html>

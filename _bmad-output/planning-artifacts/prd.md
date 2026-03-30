@@ -1,5 +1,5 @@
 ---
-stepsCompleted: ['step-01-init', 'step-02-discovery', 'step-02b-vision', 'step-02c-executive-summary', 'step-03-success', 'step-04-journeys', 'step-05-domain', 'step-06-innovation', 'step-07-project-type', 'step-08-scoping', 'step-09-functional']
+stepsCompleted: ['step-01-init', 'step-02-discovery', 'step-02b-vision', 'step-02c-executive-summary', 'step-03-success', 'step-04-journeys', 'step-05-domain', 'step-06-innovation', 'step-07-project-type', 'step-08-scoping', 'step-09-functional', 'step-10-nonfunctional', 'step-11-polish', 'step-12-complete']
 inputDocuments: ['product-brief-EasyPiano-2026-03-03.md', 'market-piano-tuning-marketplace-research-2026-03-04.md', 'brainstorming-session-2026-03-03-1300.md', 'architecture-web-app.md']
 workflowType: 'prd'
 documentCounts:
@@ -13,13 +13,24 @@ classification:
   complexity: 'medium'
   projectContext: 'brownfield'
 techStack:
-  frontend: 'Next.js 15 + App Router (React 19)'
-  backend: 'Node.js (Next.js API Routes + Firebase Functions)'
-  database: 'Firebase Realtime Database'
-  auth: 'Firebase Auth (Google, Email, SMS)'
-  storage: 'Firebase Storage'
-  payment: 'Stripe Connect + Stripe Checkout'
-  hosting: 'Firebase Hosting (ou Vercel)'
+  mvp_v01:
+    frontend: 'Next.js 15 + App Router (React 19)'
+    backend: 'Node.js (Next.js API Routes + Firebase Functions)'
+    database: 'Firebase Realtime Database'
+    auth: 'Firebase Auth (Google, Email, SMS)'
+    storage: 'Firebase Storage'
+    payment: 'Stripe Connect + Stripe Checkout'
+    hosting: 'Firebase Hosting (ou Vercel)'
+    monitoring: 'Sentry (error tracking)'
+  v1_plus_migration:
+    frontend: 'Next.js 15 (inchangé)'
+    backend: 'Python (FastAPI/Django) + Docker'
+    database: 'PostgreSQL (Render 7€/mois)'
+    auth: 'JWT + Custom auth service'
+    storage: 'S3-compatible (Render/Cloudflare R2)'
+    payment: 'Stripe Connect (inchangé)'
+    hosting: 'Render VPS + Docker'
+    monitoring: 'Sentry + Render Metrics'
 ---
 
 # Product Requirements Document - EasyPiano
@@ -29,11 +40,11 @@ techStack:
 
 ## Executive Summary
 
-EasyPiano est une plateforme de réservation en ligne qui connecte les propriétaires de piano en Europe occidentale (Suisse, France, Allemagne) avec des accordeurs qualifiés d'Europe de l'Est. Face à une pénurie critique d'accordeurs — le nombre de techniciens certifiés a baissé de 15% entre 2021 et 2024 et le métier est en voie de disparition faute de renouvellement — EasyPiano exploite le libre-échange européen pour organiser une main-d'œuvre qualifiée mais sous-exploitée. La plateforme propose un prix disruptif de 125 CHF (contre 180-230 CHF sur le marché traditionnel), un système de réservation instantanée par demi-journée avec paiement en ligne via Stripe Connect (commission 10%), et une curation physique de chaque professionnel (rencontré personnellement par l'équipe avant validation). EasyPiano opère sur un marché 100% vierge en digital — aucune plateforme de booking spécialisée n'existe en Europe continentale.
+EasyPiano connecte les propriétaires de piano (particuliers et B2B) en Europe occidentale (Suisse, France, Allemagne) avec des accordeurs qualifiés d'Europe de l'Est. Face à une pénurie critique (-15% de techniciens certifiés entre 2021-2024), EasyPiano exploite le libre-échange européen pour organiser une main-d'œuvre qualifiée mais sous-exploitée. Prix disruptif : 150 CHF vs 180-230 CHF (réduction 35%), réservation instantanée par demi-journée, paiement en ligne via Stripe Connect (commission 17%), curation physique de chaque professionnel. Marché 100% vierge : aucune plateforme de booking spécialisée en Europe continentale. Clients B2B (écoles de musique, conservatoires, hôtels, restaurants, églises, salles de concert) inclus dès la V1 avec un workflow d'inscription dédié.
 
 **Fondateurs :** Jérôme (musicien 30 ans, expertise métier, réseau établi, étude de marché préalable) + Malik (exécution produit/tech). Lancement prévu : bassin lémanique (Genève-Lausanne), expansion progressive Suisse romande/alémanique puis France et Allemagne.
 
-**Marché :** ~540M USD en Europe (30% du marché global de 1.8 milliards USD), croissance projetée 4.2% CAGR. Estimation 200 000-400 000 pianos en Suisse, 800 000+ en France, 800 000 en Allemagne. Besoin récurrent 1-2 accordages/an. Recherche actuelle 100% analogique (bouche-à-oreille, annuaires obsolètes, appels téléphoniques).
+**Marché :** ~540M USD Europe (30% du marché global 1.8B USD), croissance 4.2% CAGR. 200K-400K pianos Suisse, 800K+ France, 800K Allemagne. Besoin récurrent 1-2x/an. Recherche actuelle 100% analogique.
 
 ### Ce qui rend EasyPiano spécial
 
@@ -51,23 +62,12 @@ Dans un secteur où le client laisse un inconnu seul chez lui avec un instrument
 La promesse : "Tu as choisi EasyPiano = tu as fait ton choix de confiance."
 
 **3. Disruption de prix structurelle**
-125 CHF vs 180-230 CHF (réduction de 30-45%) grâce au sourcing transfrontalier. Le pro gagne ~112.50 CHF net par accordage (~1 700-2 000 CHF net/semaine de tournée), très attractif comparé au coût de vie en Europe de l'Est. Win-win structurel : client paie moins, pro gagne bien, plateforme prend 10%.
+150 CHF vs 180-230 CHF (réduction 35%) grâce au sourcing transfrontalier. Le pro gagne ~125 CHF net par accordage (~1 875-2 500 CHF net/semaine de tournée), très attractif comparé au coût de vie en Europe de l'Est. Win-win structurel : client paie moins, pro gagne bien, plateforme prend 17%.
 
 **4. Modèle de tournées — solution à la pénurie**
 Les pros publient leurs disponibilités 6 mois à l'avance, organisent des tournées d'une semaine, les créneaux se remplissent instantanément. Ce modèle résout la saisonnalité (novembre-juin = haute demande, délais 3-6 semaines actuellement) et couvre les zones rurales/périurbaines délaissées par les accordeurs locaux.
 
-**Core insight :** Le problème s'aggrave structurellement (-15% d'accordeurs en 3 ans, pas de renouvellement), aucune infrastructure digitale n'existe, et la fenêtre européenne (libre circulation) permet une solution unique. C'est un secteur qui n'a jamais connu sa transformation numérique.
-
-## Classification du Projet
-
-**Type de projet :** Web App (SPA React 19 + Vite)
-**Domaine :** Marketplace de services
-**Complexité :** Moyenne
-**Contexte projet :** Brownfield (architecture Firebase + Stripe Connect déjà initiée avec Copilot)
-
-**Stack technique :** React 19 + Vite, Firebase (Auth/Realtime Database/Storage/Hosting), Stripe Connect, Vitest + React Testing Library.
-
-**Décisions produit MVP :** Lancement FR uniquement, Google Auth uniquement, annulation sans frais jusqu'à 10 jours avant, supplément "piano en mauvais état" hors MVP, référencement pro avec validation interne complète (pièces + rencontre physique).
+**Core insight :** Le problème s'aggrave structurellement (-15% d'accordeurs en 3 ans), aucune infrastructure digitale n'existe, et la fenêtre européenne (libre circulation) permet une solution unique.
 
 ## Critères de Succès
 
@@ -84,13 +84,13 @@ Le client tape son lieu + date, voit des pros disponibles dans les 2 semaines, r
 | Temps recherche → confirmation | < 3 minutes | Timestamp parcours |
 
 **Pro (Tomasz) — Moment de succès :**
-Le pro publie une tournée d'une semaine, ses créneaux se remplissent en quelques jours, il gagne ~1 700-2 000 CHF net sur la semaine.
+Le pro publie une tournée d'une semaine, ses créneaux se remplissent en quelques jours, il gagne ~1 875-2 500 CHF net sur la semaine.
 
 | Métrique | Cible MVP | Mesure |
 | --- | --- | --- |
 | Taux de remplissage des créneaux | Signal positif = créneaux qui se remplissent | Ratio réservés/disponibles |
 | Satisfaction pro | Feedback direct (contact Jérôme) | Qualitatif — relation directe |
-| Revenu net par semaine de tournée | ~1 700-2 000 CHF | Données Stripe Connect |
+| Revenu net par semaine de tournée | ~1 875-2 500 CHF | Données Stripe Connect |
 
 ### Succès Business
 
@@ -119,7 +119,7 @@ Le pro publie une tournée d'une semaine, ses créneaux se remplissent en quelqu
 | Note moyenne client | Confiance et satisfaction | Pilier central du projet |
 | Taux de re-réservation | Rétention client | Valide la valeur perçue |
 | Nombre de pros actifs | Capacité de l'offre | Assez de pros pour couvrir la demande |
-| Revenu commission/mois | Viabilité économique | 12.50 CHF/réservation (10% de 125 CHF) |
+| Revenu commission/mois | Viabilité économique | 25 CHF/réservation (17% de 150 CHF) |
 
 ### Succès Technique
 
@@ -133,47 +133,14 @@ Le pro publie une tournée d'une semaine, ses créneaux se remplissent en quelqu
 
 ### Résultats Mesurables
 
-**Le signal de succès ultime (en 1 phrase) :** Les gens réservent, sont satisfaits, et reviennent.
+**Signal de succès ultime :** Les gens réservent, sont satisfaits, et reviennent.
 
-**Validation du product-market fit :**
-
-- Les réservations arrivent sans forcer
-- Les avis sont positifs (> 4.5/5)
-- Les pros redemandent des tournées
-- Le parcours recherche → réservation → paiement fonctionne sans friction
-- Zéro problème de paiement Stripe
-
-## Périmètre Produit
-
-### MVP — Produit Minimum Viable
-
-1. **Site vitrine** — Héro piano, thème sombre, animations scroll, barre de recherche lieu + date, contenu confiance/équipe/métier, footer "Devenez accordeur"
-2. **Recherche & Résultats** — Recherche lieu + date, affichage pros disponibles, profil pro complet (photo, bio, pays, langues, note, avis, certificats, interventions)
-3. **Réservation & Paiement** — Créneaux demi-journée, réservation instantanée, récapitulatif, Stripe Checkout 125 CHF, commission 10% Stripe Connect
-4. **Authentification Client** — Google Auth via Firebase SDK, création profil (nom, prénom, photo)
-5. **Dashboard Client** — Prochains RDV, historique, annulation sans frais (10 jours avant), messagerie pro + plateforme, notifications email, gestion profil
-6. **Inscription & Dashboard Pro** — Page "Devenez accordeur", validation admin, publication dispos (dates + rayon géo, 6 mois), capacité configurable, emploi du temps, répondre aux avis/messages, Stripe Connect onboarding
-7. **Système d'avis** — Note 1-5 + commentaire, réponse pro, note moyenne sur profil
-8. **Admin** — Validation profils pro, vérification juridique/opérationnelle, accès Stripe dashboard
-
-### Growth Features (Post-MVP)
-
-- Auth par SMS (code)
-- Notifications SMS
-- Langues EN et DE
-- Supplément piano mauvais état (lien Stripe à la demande)
-- Recherche par nom d'accordeur
-- Rappel annuel automatisé ("Votre piano a été accordé il y a 11 mois")
-- Re-booking du même pro en 1 clic
-
-### Vision (Future)
-
-- App mobile (PWA ou native)
-- Expansion géographique : toute la Suisse → France nationale → Allemagne → monde
-- Mécanisme de remplacement automatisé si pro indisponible
-- Analytics et reporting avancés
-- Pricing dynamique par zone (v2+)
-- Programme de fidélité
+**Validation product-market fit :**
+- Réservations arrivent sans forcer
+- Avis positifs (> 4.5/5)
+- Pros redemandent des tournées
+- Parcours recherche → paiement sans friction
+- Zéro échec paiement Stripe
 
 ## Parcours Utilisateurs
 
@@ -185,9 +152,9 @@ Sophie, 42 ans, Lausanne. Piano droit Yamaha dans le salon, deux enfants en cour
 
 **Action montante :** Elle tape "Lausanne" + "15 mars" dans la barre de recherche. 3 profils de pros apparaissent, disponibles en demi-journée. Elle clique sur Tomasz — photo, bio, 12 ans d'expérience, conservatoire de Cracovie, parle français, 4.8/5 sur 47 avis, certificats visibles, badge "Validé par EasyPiano". Elle lit 2-3 commentaires. Elle se sent rassurée.
 
-**Climax :** Elle clique "Réserver", voit le récapitulatif — Tomasz, mardi 15 mars matin, 125 CHF. Elle se connecte avec Google Auth en 1 clic. Stripe Checkout. Paiement. Confirmation par email immédiate. Total : 2 minutes 30.
+**Climax :** Elle clique "Réserver", voit le récapitulatif — Tomasz, mardi 15 mars matin, 150 CHF. Elle se connecte avec Google Auth en 1 clic. Stripe Checkout. Paiement. Confirmation par email immédiate. Total : 2 minutes 30.
 
-**Résolution :** Le lundi soir elle reçoit un email de rappel. Mardi matin, Tomasz arrive, accorde le piano en 1h15. Les enfants jouent le soir — "ça sonne tellement mieux !". Deux jours plus tard, Sophie reçoit un email l'invitant à laisser un avis. Elle met 5 étoiles : "Ponctuel, professionnel, piano parfaitement accordé. Et moitié moins cher que ce que je payais avant. Je re-réserve l'année prochaine !" 11 mois plus tard, elle reçoit un rappel : "Votre piano a été accordé il y a 11 mois". Elle re-réserve en 1 clic.
+**Résolution :** Deux jours avant (J-2) puis 2 heures avant (H-2), elle reçoit un email de rappel. Mardi matin, Tomasz arrive, accorde le piano en 1h15. Les enfants jouent le soir — "ça sonne tellement mieux !". Deux jours plus tard, Sophie reçoit un email l'invitant à laisser un avis. Elle met 5 étoiles : "Ponctuel, professionnel, piano parfaitement accordé. Et moitié moins cher que ce que je payais avant. Je re-réserve l'année prochaine !" 11 mois plus tard, elle reçoit un rappel : "Votre piano a été accordé il y a 11 mois". Elle re-réserve en 1 clic.
 
 **Capabilities révélées :** SEO/landing page, recherche lieu + date, affichage profils comparables, Google Auth, Stripe Checkout, email confirmation + rappel, système d'avis, re-booking.
 
@@ -205,13 +172,13 @@ Options :
 4. J'ai trouvé un autre accordeur
 5. Autre (champ texte libre)
 
-Elle sélectionne "Imprévu personnel / familial". Le système vérifie : 12 jours avant > 10 jours → annulation sans frais. Confirmation : "Votre réservation est annulée. Vous serez remboursé sous 5-10 jours ouvrés." Email de confirmation envoyé. Le motif est enregistré dans Firebase RTDB pour analytics (dashboard admin peut voir les motifs d'annulation agrégés).
+Elle sélectionne "Imprévu personnel / familial". Le système vérifie : 12 jours avant > 48h → remboursement 100%. Confirmation : "Votre réservation est annulée. Vous serez remboursé sous 5-10 jours ouvrés." Email de confirmation envoyé. Le motif est enregistré dans Firebase RTDB pour analytics (dashboard admin peut voir les motifs d'annulation agrégés).
 
-**Variante — Annulation tardive :** Sophie veut annuler le 8 mars (7 jours avant). Après avoir sélectionné le motif, le système affiche : "L'annulation sans frais est possible jusqu'à 10 jours avant l'intervention. Contactez-nous via la messagerie pour discuter de votre situation." Elle envoie un message à la plateforme. L'admin gère au cas par cas.
+**Variante — Annulation tardive :** Sophie veut annuler le 13 mars (2 jours avant, dans la fenêtre 24-48h). Après avoir sélectionné le motif, le système affiche : "Annulation entre 24h et 48h avant l'intervention : remboursement de 50%." Sophie confirme. Si elle annule à moins de 24h, le système propose un crédit plateforme (pas de remboursement).
 
 **Variante — Problème de qualité :** Après l'intervention, Sophie n'est pas satisfaite — le piano se désaccorde en 3 jours. Elle laisse un avis 2/5 avec commentaire explicatif. Tomasz peut répondre publiquement. L'admin EasyPiano est alerté et contacte Sophie pour trouver une solution (re-intervention ou remboursement partiel).
 
-**Capabilities révélées :** Dashboard client avec gestion RDV, annulation avec motif obligatoire (menu déroulant 5 options), logique d'annulation automatisée (10 jours), enregistrement motifs pour analytics, remboursement Stripe, messagerie client → plateforme, alertes admin sur avis négatifs, réponse pro aux avis.
+**Capabilities révélées :** Dashboard client avec gestion RDV, annulation avec motif obligatoire (menu déroulant 5 options), logique d'annulation automatisée par paliers (48h/24h), enregistrement motifs pour analytics, remboursement Stripe, messagerie client → plateforme, alertes admin sur avis négatifs, réponse pro aux avis.
 
 ### Parcours 3 : Tomasz — L'accordeur en tournée (Happy Path)
 
@@ -223,7 +190,7 @@ Tomasz, 35 ans, Cracovie. Accordeur depuis 12 ans, formé au conservatoire. En P
 
 **Climax :** Tomasz déclare une tournée : "Disponible du 10 au 17 mars, zone Genève-Lausanne, rayon 50 km". Il configure sa capacité : 1 piano le matin, 2 l'après-midi. Ses créneaux apparaissent sur la plateforme. En 5 jours, 12 créneaux sur 15 sont réservés. Il organise son transport (avion low-cost Cracovie → Genève) et réserve un Airbnb.
 
-**Résolution :** Semaine de tournée. Chaque matin il consulte son emploi du temps sur son dashboard pro — adresses, contacts, détails. Il enchaîne 3 pianos/jour. Fin de semaine : ~1 875 CHF net (15 × 112.50 CHF après commission). De retour à Cracovie, il consulte ses avis — 4.9/5 en moyenne. Il planifie sa prochaine tournée pour mai. En 3 mois, il a fait 4 tournées et gagné ~7 500 CHF net — soit 10 mois de salaire polonais.
+**Résolution :** Semaine de tournée. Chaque matin il consulte son emploi du temps sur son dashboard pro — adresses, contacts, détails. Il enchaîne 3 pianos/jour. Fin de semaine : ~1 875 CHF net (15 × 125 CHF après commission). De retour à Cracovie, il consulte ses avis — 4.9/5 en moyenne. Il planifie sa prochaine tournée pour mai. En 3 mois, il a fait 4 tournées et gagné ~7 500 CHF net — soit 10 mois de salaire polonais.
 
 **Capabilities révélées :** Page "Devenez accordeur", formulaire inscription pro, workflow validation admin, Stripe Connect onboarding, publication disponibilités (dates + zone + capacité), dashboard pro (emploi du temps, avis, messages), paiements automatiques via Stripe Connect.
 
@@ -233,7 +200,7 @@ Tomasz a une tournée prévue du 10 au 17 mars avec 12 réservations. Le 5 mars,
 
 **Scène :** Tomasz contacte EasyPiano via la messagerie pro. L'admin est alerté immédiatement. Jérôme cherche un remplaçant dans le réseau de pros validés — un autre accordeur couvrant la zone Genève-Lausanne cette période. Si un remplaçant est trouvé : les 12 clients sont notifiés par email ("Votre accordeur a changé, voici le nouveau profil"). Si aucun remplaçant : les clients sont contactés pour proposer un report ou un remboursement complet.
 
-**Note MVP :** Le mécanisme de remplacement est manuel (admin gère au cas par cas). L'automatisation est post-MVP.
+**Note MVP :** Le mécanisme de remplacement est manuel (admin gère au cas par cas). V1 : remboursement total + crédit 20 CHF pour le client (honnêteté, pas de fausse promesse). À terme : réseau de secours (pros remplaçants dans la zone). L'automatisation est post-MVP.
 
 **Capabilities révélées :** Messagerie pro → plateforme, alertes admin urgentes, notification clients en masse, mécanisme de remplacement manuel, remboursement Stripe.
 
@@ -243,7 +210,7 @@ Malik et Jérôme, fondateurs. Jérôme gère la relation pros et la validation.
 
 **Scène d'ouverture :** Lundi matin. Jérôme ouvre le dashboard admin. 2 nouvelles inscriptions pro en attente de validation. Il consulte les profils — photos, bios, certificats uploadés. Il planifie une visio avec chacun cette semaine.
 
-**Action — Validation pro :** Après la visio et la vérification des documents (diplôme, RC pro, pièce d'identité), Jérôme valide le profil dans le dashboard admin. Le pro reçoit un email : "Votre profil est validé ! Vous pouvez maintenant publier vos disponibilités." Si refus : email explicatif avec motif.
+**Action — Validation pro :** Après la visio et la vérification des documents (diplôme, assurance RC (modèle hybride : pro avec RC propre = ok, sans RC = couverture collective EasyPiano avec surcoût aligné sur coût réel), pièce d'identité), Jérôme valide le profil dans le dashboard admin. Le pro reçoit un email : "Votre profil est validé ! Vous pouvez maintenant publier vos disponibilités." Si refus : email explicatif avec motif.
 
 **Action — Suivi opérationnel :** Malik consulte le dashboard Stripe Connect — transactions de la semaine, commissions perçues, virements aux pros. Il vérifie qu'aucun paiement n'est bloqué. Il consulte les avis récents — aucun en dessous de 3/5, tout va bien. Il consulte aussi les analytics des motifs d'annulation — 60% "Imprévu personnel/familial", 20% "Problème de santé", 15% "Changement de planning", 5% "Autre". Signal sain.
 
@@ -259,7 +226,7 @@ Malik et Jérôme, fondateurs. Jérôme gère la relation pros et la validation.
 | Recherche lieu + date | Core | — | — |
 | Profils pro comparables | Évaluation | Création profil | Validation |
 | Google Auth | Connexion | — | — |
-| Stripe Checkout | Paiement 125 CHF | — | Suivi |
+| Stripe Checkout | Paiement 150 CHF | — | Suivi |
 | Stripe Connect | — | Onboarding + réception paiements | Dashboard |
 | Dashboard client | Gestion RDV, annulation, messagerie | — | — |
 | Annulation avec motif (5 options) | Sélection motif obligatoire | — | Analytics motifs agrégés |
@@ -285,9 +252,9 @@ EasyPiano ne disrupts pas un concurrent existant — il *crée* le marché digit
 
 Le problème s'aggrave structurellement : -15% d'accordeurs certifiés en Europe 2021-2024, métier en voie de disparition, délais 3-6 semaines en haute saison. Les accordeurs locaux survivants priorisent les zones urbaines denses et facturent 180-230 CHF.
 
-**Innovation structurelle :** Organiser une main-d'œuvre qualifiée d'Europe de l'Est (Pologne, Croatie, Ukraine) en tournées planifiées 6 mois à l'avance pour servir un marché en pénurie en Europe de l'Ouest. Le libre-échange européen + le différentiel de coût de vie permettent une solution unique : les pros gagnent ~1 700-2 000 CHF net/semaine (10 mois de salaire polonais en 1 semaine), les clients paient 125 CHF au lieu de 230 CHF.
+**Innovation structurelle :** Organiser une main-d'œuvre qualifiée d'Europe de l'Est (Pologne, Croatie, Ukraine) en tournées planifiées 6 mois à l'avance pour servir un marché en pénurie en Europe de l'Ouest. Le libre-échange européen + le différentiel de coût de vie permettent une solution unique : les pros gagnent ~1 875-2 500 CHF net/semaine (10 mois de salaire polonais en 1 semaine), les clients paient 150 CHF au lieu de 230 CHF.
 
-**Validation du modèle :** Les pros publient leurs disponibilités 6 mois à l'avance → les créneaux se remplissent en quelques jours → tournée rentable pour le pro + disruption de prix pour le client + commission 10% pour la plateforme. Win-win-win structurel.
+**Validation du modèle :** Les pros publient leurs disponibilités 6 mois à l'avance → les créneaux se remplissent en quelques jours → tournée rentable pour le pro + disruption de prix pour le client + commission 17% pour la plateforme. Win-win-win structurel.
 
 **3. Curation physique intensive comme moat dans un monde de marketplaces ouvertes**
 
@@ -299,9 +266,9 @@ Airbnb, Uber, TaskRabbit = marketplaces ouvertes avec validation algorithmique o
 
 **4. Arbitrage géographique comme disruption de prix structurelle**
 
-125 CHF vs 180-230 CHF = réduction de 30-45%. Ce n'est pas une promo ou une optimisation opérationnelle temporaire — c'est une asymétrie structurelle basée sur le différentiel de coût de vie EU.
+150 CHF vs 180-230 CHF = réduction 35%. Ce n'est pas une promo ou une optimisation opérationnelle temporaire — c'est une asymétrie structurelle basée sur le différentiel de coût de vie EU.
 
-**Innovation business model :** Le pro d'Europe de l'Est gagne ~112.50 CHF net par accordage (après commission 10%). En une semaine de tournée (15 accordages), il gagne ~1 875 CHF net. Le coût de vie en Pologne/Croatie permet de rendre ce revenu extrêmement attractif (~10 mois de salaire local en 1 semaine), tout en proposant un prix disruptif au client suisse.
+**Innovation business model :** Le pro d'Europe de l'Est gagne ~125 CHF net par accordage (après commission 17%). En une semaine de tournée (15 accordages), il gagne ~1 875 CHF net. Le coût de vie en Pologne/Croatie permet de rendre ce revenu extrêmement attractif (~10 mois de salaire local en 1 semaine), tout en proposant un prix disruptif au client suisse.
 
 **Pérennité :** Tant que le différentiel de coût de vie EU existe ET que la pénurie d'accordeurs en Europe de l'Ouest persiste, le modèle tient. Les deux facteurs sont structurels (pas de renouvellement du métier, convergence économique EU lente).
 
@@ -310,7 +277,7 @@ Airbnb, Uber, TaskRabbit = marketplaces ouvertes avec validation algorithmique o
 Un seul produit digital résout 5 problèmes en parallèle :
 
 1. **Client** : Impossible de trouver un accordeur disponible → Recherche lieu + date, booking instantané
-2. **Client** : Prix opaque et élevé (230 CHF) → Prix fixe transparent 125 CHF
+2. **Client** : Prix opaque et élevé (230 CHF) → Prix fixe transparent 150 CHF
 3. **Client** : Aucune garantie de qualité → Profils vérifiés + avis + badge "Validé par EasyPiano"
 4. **Pro** : Aucun canal pour accéder au marché suisse → Plateforme dédiée avec curation humaine
 5. **Secteur** : Métier en voie de disparition → Nouvelle génération de revenus pour les pros EU, revitalisation du métier
@@ -333,6 +300,7 @@ Un seul produit digital résout 5 problèmes en parallèle :
 - Suisse : ~200 000-400 000 pianos, besoin récurrent 1-2x/an
 - France : ~800 000+ pianos
 - Allemagne : ~800 000 pianos
+- Clients B2B : écoles de musique, conservatoires, hôtels, restaurants, églises, salles de concert
 
 **Pénurie confirmée :**
 
@@ -349,7 +317,7 @@ Valider 3 hypothèses critiques :
 
 1. **Les clients réservent-ils via la plateforme ?** (vs continuer à chercher en analogique)
 2. **Les pros d'Europe de l'Est viennent-ils en tournée ?** (vs garder leur activité locale)
-3. **Le prix 125 CHF est-il perçu comme "bon deal" ET "crédible" ?** (vs "trop cheap = suspect")
+3. **Le prix 150 CHF est-il perçu comme "bon deal" ET "crédible" ?** (vs "trop cheap = suspect")
 
 **Métriques de validation MVP :**
 
@@ -362,7 +330,7 @@ Valider 3 hypothèses critiques :
 
 - Expansion géographique : bassin lémanique → Suisse romande/alémanique → France → Allemagne
 - Scaling du réseau pros : 5-10 pros au lancement → 50-100 pros en 12 mois
-- Automatisation progressive : rappel annuel, re-booking 1 clic, mécanisme remplacement
+- Automatisation progressive : re-booking 1 clic, mécanisme remplacement (rappel annuel 11 mois déjà en V1)
 
 ### Gestion des Risques
 
@@ -371,8 +339,8 @@ Valider 3 hypothèses critiques :
 | **Les clients ne font pas confiance à des pros d'Europe de l'Est** | Moyenne | Critique | Curation physique + badge "Validé par EasyPiano" + système d'avis dès J1 + Jérôme (30 ans musicien) comme caution |
 | **Les pros ne viennent pas en tournée** (logistique trop complexe) | Faible | Haute | Jérôme a le réseau + étude marché il y a 2 ans confirme l'intérêt + revenu 1 semaine = 10 mois salaire local |
 | **Un concurrent réplique le modèle** | Haute (si succès) | Moyenne | Network effects + data moat + brand trust = avantages défendables. Premier arrivé capture la demande latente. |
-| **Cadre juridique transfrontalier bloque le modèle** | Faible | Critique | Validation manuelle par Jérôme au MVP (RC pro + pièces justificatives). Cadre juridique détaillé post-MVP avec avocat spécialisé. |
-| **Prix 125 CHF perçu comme "trop cheap"** | Faible | Moyenne | Transparence totale sur le modèle : pros EU qualifiés, curation physique, avis vérifiés. Positionnement "bon rapport qualité-prix" pas "discount". |
+| **Cadre juridique transfrontalier bloque le modèle** | Faible | Critique | Validation manuelle par Jérôme au MVP (assurance RC (modèle hybride) + pièces justificatives). Cadre juridique détaillé post-MVP avec avocat spécialisé. |
+| **Prix 150 CHF perçu comme "trop cheap"** | Faible | Moyenne | Transparence totale sur le modèle : pros EU qualifiés, curation physique, avis vérifiés. Positionnement "bon rapport qualité-prix" pas "discount". |
 
 **Fallback si innovation ne prend pas :**
 
@@ -380,8 +348,8 @@ Si le marché rejette le modèle de tournées transfrontalier :
 
 
 1. Pivot vers marketplace locale (accordeurs suisses/français/allemands)
-2. Commission ajustée (15-20% au lieu de 10%)
-3. Prix client ajusté (150-180 CHF au lieu de 125 CHF)
+2. Commission ajustée (20-25% au lieu de 17%)
+3. Prix client ajusté (180-200 CHF au lieu de 150 CHF)
 4. Garde la curation physique + booking instantané + avis (innovation #1 et #3 restent valables)
 
 ## Scoping Stratégique & Développement Progressif
@@ -395,9 +363,9 @@ Validation des 3 hypothèses critiques avec un produit minimal fonctionnel :
 
 1. Les clients réservent via la plateforme ✓
 2. Les pros viennent en tournée ✓
-3. Le prix 125 CHF est crédible ✓
+3. Le prix 150 CHF est crédible ✓
 
-**Acquisition initiale :** Bouche-à-oreille via réseau Jérôme (salles de concert, professeurs de piano) + programme d'affiliation pour profs particuliers (commission si envoi d'élèves, modèle CarVertical).
+**Acquisition initiale :** Réseau Jérôme (20 ans dans le milieu pianistique : salles de concert, professeurs de piano, conservatoires) + Google Ads ciblé ("accordeur piano Lausanne/Genève") + parrainage 20 CHF (crédit réciproque parrain/filleul) + programme d'affiliation pour profs particuliers (commission si envoi d'élèves, modèle CarVertical).
 
 **Philosophie :** "Launch fast, learn fast" — on lance en 4-6 semaines, on valide le marché avec 10-20 réservations, puis on itère avec les feedbacks terrain.
 
@@ -415,9 +383,9 @@ Validation des 3 hypothèses critiques avec un produit minimal fonctionnel :
 
 | Feature | Justification | Détail |
 | --- | --- | --- |
-| **Landing page** | Acquisition organique + crédibilité | Héro piano, barre recherche lieu + date, contenu confiance/équipe/métier, footer "Devenez accordeur" |
+| **Landing page** | Acquisition organique + crédibilité | Héro piano, barre recherche lieu + date (CTA principal, mais le site reste navigable librement), contenu confiance/équipe/métier, avis clients affichés, footer "Devenez accordeur" |
 | **Recherche & Résultats** | Core value prop | Recherche lieu + date → affichage profils pros disponibles (photo, bio, note estimée, langues, certificats) |
-| **Booking & Paiement** | Validation hypothèse #1 (clients réservent) | Sélection créneau demi-journée → récapitulatif → Stripe Checkout 125 CHF → commission 10% Stripe Connect |
+| **Booking & Paiement** | Validation hypothèse #1 (clients réservent) | Sélection créneau demi-journée → récapitulatif → Stripe Checkout 150 CHF → commission 17% Stripe Connect |
 | **Google Auth** | Identification client pour Stripe + dashboard | Connexion 1 clic, création profil (nom, prénom, photo) |
 | **Dashboard Client** | Visibilité RDV + gestion basique | Vue "Prochains RDV" uniquement. Annulation via email/messagerie externe (WhatsApp/email Jérôme) |
 | **Dashboard Pro** | Validation hypothèse #2 (pros publient tournées) | Publication disponibilités (dates + zone + capacité) + emploi du temps (adresses, contacts, détails RDV) |
@@ -442,14 +410,17 @@ Validation des 3 hypothèses critiques avec un produit minimal fonctionnel :
 | **Dashboard Client complet** | Autonomie client | Annulation avec motif (menu déroulant 5 options), remboursement automatique Stripe, messagerie client → pro intégrée, notifications email |
 | **Dashboard Admin** | Scalabilité opérationnelle | Validation profils pro (interface dédiée), analytics motifs d'annulation, vue avis/notes, gestion incidents, accès Stripe dashboard |
 | **Messagerie intégrée** | Communication centralisée | Client ↔ Pro, Client ↔ Plateforme, Pro ↔ Plateforme (Firebase Realtime Database pour notifications temps réel) |
-| **Notifications email** | Engagement & rétention | Confirmation, rappel 24h avant RDV, invitation avis post-intervention |
+| **Notifications email** | Engagement & rétention | Confirmation, rappel J-2 + H-2 avant RDV, invitation avis post-intervention, rappel annuel automatique (11 mois après dernier accordage) |
 
 **Features Growth (toujours en V1) :**
 
 - Auth par SMS (code)
-- Langues EN et DE
+- Langues FR + EN au lancement, archi i18n prête pour DE
 - Recherche par nom d'accordeur
-- Supplément piano mauvais état (lien Stripe à la demande)
+- Rappel annuel automatique (11 mois après dernier accordage)
+- Supplément piano mauvais état (déclaratif client à la réservation, grille fixe par ancienneté, surclassement pro sur place)
+- Carnet d'entretien du piano (rapport post-intervention par le pro)
+- Parrainage : crédit 20 CHF réciproque (parrain + filleul)
 
 ### Phase 3 — Produit Léché (Expansion)
 
@@ -461,13 +432,13 @@ Validation des 3 hypothèses critiques avec un produit minimal fonctionnel :
 
 | Feature | Objectif | Détail |
 | --- | --- | --- |
-| **Rappel annuel automatisé** | Rétention automatique | "Votre piano a été accordé il y a 11 mois" + CTA re-réservation |
+| **Rappel annuel automatique 11 mois** *(déplacé en V1)* | Rétention automatique | "Votre piano a été accordé il y a 11 mois" + CTA re-réservation |
 | **Re-booking 1 clic** | Expérience seamless | "Réserver à nouveau avec Tomasz" → 1 clic → confirmation |
 | **Mécanisme remplacement automatisé** | Résilience opérationnelle | Si pro indisponible → proposition automatique d'un remplaçant validé dans la zone |
 | **App mobile (PWA/Native)** | Expérience mobile premium | Notifications push, expérience native iOS/Android |
 | **Analytics & Reporting avancés** | Data-driven decisions | Dashboard analytics pour admin, insights sur remplissage créneaux, zones géographiques, saisonnalité |
 | **Pricing dynamique par zone** | Optimisation revenus | Ajustement prix selon demande/offre par région (post-validation marché) |
-| **Programme fidélité** | Rétention long-terme | Réductions après X accordages, parrainage clients |
+| **Programme fidélité** | Rétention long-terme | Réductions après X accordages (parrainage déjà en V1) |
 | **Expansion géographique** | Scaling | Suisse romande/alémanique → France nationale → Allemagne → Europe |
 
 ### Roadmap de Développement Progressif
@@ -489,13 +460,13 @@ MVP V1 (2-4 semaines dev post-validation)
 → Dashboard Admin complet
 → Messagerie intégrée
 → Annulation automatisée
-→ Growth features (SMS Auth, EN/DE, Recherche par nom)
+→ Growth features (SMS Auth, FR+EN (archi prête DE), Recherche par nom)
 ✅ Product-market fit validé, scalabilité opérationnelle
 
      ↓
 
 Produit Léché (6+ mois post-V1)
-→ Rappel annuel + Re-booking 1 clic
+→ Re-booking 1 clic (rappel annuel déjà en V1)
 → App mobile (PWA/Native)
 → Analytics avancés + Pricing dynamique
 → Expansion géographique (Suisse → France → Allemagne)
@@ -532,16 +503,16 @@ Produit Léché (6+ mois post-V1)
 
 ### 1. Découverte & Recherche
 
-- **FR1:** Les visiteurs peuvent accéder à une landing page présentant la valeur du service (héro piano, confiance, équipe, métier)
+- **FR1:** Les visiteurs peuvent accéder à une landing page présentant la valeur du service (héro piano, confiance, équipe, métier, avis clients 5 étoiles affichés)
 - **FR2:** Les visiteurs peuvent rechercher des accordeurs disponibles par lieu et date
 - **FR3:** Les visiteurs peuvent voir une liste de profils d'accordeurs correspondant à leur recherche
-- **FR4:** Les visiteurs peuvent consulter le profil détaillé d'un accordeur (photo, bio, pays, langues, note estimée, certificats, nombre d'interventions)
+- **FR4:** Les visiteurs peuvent consulter le profil détaillé d'un accordeur (photo, bio, pays, langues, note estimée, certificats, nombre d'interventions, "Mon parcours" (obligatoire), vidéo 30s (optionnel))
 - **FR5:** Les visiteurs peuvent accéder au formulaire d'inscription pro via le lien "Devenez accordeur"
 
 ### 2. Gestion Utilisateurs
 
 - **FR6:** Les clients peuvent s'authentifier via Google Auth (V0.1), puis email+mot de passe OU SMS+code (V1)
-- **FR7:** Les clients peuvent créer et gérer leur profil (nom, prénom, photo, téléphone)
+- **FR7:** Les clients peuvent créer et gérer leur profil (nom, prénom, photo, téléphone, toggle Particulier/Pro-B2B à l'inscription)
 - **FR7b:** Les clients doivent fournir un email valide au moment de la première réservation (obligatoire pour Stripe Checkout et communications)
 - **FR8:** Les pros doivent fournir un email lors de l'inscription (obligatoire pour validation admin + Stripe Connect)
 - **FR9:** Les pros peuvent consulter le statut de leur inscription (en attente, validé, refusé)
@@ -550,11 +521,11 @@ Produit Léché (6+ mois post-V1)
 
 ### 3. Réservation & Paiement
 
-- **FR10:** Les clients authentifiés peuvent sélectionner un créneau de demi-journée disponible chez un accordeur
-- **FR11:** Les clients peuvent voir un récapitulatif de leur réservation avant paiement (accordeur, date, créneau, prix 125 CHF)
+- **FR10:** Les clients authentifiés peuvent sélectionner un créneau de demi-journée disponible chez un accordeur. Réservation instantanée si le client est dans le rayon défini par le pro ; validation requise par le pro si hors rayon.
+- **FR11:** Les clients peuvent voir un récapitulatif de leur réservation avant paiement (accordeur, date, créneau, prix 150 CHF)
 - **FR12:** Les clients peuvent payer leur réservation via Stripe Checkout
 - **FR13:** Les clients reçoivent une confirmation de réservation par email après paiement
-- **FR14:** Les pros reçoivent le paiement automatiquement via Stripe Connect (112.50 CHF net après commission 10%)
+- **FR14:** Les pros reçoivent le paiement automatiquement via Stripe Connect (125 CHF net après commission 17%)
 
 ### 4. Gestion des Rendez-vous
 
@@ -564,11 +535,11 @@ Produit Léché (6+ mois post-V1)
 - **FR16:** Les clients peuvent demander l'annulation d'un rendez-vous (via email/WhatsApp dans V0.1)
 - **FR17:** Les clients peuvent consulter l'historique de leurs rendez-vous passés (V1)
 - **FR18:** Les clients peuvent annuler un rendez-vous avec sélection d'un motif obligatoire parmi 5 options (V1)
-- **FR19:** Les clients reçoivent un remboursement automatique si annulation > 10 jours avant (V1)
+- **FR19:** Politique d'annulation par paliers : > 48h avant = remboursement 100%, 24-48h avant = remboursement 50%, < 24h = crédit plateforme (V1)
 
 **Pro :**
 
-- **FR20:** Les pros validés peuvent publier leurs disponibilités (dates, zone géographique, rayon km, capacité journalière)
+- **FR20:** Les pros validés peuvent publier leurs disponibilités (dates, zone géographique, rayon km, capacité journalière). Les réservations dans le rayon défini sont confirmées instantanément ; les réservations hors rayon nécessitent la validation du pro.
 - **FR21:** Les pros peuvent consulter leur emploi du temps avec informations partielles protégées :
   - **Avant le RDV (> 24h)** : Ville/zone uniquement, nom client, créneau
   - **24h avant le RDV** : Adresse exacte révélée automatiquement
@@ -593,7 +564,7 @@ Produit Léché (6+ mois post-V1)
 - **FR31:** Les clients peuvent envoyer des messages aux pros (via email/WhatsApp externe en V0.1, messagerie intégrée en V1)
 - **FR32:** Les clients peuvent contacter la plateforme (via email/WhatsApp externe en V0.1)
 - **FR33:** Les pros peuvent contacter la plateforme pour alertes urgentes (via email/WhatsApp externe en V0.1)
-- **FR34:** Le système envoie des notifications email automatiques (confirmation réservation, rappel 24h avant, invitation avis) (V1)
+- **FR34:** Le système envoie des notifications email automatiques (confirmation réservation, rappel J-2 + H-2 avant RDV, invitation avis) (V1)
 - **FR35:** Les utilisateurs peuvent échanger via messagerie intégrée avec notifications temps réel (Client ↔ Pro, Client ↔ Plateforme, Pro ↔ Plateforme) (V1)
 
 ### 7. Administration
@@ -608,13 +579,13 @@ Produit Léché (6+ mois post-V1)
 ### 8. Features Growth (V1)
 
 - **FR42:** Les clients peuvent s'authentifier par SMS avec code de vérification (V1)
-- **FR43:** Les utilisateurs peuvent sélectionner la langue d'interface (FR, EN, DE) (V1)
+- **FR43:** Les utilisateurs peuvent sélectionner la langue d'interface (FR + EN au lancement, architecture i18n prête pour DE) (V1)
 - **FR44:** Les clients peuvent rechercher un accordeur par son nom (V1)
-- **FR45:** Les clients peuvent demander un supplément "piano en mauvais état" avec lien Stripe à la demande (V1)
+- **FR45:** Supplément "piano en mauvais état" : déclaratif client à la réservation (grille fixe : 2-5 ans sans accordage +30 CHF, 5-10 ans +50 CHF, 10+ ans +80 CHF). Le pro peut surclasser sur place si l'état réel est pire que déclaré. (V1)
 
 ### 9. Features Vision (Phase 3)
 
-- **FR46:** Les clients reçoivent un rappel automatique 5-6 mois après le dernier accordage (accordage 2x/an)
+- **FR46:** *(Déplacé en V1)* Les clients reçoivent un rappel annuel automatique 11 mois après le dernier accordage
 - **FR47:** Les clients peuvent re-réserver le même accordeur en 1 clic
 - **FR48:** Le système propose automatiquement un accordeur remplaçant si le pro initialement réservé est indisponible
 - **FR49:** L'admin peut consulter des analytics avancés (taux de remplissage par zone, saisonnalité, revenus)
@@ -625,9 +596,88 @@ Produit Léché (6+ mois post-V1)
 - **FR51:** Les professeurs de piano peuvent s'inscrire au programme d'affiliation
 - **FR52:** Les professeurs affiliés reçoivent une commission automatique via Stripe quand un élève réserve via leur lien
 
-### 11. Sécurité & Protection Données
+### 11. Carnet d'entretien du piano (V1)
+
+- **FR53b:** Après chaque intervention, le pro remplit un rapport post-intervention ("Carnet d'entretien du piano") : état du piano, recommandations, date suggérée du prochain accordage. Ce rapport est visible par le client dans son dashboard.
+
+### 12. Parrainage (V1)
+
+- **FR53c:** Programme de parrainage : crédit 20 CHF réciproque (parrain + filleul) lors de la première réservation du filleul via lien de parrainage.
+
+### 13. Sécurité & Protection Données
 
 - **FR53:** Les adresses exactes des clients ne sont JAMAIS stockées en clair dans l'historique des pros
 - **FR54:** Les adresses exactes sont révélées aux pros dans une fenêtre temporelle limitée (24h avant RDV → fin intervention)
 - **FR55:** Les pros doivent activer 2FA (authentification à deux facteurs) obligatoirement dès leur premier client confirmé
 - **FR56:** Les sessions pros expirent automatiquement après X minutes d'inactivité (à définir en NFR : 15-30 min recommandé)
+
+## Exigences Non-Fonctionnelles
+
+### Architecture & Évolutivité
+
+- **NFR-ARCH1:** Le frontend Next.js communique avec le backend via API REST uniquement (pas de couplage direct Firebase SDK côté client sauf auth)
+- **NFR-ARCH2:** Les services backend sont abstraits (database.js, auth.js) pour permettre migration sans refonte frontend
+- **NFR-ARCH3:** Le système doit supporter migration backend Firebase → PostgreSQL + Python sans downtime > 2h
+
+### Performance
+
+- **NFR-P1:** Temps de chargement initial < 3s sur connexion 3G
+- **NFR-P2:** Actions utilisateur (recherche, booking, consultation dashboard) complètent en < 2s sur connexion standard
+- **NFR-P3:** Lighthouse Performance Score > 80
+- **NFR-P4:** Première page interactive (FCP - First Contentful Paint) < 1.5s
+- **NFR-P5:** Le système supporte 100 utilisateurs concurrents sans dégradation > 10% des temps de réponse
+
+### Security
+
+- **NFR-S1:** Toutes les communications client-serveur utilisent HTTPS/TLS 1.3+
+- **NFR-S2:** Les adresses exactes des clients sont chiffrées en base de données et révélées temporairement (24h avant RDV)
+- **NFR-S3:** Les sessions pros expirent après 30 minutes d'inactivité
+- **NFR-S4:** 2FA obligatoire pour tous les pros dès le premier client confirmé
+- **NFR-S5:** Paiements traités via Stripe (PCI-DSS Level 1 compliant) — aucune donnée de carte bancaire stockée sur EasyPiano
+- **NFR-S6:** Conformité RGPD (GDPR) : droit à l'oubli, export données, consentement explicite pour communications marketing
+- **NFR-S7:** Les tokens d'authentification Firebase sont renouvelés automatiquement toutes les heures
+- **NFR-S8:** Les logs contenant des données sensibles (adresses, emails, téléphones) sont anonymisés après 30 jours
+
+### Scalability
+
+- **NFR-SC1:** Le système supporte 10x croissance du nombre d'utilisateurs (50 → 500) avec < 10% dégradation performance
+- **NFR-SC2:** Base de données optimisée avec index appropriés pour requêtes fréquentes (recherche lieu + date)
+- **NFR-SC3:** Le système gère 1 000 réservations/mois en V1, 10 000 réservations/mois en Phase 3
+- **NFR-SC4:** Les images pros sont optimisées et servies via CDN
+
+### Accessibility
+
+- **NFR-A1:** Conformité WCAG 2.1 Level AA
+- **NFR-A2:** Navigation complète au clavier (Tab, Enter, Esc) pour toutes les fonctionnalités critiques (recherche, booking, dashboards)
+- **NFR-A3:** Contraste couleurs minimum 4.5:1 pour textes normaux, 3:1 pour textes larges
+- **NFR-A4:** Support lecteurs d'écran (ARIA labels, semantic HTML)
+- **NFR-A5:** Taille de police minimum 16px, boutons tactiles minimum 44x44px (mobile-friendly)
+- **NFR-A6:** Messages d'erreur clairs et explicites (pas de codes techniques pour l'utilisateur final)
+
+### Integration
+
+- **NFR-I1:** Intégration Stripe Checkout : succès de paiement confirmé en < 5s
+- **NFR-I2:** Webhooks Stripe (payment_intent.succeeded, etc.) traités en < 30s
+- **NFR-I3:** Notifications email envoyées en < 2 minutes après événement déclencheur
+- **NFR-I4:** Firebase Auth : authentification Google complétée en < 3s
+- **NFR-I5:** Fallback manuel si Stripe Connect indisponible (admin peut traiter paiement manuellement)
+- **NFR-I6:** Les pros reçoivent leurs paiements automatiquement chaque vendredi (Stripe Connect Weekly Payout)
+- **NFR-I7:** Option Instant Payout disponible en V1+ (pro paye frais 1% pour paiement immédiat)
+
+### Reliability
+
+- **NFR-R1:** Disponibilité > 99.5% (max 3.6h downtime/mois)
+- **NFR-R2:** Paiements Stripe : 0 échec non-résolu
+- **NFR-R3:** Monitoring + alertes admin si erreurs critiques (> 10 erreurs/heure)
+- **NFR-R4:** Backup base de données automatique quotidien (Firebase export V0.1, PostgreSQL auto-backup V1+)
+- **NFR-R5:** Procédure de rollback en < 15 minutes si déploiement critique défaillant
+
+### Monitoring & Observability
+
+- **NFR-M1:** Sentry activé pour error tracking frontend + backend (gratuit jusqu'à 5K erreurs/mois)
+- **NFR-M2:** Logs structurés (JSON) pour faciliter debugging et analytics
+- **NFR-M3:** Alertes Slack/Email automatiques si :
+  - Erreur critique (crash backend)
+  - Paiement Stripe échoué
+  - Downtime > 2 min
+  - Taux d'erreur > 5%

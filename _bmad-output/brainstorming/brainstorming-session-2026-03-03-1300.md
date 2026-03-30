@@ -1,12 +1,16 @@
 ---
-stepsCompleted: [1]
+stepsCompleted: [1, 2, 3, 4]
 inputDocuments: []
 session_topic: 'Vision complète EasyPiano - UX, UI, fonctionnalités clés, modèle économique'
 session_goals: 'Définir la vision fondatrice de la plateforme EasyPiano'
-selected_approach: 'Brainstorming guidé par questions'
-techniques_used: [elicitation-directe, questions-progressives]
-ideas_generated: []
+selected_approach: 'ai-recommended'
+techniques_used: [elicitation-directe, questions-progressives, assumption-reversal, six-thinking-hats, cross-pollination]
+ideas_generated: [prix-150chf, b2b-toggle, rayon-validation, credit-plateforme, assurance-hybride, supplement-declaratif, piquet-honnete, rappel-annuel, carnet-entretien, abonnement-annuel, avis-5-etoiles, profil-video, parcours-obligatoire]
 context_file: ''
+session_continued: true
+continuation_date: '2026-03-20'
+session_active: false
+workflow_completed: true
 ---
 
 # Brainstorming Session Results
@@ -31,7 +35,7 @@ context_file: ''
 
 ### La Disruption
 - Prix marché actuel : **230 CHF** l'accordage
-- Prix EasyPiano : **125 CHF** — presque 50% moins cher
+- Prix EasyPiano : **150 CHF** — 35% moins cher (révisé le 2026-03-20 15:00)
 - Possible grâce au coût de vie plus bas des pros d'Europe de l'Est
 - Le pro gère sa propre logistique (transport, hôtel)
 
@@ -41,7 +45,8 @@ context_file: ''
 
 - **Zone de lancement** : Bassin lémanique (Genève → Lausanne, côté France inclus)
 - **Scalabilité** : Partout où il y a des pianos = futurs clients
-- **Clients** : Propriétaires de piano (particuliers)
+- **Clients** : Particuliers ET B2B (écoles de musique, conservatoires, hôtels, restaurants, églises, salles de concert)
+- **Inscription** : Toggle Pro / Particulier dès l'inscription → deux workflows séparés
 
 ---
 
@@ -49,15 +54,15 @@ context_file: ''
 
 | Élément | Détail |
 |---|---|
-| Prix accordage | 125 CHF (fixé par EasyPiano, pas par le pro) |
-| Commission | 10% (~12.50 CHF) |
-| Revenu pro | ~112.50 CHF par accordage |
-| Supplément piano mauvais état | À la discrétion du pro, montant libre |
+| Prix accordage | 150 CHF (fixé par EasyPiano, pas par le pro) |
+| Commission | 17% (25 CHF) |
+| Revenu pro | 125 CHF par accordage |
+| Supplément piano mauvais état | Grille fixe basée sur déclaration client à la résa (dernier accordage : 2-5 ans +30 CHF, 5-10 ans +50 CHF, 10+ ans +80 CHF) |
+| Surclassement sur place | Le pro peut surclasser si l'état réel est pire que déclaré → notification + paiement complémentaire Stripe |
 | Commission sur supplément | Quasi nulle (carotte pour le pro) |
-| Mécanisme supplément | Lien Stripe généré à la demande, envoyé au client |
 | Paiement client | Au moment de la réservation (bloque le créneau) |
 | Capacité pro | ~3 pianos/jour (1 matin, 2 après-midi), configurable |
-| Rentabilité pro/semaine | ~1 700-2 000 CHF net pour une tournée d'une semaine |
+| Rentabilité pro/semaine | ~1 875-2 500 CHF net pour une tournée d'une semaine (à 125 CHF/accordage) |
 
 ---
 
@@ -76,7 +81,7 @@ context_file: ''
 5. **Footer** : Lien discret "Devenez accordeur"
 
 ### Parcours de Réservation
-1. Recherche par **lieu + date** (point d'entrée verrouillé, pas de browsing libre)
+1. Recherche par **lieu + date** (CTA principal, mais le site reste navigable librement)
 2. Résultats : uniquement les pros disponibles pour ce créneau/lieu
 3. Clic sur un pro → **page profil complète**
 4. Bouton "Réserver" → **récapitulatif des détails**
@@ -89,7 +94,7 @@ context_file: ''
 ### Dashboard Client (style Doctolib)
 - Prochains RDV visibles
 - Historique des réservations
-- Annulation sans frais jusqu'à X jours avant (style Booking.com)
+- Annulation : 100% si >48h, 50% si 24-48h, crédit plateforme si <24h
 - Modification de date possible avec validation du pro
 - Messagerie vers le pro
 - Messagerie vers la plateforme
@@ -110,6 +115,8 @@ context_file: ''
 ### Profil Public (vu par le client)
 - Photo
 - Bio
+- **"Mon parcours"** (obligatoire) — où il a appris, depuis combien de temps, sa passion
+- **Vidéo 30s** (optionnel) — le pro en train d'accorder
 - Pays d'origine
 - Langues parlées
 - Nombre d'interventions via la plateforme
@@ -127,7 +134,7 @@ context_file: ''
 ### Tournées
 - Le pro déclare "disponible du X au Y à [zone géographique]"
 - Créneaux en demi-journée (matin / après-midi)
-- Réservation instantanée — pas de confirmation requise du pro
+- Réservation instantanée dans le rayon défini par le pro — hors rayon = validation pro requise
 
 ---
 
@@ -138,9 +145,9 @@ context_file: ''
 | Curation | Chaque pro rencontré physiquement par l'équipe EasyPiano |
 | Validation | Profil vérifié avant publication |
 | Philosophie | "Tu as choisi EasyPiano = tu as déjà fait ton choix de confiance" |
-| Assurance | Chaque pro doit avoir une RC pro valide (à vérifier par EasyPiano — sujet juridique à creuser) |
-| Avis | Unilatéral : seul le client note le pro |
-| Annulation pro | EasyPiano trouve un remplaçant équivalent |
+| Assurance | Modèle hybride : pro avec RC = ok, sans RC = couverture collective EasyPiano (surcoût aligné sur coût réel) |
+| Avis | Unilatéral : seul le client note le pro (5 étoiles, relayés sur la page d'accueil) |
+| Annulation pro | V1 : remboursement total + crédit 20 CHF. À terme : réseau de secours |
 
 ---
 
@@ -150,7 +157,7 @@ context_file: ''
 |---|---|
 | Type | Web responsive (mobile-first) |
 | App native | Pas à l'ordre du jour |
-| Langues | FR / EN / DE dès le lancement |
+| Langues | FR + EN au lancement, archi i18n prête pour DE |
 | Auth | Google Auth + SMS (code) |
 | Paiement | Stripe Connect |
 | Notifications | Email ou SMS (au choix du client, configurable) |
@@ -158,12 +165,103 @@ context_file: ''
 
 ---
 
-## 8. Sujets à Creuser
+## 8. Sujets à Creuser (résolus le 2026-03-20 15:00)
 
-- [ ] Politique d'annulation : définir le X jours précis
-- [ ] Assurance RC pro : cadre légal par pays, types d'assurance acceptés
-- [ ] Supplément piano mauvais état : UX du lien Stripe à la demande
-- [ ] Mécanisme de remplacement si pro indisponible
-- [ ] Stratégie de lancement et acquisition des premiers clients
-- [ ] Recrutement et sourcing des accordeurs en Europe de l'Est
-- [ ] i18n : architecture technique pour FR/EN/DE
+- [x] Politique d'annulation : paliers 48h (100%) / 24h (50%) / <24h (crédit plateforme)
+- [x] Assurance RC pro : modèle hybride (RC propre ou couverture collective EasyPiano, surcoût aligné sur coût réel)
+- [x] Supplément piano mauvais état : déclaratif client à la résa (grille fixe) + surclassement pro sur place si nécessaire
+- [x] Mécanisme de remplacement : V1 = honnêteté + remboursement total + crédit 20 CHF. Scale = réseau de secours
+- [x] Stratégie de lancement : réseau associé (pianiste, 20 ans sur le secteur) + Google Ads ciblé + parrainage 20 CHF
+- [x] Recrutement accordeurs : associé a déjà des contacts + tour des écoles/centres de formation (petit milieu)
+- [x] i18n : FR + EN au lancement, archi i18n prête pour DE
+
+---
+
+## Sélection des Techniques
+
+**Approche :** Recommandation IA
+**Contexte :** Vision complète EasyPiano — résoudre les sujets ouverts + challenger les hypothèses
+
+**Techniques recommandées :**
+
+- **Assumption Reversal (Phase 1) :** Retourner chaque hypothèse fondatrice pour identifier les angles morts
+- **Six Thinking Hats (Phase 2) :** Analyser systématiquement les 7 sujets ouverts sous tous les angles
+- **Cross-Pollination (Phase 3) :** Emprunter des patterns d'autres industries pour innover au-delà du cadre marketplace classique
+
+---
+
+## 9. Résultats Phase 1 — Assumption Reversal (2026-03-20 15:00)
+
+7 hypothèses fondatrices challengées :
+
+| # | Hypothèse challengée | Décision |
+|---|---|---|
+| 1 | Prix fixe unique 125 CHF | Révisé → **150 CHF**, commission 17% (25 CHF), pro à 125 CHF |
+| 2 | Curation physique obligatoire | V1 = physique. Scale = visio + certificats + essai supervisé |
+| 3 | Pro gère sa logistique | Non-sujet MVP (pros locaux). Scale = pré-résa + seuil minimum |
+| 4 | Réservation 100% instantanée | Dans le rayon = instantané. Hors rayon = validation pro |
+| 5 | Particuliers uniquement | **B2B inclus dès V1** — toggle Pro/Particulier à l'inscription |
+| 6 | Recherche verrouillée lieu+date | Assoupli — CTA principal mais site navigable librement |
+| 7 | Commission 10% (12.50 CHF) | Révisé → **17% (25 CHF)** — pro gagne plus, plateforme respire |
+
+---
+
+## 10. Résultats Phase 2 — Six Thinking Hats (2026-03-20 15:30)
+
+7 sujets ouverts résolus (voir section 8 pour le détail des décisions).
+
+---
+
+## 11. Résultats Phase 3 — Cross-Pollination (2026-03-20 16:00)
+
+Patterns empruntés à d'autres industries :
+
+| Source | Pattern | Application EasyPiano | Priorité |
+|---|---|---|---|
+| Doctolib | Rappels automatiques | J-2 + H-2 avant le RDV | **V1** |
+| Doctolib | Rappel récurrent | Rappel annuel automatique ("11 mois depuis votre dernier accordage") | **V1** |
+| Uber | Statut en temps réel | "Confirmé" uniquement en V1. Tracking détaillé post-MVP | **V1 simplifié** |
+| Airbnb | Profil humanisé | "Mon parcours" obligatoire + vidéo 30s optionnelle | **V1** |
+| Nespresso | Suivi post-intervention | **Carnet d'entretien du piano** — rapport d'accordage, état, recommandations | **V1** |
+| Amazon Prime | Abonnement récurrence | Abo annuel (2 accordages/an, petite économie, planification auto) | **Post-MVP** |
+| Booking.com | Urgence sociale | "Il reste X créneaux cette semaine" | **Post-MVP** |
+| Spotify | Bilan annuel personnalisé | Résumé annuel du piano et des interventions | **Post-MVP** |
+| Booking.com | Avis 5 étoiles | Commentaires clients relayés sur la page d'accueil | **V1** |
+| Booking.com | Parrainage | Crédit 20 CHF réciproque (parrain + filleul) | **V1** |
+
+---
+
+## 12. Équipe et Rôles
+
+| Rôle | Personne | Responsabilités |
+|---|---|---|
+| Dev & Tech | Malik | Développement plateforme, architecture technique |
+| Commercial & Réseau | Associé (pianiste, 20 ans d'expérience) | Acquisition clients, sourcing accordeurs, démarchage B2B |
+
+---
+
+## 13. Roadmap Post-MVP
+
+Fonctionnalités identifiées pour les versions futures :
+
+- [ ] Optimisation géographique des créneaux (algorithme)
+- [ ] Système de pré-réservation pour les tournées longue distance
+- [ ] Statut de suivi détaillé (en route, en cours, terminé)
+- [ ] Abonnement annuel client (2 accordages/an)
+- [ ] Urgence sociale ("Il reste X créneaux")
+- [ ] Bilan annuel personnalisé style Spotify
+- [ ] Paliers de prix (Standard / Premium / Concert)
+- [ ] Réseau de secours (accordeurs locaux en backup)
+- [ ] Process de curation hybride (visio + essai supervisé)
+- [ ] Ajout langue DE pour la Suisse alémanique
+
+---
+
+## Résumé de Session
+
+**Session continuée le :** 2026-03-20 15:00
+**Techniques utilisées :** Assumption Reversal, Six Thinking Hats, Cross-Pollination
+**Décisions majeures prises :** 14
+**Sujets ouverts résolus :** 7/7
+**Nouvelles fonctionnalités identifiées (V1) :** 7
+**Fonctionnalités post-MVP identifiées :** 10
