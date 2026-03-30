@@ -77,10 +77,10 @@ development_status:
   epic-4-retrospective: optional
 
   # Epic 5: Recherche & Découverte
-  epic-5: backlog
-  5-1-recherche-lieu-date: backlog
-  5-2-affichage-resultats-recherche: backlog
-  5-3-profil-detaille-accordeur: backlog
+  epic-5: in-progress
+  5-1-recherche-lieu-date: review
+  5-2-affichage-resultats-recherche: review
+  5-3-profil-detaille-accordeur: review
   epic-5-retrospective: optional
 
   # Epic 6: Réservation & Paiement
