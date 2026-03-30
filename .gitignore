@@ -52,5 +52,8 @@ firebase-adminsdk*.json
 .env.*
 !.env.example
 
+# Backups Firebase (générés par scripts/backup-firebase.sh)
+backups/
+
 # Claude worktrees
 .claude/worktrees/

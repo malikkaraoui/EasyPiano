@@ -49,7 +49,7 @@ development_status:
   1-1-migration-design-system: review
   1-2-setup-api-routes-infrastructure-backend: review
   1-3-landing-page: review
-  1-4-cicd-monitoring: backlog
+  1-4-cicd-monitoring: review
   epic-1-retrospective: optional
 
   # Epic 2: Authentification & Profils Utilisateurs
