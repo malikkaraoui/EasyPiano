@@ -30,7 +30,7 @@ function PianoKeys() {
         {Array.from({ length: WHITE_KEYS }).map((_, i) => (
           <div
             key={`w-${i}`}
-            className="h-full w-[22px] border-x border-foreground/[0.04] bg-gradient-to-b from-foreground/[0.06] to-foreground/[0.02] sm:w-[28px]"
+            className="h-full w-[22px] bg-gradient-to-b from-foreground/[0.04] to-transparent sm:w-[28px]"
           />
         ))}
       </div>
