@@ -43,70 +43,107 @@ export default function ManagePros() {
     loadPros();
   }
 
-  if (loading) return <div className="loading">Chargement...</div>;
+  if (loading)
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center text-muted">
+        Chargement...
+      </div>
+    );
 
   return (
-    <div className="manage-pros">
-      <div className="page-header">
-        <h1>Professionnels ({pros.length})</h1>
-        <Link href="/admin/pros/add" className="btn-primary">
+    <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <h1 className="font-heading text-3xl font-bold text-foreground">
+          Professionnels ({pros.length})
+        </h1>
+        <Link
+          href="/admin/pros/add"
+          className="inline-flex h-10 items-center rounded bg-accent px-4 text-sm font-medium text-background transition-colors hover:bg-accent-hover"
+        >
           + Ajouter un pro
         </Link>
       </div>
 
-      <div className="pros-table">
-        <table>
-          <thead>
+      <div className="mt-8 overflow-x-auto rounded-xl border border-border/50">
+        <table className="w-full text-sm">
+          <thead className="border-b border-border bg-card">
             <tr>
-              <th>Nom</th>
-              <th>Ville</th>
-              <th>Note</th>
-              <th>Avis</th>
-              <th>Actif</th>
-              <th>Vérifié</th>
-              <th>Actions</th>
+              <th className="p-3 text-left text-xs font-medium uppercase text-muted">
+                Nom
+              </th>
+              <th className="p-3 text-left text-xs font-medium uppercase text-muted">
+                Ville
+              </th>
+              <th className="p-3 text-left text-xs font-medium uppercase text-muted">
+                Note
+              </th>
+              <th className="p-3 text-left text-xs font-medium uppercase text-muted">
+                Avis
+              </th>
+              <th className="p-3 text-left text-xs font-medium uppercase text-muted">
+                Actif
+              </th>
+              <th className="p-3 text-left text-xs font-medium uppercase text-muted">
+                Vérifié
+              </th>
+              <th className="p-3 text-left text-xs font-medium uppercase text-muted">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
             {pros.map((pro) => (
-              <tr key={pro.id}>
-                <td>
-                  <strong>
+              <tr
+                key={pro.id}
+                className="border-b border-border/30 transition-colors hover:bg-card/50"
+              >
+                <td className="p-3">
+                  <strong className="text-foreground">
                     {pro.firstName} {pro.lastName}
                   </strong>
                   <br />
-                  <small>{pro.email}</small>
+                  <span className="text-xs text-muted">{pro.email}</span>
                 </td>
-                <td>
+                <td className="p-3 text-muted">
                   {pro.city} ({pro.postalCode})
                 </td>
-                <td>{formatRating(pro.rating || 0)}</td>
-                <td>{pro.reviewCount || 0}</td>
-                <td>
+                <td className="p-3 text-foreground">
+                  {formatRating(pro.rating || 0)}
+                </td>
+                <td className="p-3 text-muted">{pro.reviewCount || 0}</td>
+                <td className="p-3">
                   <button
-                    className={`toggle-btn ${pro.active ? "active" : ""}`}
+                    className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                      pro.active
+                        ? "bg-success/20 text-success"
+                        : "bg-destructive/20 text-destructive"
+                    }`}
                     onClick={() => toggleActive(pro)}
                   >
                     {pro.active ? "Oui" : "Non"}
                   </button>
                 </td>
-                <td>
+                <td className="p-3">
                   <button
-                    className={`toggle-btn ${pro.verified ? "verified" : ""}`}
+                    className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                      pro.verified
+                        ? "bg-accent/20 text-accent"
+                        : "bg-card text-muted"
+                    }`}
                     onClick={() => toggleVerified(pro)}
                   >
                     {pro.verified ? "✓" : "✗"}
                   </button>
                 </td>
-                <td className="actions">
+                <td className="flex gap-2 p-3">
                   <Link
                     href={`/admin/pros/edit/${pro.id}`}
-                    className="btn-edit"
+                    className="rounded border border-border px-2 py-1 text-xs text-foreground transition-colors hover:bg-card"
                   >
                     Modifier
                   </Link>
                   <button
-                    className="btn-delete"
+                    className="rounded border border-destructive/30 px-2 py-1 text-xs text-destructive transition-colors hover:bg-destructive/10"
                     onClick={() => handleDelete(pro)}
                   >
                     Supprimer
