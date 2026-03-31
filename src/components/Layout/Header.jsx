@@ -1,9 +1,72 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useAuth } from "../../hooks/useAuth";
 import { logout } from "../../services/auth";
 import { Button } from "@/components/UI/button";
+import { Avatar, AvatarFallback } from "@/components/UI/avatar";
+
+function getAvatarFallbackLabel(user) {
+  const source = user?.displayName || user?.email || "EasyPiano";
+
+  return (
+    source
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase() || "")
+      .join("") || "EP"
+  );
+}
+
+function normalizeAvatarUrl(photoURL) {
+  if (!photoURL) {
+    return "";
+  }
+
+  try {
+    const url = new URL(photoURL);
+
+    if (url.hostname.endsWith("googleusercontent.com")) {
+      url.searchParams.set("sz", "128");
+    }
+
+    return url.toString();
+  } catch {
+    return photoURL;
+  }
+}
+
+function UserAvatar({ user }) {
+  const [hasImageError, setHasImageError] = useState(false);
+  const avatarSrc = useMemo(
+    () => normalizeAvatarUrl(user?.photoURL),
+    [user?.photoURL],
+  );
+  const fallbackLabel = useMemo(() => getAvatarFallbackLabel(user), [user]);
+
+  return (
+    <Avatar
+      key={avatarSrc || fallbackLabel}
+      className="h-8 w-8 ring-1 ring-border/50"
+    >
+      {avatarSrc && !hasImageError ? (
+        <img
+          src={avatarSrc}
+          alt={user?.displayName || "Avatar"}
+          className="h-full w-full rounded-full object-cover"
+          referrerPolicy="no-referrer"
+          onError={() => setHasImageError(true)}
+        />
+      ) : (
+        <AvatarFallback className="bg-secondary text-[11px] font-semibold text-foreground">
+          {fallbackLabel}
+        </AvatarFallback>
+      )}
+    </Avatar>
+  );
+}
 
 export default function Header() {
   const { user, isAdmin } = useAuth();
@@ -56,13 +119,7 @@ export default function Header() {
                 </Link>
               )}
               <div className="flex items-center gap-3">
-                {user.photoURL && (
-                  <img
-                    src={user.photoURL}
-                    alt={user.displayName || "Avatar"}
-                    className="h-8 w-8 rounded-full object-cover ring-1 ring-border/50"
-                  />
-                )}
+                <UserAvatar user={user} />
                 <Button variant="ghost" size="sm" onClick={logout}>
                   Déconnexion
                 </Button>
@@ -71,7 +128,7 @@ export default function Header() {
           ) : (
             <Link
               href="/login"
-              className="inline-flex h-9 items-center rounded border border-accent/30 bg-transparent px-3 text-xs font-medium text-foreground transition-all duration-300 hover:border-accent hover:text-accent"
+              className="inline-flex h-9 items-center rounded border border-accent/30 bg-transparent px-3 text-xs font-medium text-foreground transition-all duration-200 hover:border-accent hover:bg-accent hover:text-background hover:shadow-[0_0_15px_rgba(212,197,160,0.2)] active:scale-95 active:shadow-none"
             >
               Connexion
             </Link>

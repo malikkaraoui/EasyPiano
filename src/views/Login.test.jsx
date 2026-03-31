@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import Login from "./Login";
 
 const mockPush = vi.fn();
@@ -53,14 +53,33 @@ describe("Login", () => {
 
   it("appelle loginWithGoogle au clic sur le bouton", async () => {
     useAuth.mockReturnValue({ user: null });
-    loginWithGoogle.mockResolvedValue({});
+    loginWithGoogle.mockResolvedValue({ redirected: false });
     render(<Login />);
 
     fireEvent.click(
       screen.getByRole("button", { name: /continuer avec google/i }),
     );
 
-    expect(loginWithGoogle).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(loginWithGoogle).toHaveBeenCalled();
+      expect(mockPush).toHaveBeenCalledWith("/dashboard");
+    });
+  });
+
+  it("ne navigue pas tout de suite si la connexion part en redirect", async () => {
+    useAuth.mockReturnValue({ user: null });
+    loginWithGoogle.mockResolvedValue({ redirected: true });
+    render(<Login />);
+
+    fireEvent.click(
+      screen.getByRole("button", { name: /continuer avec google/i }),
+    );
+
+    await waitFor(() => {
+      expect(loginWithGoogle).toHaveBeenCalled();
+    });
+
+    expect(mockPush).not.toHaveBeenCalled();
   });
 
   it("affiche un message d'erreur si la connexion échoue", async () => {
@@ -82,5 +101,29 @@ describe("Login", () => {
     expect(
       screen.getByText(/connectez-vous pour réserver/i),
     ).toBeInTheDocument();
+  });
+
+  it("désactive le bouton pendant la tentative de connexion", async () => {
+    useAuth.mockReturnValue({ user: null });
+    loginWithGoogle.mockImplementation(
+      () =>
+        new Promise((resolve) =>
+          setTimeout(() => resolve({ redirected: true }), 0),
+        ),
+    );
+    render(<Login />);
+
+    const button = screen.getByRole("button", {
+      name: /continuer avec google/i,
+    });
+    fireEvent.click(button);
+
+    expect(
+      screen.getByRole("button", { name: /connexion en cours/i }),
+    ).toBeDisabled();
+
+    await waitFor(() => {
+      expect(loginWithGoogle).toHaveBeenCalled();
+    });
   });
 });

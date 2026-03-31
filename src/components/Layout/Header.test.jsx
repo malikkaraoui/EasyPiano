@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import Header from "./Header";
 
 // Mock useAuth
@@ -79,6 +79,21 @@ describe("Header", () => {
     const avatar = screen.getByAltText("User");
     expect(avatar).toBeInTheDocument();
     expect(avatar).toHaveAttribute("src", "https://example.com/photo.jpg");
+  });
+
+  it("affiche des initiales si l'image de profil échoue", () => {
+    useAuth.mockReturnValue({
+      user: {
+        displayName: "User Test",
+        photoURL: "https://example.com/photo.jpg",
+      },
+      isAdmin: false,
+    });
+    render(<Header />);
+
+    fireEvent.error(screen.getByAltText("User Test"));
+
+    expect(screen.getByText("UT")).toBeInTheDocument();
   });
 
   it("contient un nav avec aria-label", () => {

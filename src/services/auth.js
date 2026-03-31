@@ -1,32 +1,103 @@
-import { signInWithPopup, signOut } from "firebase/auth";
-import { ref, set, get } from "firebase/database";
+import {
+  getRedirectResult,
+  signInWithPopup,
+  signInWithRedirect,
+  signOut,
+} from "firebase/auth";
+import { ref, set, get, update } from "firebase/database";
 import { auth, googleProvider, db } from "./firebase";
 
-export async function loginWithGoogle() {
-  const result = await signInWithPopup(auth, googleProvider);
-  const user = result.user;
+const GOOGLE_REDIRECT_FALLBACK_CODES = new Set([
+  "auth/cancelled-popup-request",
+  "auth/operation-not-supported-in-this-environment",
+  "auth/popup-blocked",
+  "auth/web-storage-unsupported",
+]);
 
+function ensureFirebaseAuthReady() {
+  if (!auth || !googleProvider || !db) {
+    throw new Error("Firebase Auth n'est pas configuré.");
+  }
+}
+
+function shouldPreferRedirectFlow() {
+  if (typeof navigator === "undefined") {
+    return false;
+  }
+
+  return /\b(?:Chrome|CriOS|Chromium|Edg)\/\d+/i.test(navigator.userAgent);
+}
+
+function shouldFallbackToRedirect(error) {
+  const message = error?.message || "";
+
+  return (
+    GOOGLE_REDIRECT_FALLBACK_CODES.has(error?.code) ||
+    /Cross-Origin-Opener-Policy|COOP|opener/i.test(message)
+  );
+}
+
+async function syncUserProfile(user) {
+  const timestamp = new Date().toISOString();
   const userRef = ref(db, `users/${user.uid}`);
   const snapshot = await get(userRef);
 
+  const baseProfile = {
+    displayName: user.displayName || "",
+    email: user.email || "",
+    lastLoginAt: timestamp,
+    ...(user.photoURL ? { photoURL: user.photoURL } : {}),
+  };
+
   if (!snapshot.exists()) {
     await set(userRef, {
-      displayName: user.displayName,
-      email: user.email,
-      photoURL: user.photoURL,
+      ...baseProfile,
+      photoURL: user.photoURL || null,
       role: "client",
       isB2B: false,
-      createdAt: new Date().toISOString(),
-      lastLoginAt: new Date().toISOString(),
+      createdAt: timestamp,
     });
   } else {
-    await set(
-      ref(db, `users/${user.uid}/lastLoginAt`),
-      new Date().toISOString(),
-    );
+    await update(userRef, baseProfile);
   }
 
   return user;
+}
+
+export async function loginWithGoogle() {
+  ensureFirebaseAuthReady();
+
+  if (shouldPreferRedirectFlow()) {
+    await signInWithRedirect(auth, googleProvider);
+    return { redirected: true };
+  }
+
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    return {
+      redirected: false,
+      user: await syncUserProfile(result.user),
+    };
+  } catch (error) {
+    if (!shouldFallbackToRedirect(error)) {
+      throw error;
+    }
+
+    await signInWithRedirect(auth, googleProvider);
+    return { redirected: true };
+  }
+}
+
+export async function completeGoogleRedirectLogin() {
+  ensureFirebaseAuthReady();
+
+  const result = await getRedirectResult(auth);
+
+  if (!result?.user) {
+    return null;
+  }
+
+  return syncUserProfile(result.user);
 }
 
 export async function logout() {

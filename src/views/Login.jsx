@@ -1,15 +1,16 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../hooks/useAuth";
 import { loginWithGoogle } from "../services/auth";
-import { useEffect, useState } from "react";
 import { Button } from "@/components/UI/button";
 
 export default function Login() {
   const { user } = useAuth();
   const router = useRouter();
   const [error, setError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (user) router.replace("/dashboard");
@@ -17,12 +18,18 @@ export default function Login() {
 
   async function handleLogin() {
     try {
+      setIsSubmitting(true);
       setError(null);
-      await loginWithGoogle();
-      router.push("/dashboard");
+      const result = await loginWithGoogle();
+
+      if (!result?.redirected) {
+        router.push("/dashboard");
+      }
     } catch (err) {
       console.error("[Auth] Erreur de connexion:", err);
       setError("Erreur lors de la connexion. Veuillez réessayer.");
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -50,6 +57,7 @@ export default function Login() {
           variant="secondary"
           size="lg"
           className="mt-6 w-full gap-3"
+          disabled={isSubmitting}
         >
           <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
             <path
@@ -69,7 +77,7 @@ export default function Login() {
               d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
             />
           </svg>
-          Continuer avec Google
+          {isSubmitting ? "Connexion en cours..." : "Continuer avec Google"}
         </Button>
       </div>
     </div>

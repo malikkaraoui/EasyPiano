@@ -28,4 +28,15 @@ export const auth = app ? getAuth(app) : null;
 export const googleProvider = app ? new GoogleAuthProvider() : null;
 export const db = app ? getDatabase(app) : null;
 export const storage = app ? getStorage(app) : null;
+
+if (auth) {
+  auth.languageCode = "fr";
+}
+
+if (googleProvider) {
+  googleProvider.setCustomParameters({
+    prompt: "select_account",
+  });
+}
+
 export default app;
