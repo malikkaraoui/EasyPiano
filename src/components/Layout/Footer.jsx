@@ -2,7 +2,8 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-border/50 bg-background">
+    <footer className="relative bg-background">
+      <div className="piano-keys" aria-hidden="true" />
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
         <div className="grid gap-8 sm:grid-cols-3">
           <div>
@@ -65,8 +66,10 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 border-t border-border/50 pt-6 text-center text-sm text-muted">
-          &copy; {new Date().getFullYear()} EasyPiano. Tous droits réservés.
+        <div className="mt-8 border-t border-border/30 pt-6 text-center">
+          <p className="font-heading text-xs uppercase tracking-widest text-muted/60">
+            &copy; {new Date().getFullYear()} EasyPiano. Tous droits réservés.
+          </p>
         </div>
       </div>
     </footer>

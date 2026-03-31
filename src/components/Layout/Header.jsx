@@ -9,13 +9,13 @@ export default function Header() {
   const { user, isAdmin } = useAuth();
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-md">
+    <header className="glass-strong sticky top-0 z-50">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2">
           <span className="text-2xl" role="img" aria-label="piano">
             🎹
           </span>
-          <span className="font-heading text-xl font-bold text-foreground">
+          <span className="font-heading text-xl font-bold text-foreground transition-colors hover:text-accent">
             EasyPiano
           </span>
         </Link>
@@ -26,18 +26,26 @@ export default function Header() {
         >
           <Link
             href="/search"
-            className="hidden text-sm text-muted transition-colors hover:text-foreground sm:block"
+            className="group relative hidden text-sm text-muted transition-colors hover:text-foreground sm:block"
           >
             Trouver un accordeur
+            <span
+              className="absolute -bottom-1 left-0 h-px w-0 bg-accent transition-all duration-300 group-hover:w-full"
+              aria-hidden="true"
+            />
           </Link>
 
           {user ? (
             <>
               <Link
                 href="/dashboard"
-                className="text-sm text-muted transition-colors hover:text-foreground"
+                className="group relative text-sm text-muted transition-colors hover:text-foreground"
               >
                 Mes rendez-vous
+                <span
+                  className="absolute -bottom-1 left-0 h-px w-0 bg-accent transition-all duration-300 group-hover:w-full"
+                  aria-hidden="true"
+                />
               </Link>
               {isAdmin && (
                 <Link
@@ -52,7 +60,7 @@ export default function Header() {
                   <img
                     src={user.photoURL}
                     alt={user.displayName || "Avatar"}
-                    className="h-8 w-8 rounded-full object-cover"
+                    className="h-8 w-8 rounded-full object-cover ring-1 ring-border/50"
                   />
                 )}
                 <Button variant="ghost" size="sm" onClick={logout}>
@@ -63,7 +71,7 @@ export default function Header() {
           ) : (
             <Link
               href="/login"
-              className="inline-flex h-9 items-center rounded border border-border bg-transparent px-3 text-xs font-medium text-foreground transition-colors hover:bg-card"
+              className="inline-flex h-9 items-center rounded border border-accent/30 bg-transparent px-3 text-xs font-medium text-foreground transition-all duration-300 hover:border-accent hover:text-accent"
             >
               Connexion
             </Link>

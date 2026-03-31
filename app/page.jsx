@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { ShieldCheck, Banknote, Lock, Clock, Search } from "lucide-react";
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
+import {
+  HeroReveal,
+  HeroSearchReveal,
+  ScrollIndicator,
+} from "@/components/animations/HeroReveal";
 import { Button } from "@/components/UI/button";
 import { Input } from "@/components/UI/input";
 
@@ -15,23 +20,23 @@ function HeroSearchBar() {
     <form
       action="/search"
       method="get"
-      className="mt-8 flex w-full max-w-2xl flex-col gap-3 sm:flex-row"
+      className="mt-10 flex w-full max-w-2xl flex-col gap-3 rounded-xl border border-glow p-2 glass sm:flex-row"
     >
       <Input
         type="text"
         name="lieu"
         placeholder="Ville ou code postal"
         aria-label="Lieu de recherche"
-        className="h-12 flex-1 border-border/50 bg-card/50 text-foreground placeholder:text-muted backdrop-blur-sm"
+        className="h-12 flex-1 border-transparent bg-transparent text-foreground placeholder:text-muted focus-visible:ring-accent/50"
         autoComplete="off"
       />
       <Input
         type="date"
         name="date"
         aria-label="Date souhaitée"
-        className="h-12 sm:w-44 border-border/50 bg-card/50 text-foreground backdrop-blur-sm"
+        className="h-12 border-transparent bg-transparent text-foreground focus-visible:ring-accent/50 sm:w-44"
       />
-      <Button type="submit" size="lg" className="h-12 gap-2">
+      <Button type="submit" size="lg" className="h-12 gap-2 glow-gold">
         <Search className="h-4 w-4" />
         Rechercher
       </Button>
@@ -42,11 +47,11 @@ function HeroSearchBar() {
 function StepCard({ number, title, description, delay }) {
   return (
     <ScrollReveal delay={delay}>
-      <div className="flex flex-col items-center text-center">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-lg font-bold text-background">
+      <div className="group relative flex flex-col items-center text-center">
+        <div className="relative flex h-14 w-14 items-center justify-center rounded-full border-2 border-accent bg-background text-lg font-bold text-accent transition-all duration-300 glow-gold-hover group-hover:bg-accent group-hover:text-background">
           {number}
         </div>
-        <h3 className="mt-4 font-heading text-xl font-semibold text-foreground">
+        <h3 className="mt-5 font-heading text-xl font-semibold text-foreground">
           {title}
         </h3>
         <p className="mt-2 text-sm text-muted">{description}</p>
@@ -58,8 +63,8 @@ function StepCard({ number, title, description, delay }) {
 function TrustCard({ icon, title, description, delay }) {
   return (
     <ScrollReveal delay={delay}>
-      <div className="rounded border border-border/50 bg-card p-6 transition-shadow hover:shadow-lg">
-        <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-accent">
+      <div className="group rounded-xl border border-glow p-6 glass transition-all duration-300 hover:-translate-y-1">
+        <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-accent transition-transform duration-300 group-hover:scale-110 group-hover:bg-accent/20">
           {icon}
         </div>
         <h3 className="font-heading text-lg font-semibold text-foreground">
@@ -75,24 +80,38 @@ export default function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="flex min-h-[85vh] flex-col items-center justify-center px-4 text-center">
-        <h1 className="font-heading text-4xl font-bold leading-tight text-foreground sm:text-5xl md:text-7xl">
-          On accorde <span className="text-accent">votre piano</span>
-        </h1>
-        <p className="mt-4 max-w-xl text-lg text-muted sm:text-xl">
-          Trouvez et réservez un accordeur qualifié en Suisse. Prix fixe,
-          booking instantané, pros validés physiquement.
-        </p>
-        <HeroSearchBar />
+      <section className="spotlight-strong relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 text-center">
+        <HeroReveal>
+          <h1 className="font-heading text-5xl font-bold leading-[0.95] tracking-tight text-foreground sm:text-7xl md:text-8xl lg:text-9xl">
+            On accorde <span className="text-accent">votre piano</span>
+          </h1>
+          <p className="mx-auto mt-6 max-w-xl text-lg text-muted sm:text-xl">
+            Trouvez et réservez un accordeur qualifié en Suisse. Prix fixe,
+            booking instantané, pros validés physiquement.
+          </p>
+          <HeroSearchReveal>
+            <HeroSearchBar />
+          </HeroSearchReveal>
+          <ScrollIndicator />
+        </HeroReveal>
+        <div
+          className="piano-keys absolute bottom-0 left-0 right-0"
+          aria-hidden="true"
+        />
       </section>
 
       {/* Comment ça marche */}
-      <section className="mx-auto max-w-5xl px-4 py-20 sm:px-6">
+      <section className="relative mx-auto max-w-5xl px-4 py-24 sm:px-6">
         <ScrollReveal>
-          <h2 className="mb-12 text-center font-heading text-3xl font-bold text-foreground sm:text-4xl">
+          <h2 className="mb-16 text-center font-heading text-3xl font-bold text-foreground sm:text-4xl">
             Comment ça marche ?
           </h2>
         </ScrollReveal>
+        {/* Golden connector line */}
+        <div
+          className="absolute left-1/2 top-[55%] hidden h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-accent/30 to-transparent sm:block"
+          aria-hidden="true"
+        />
         <div className="grid gap-12 sm:grid-cols-3">
           <StepCard
             number={1}
@@ -116,10 +135,10 @@ export default function HomePage() {
       </section>
 
       {/* Pourquoi nous faire confiance */}
-      <section className="border-t border-border/30 bg-card/30 px-4 py-20 sm:px-6">
+      <section className="spotlight relative border-t border-border/30 px-4 py-24 sm:px-6">
         <div className="mx-auto max-w-5xl">
           <ScrollReveal>
-            <h2 className="mb-12 text-center font-heading text-3xl font-bold text-foreground sm:text-4xl">
+            <h2 className="mb-16 text-center font-heading text-3xl font-bold text-foreground sm:text-4xl">
               Pourquoi nous faire confiance ?
             </h2>
           </ScrollReveal>
@@ -153,9 +172,13 @@ export default function HomePage() {
       </section>
 
       {/* CTA Devenez accordeur */}
-      <section className="px-4 py-20 sm:px-6">
+      <section className="relative px-4 py-24 sm:px-6">
+        <div
+          className="mx-auto mb-12 h-px w-24 bg-gradient-to-r from-transparent via-accent to-transparent"
+          aria-hidden="true"
+        />
         <ScrollReveal>
-          <div className="mx-auto max-w-2xl rounded-lg border border-border/50 bg-card p-8 text-center sm:p-12">
+          <div className="mx-auto max-w-2xl rounded-xl border border-glow p-8 text-center glass sm:p-12">
             <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
               Vous êtes accordeur de piano ?
             </h2>
@@ -165,7 +188,7 @@ export default function HomePage() {
             </p>
             <Link
               href="/login"
-              className="mt-6 inline-flex h-12 items-center gap-2 rounded border border-accent bg-transparent px-8 text-sm font-medium text-accent transition-colors hover:bg-accent hover:text-background"
+              className="mt-6 inline-flex h-12 items-center gap-2 rounded border border-accent bg-transparent px-8 text-sm font-medium text-accent transition-all duration-300 glow-gold-hover hover:bg-accent hover:text-background"
             >
               Devenez accordeur
             </Link>

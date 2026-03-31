@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 /*
- * EasyPiano Design Tokens
- * Source: UX Design Specification — Customization Strategy
+ * EasyPiano "Concert Noir" Design System
+ * Aesthetic: Luxury piano concert hall — Steinway meets Apple
  */
 
 @layer base {
@@ -25,6 +25,9 @@
     font-family: var(--font-body);
     color: var(--foreground);
     background-color: var(--background);
+    scroll-behavior: smooth;
+    scrollbar-color: #333333 #0a0a0a;
+    scrollbar-width: thin;
   }
 
   body {
@@ -32,4 +35,138 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  /* Film grain texture overlay */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 256px 256px;
+  }
+
+  /* Selection champagne */
+  ::selection {
+    background-color: rgba(212, 197, 160, 0.3);
+    color: #fafafa;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0a0a0a;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #333333;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #d4c5a0;
+  }
+}
+
+/* Concert Noir utility classes */
+
+/* Radial spotlight gradients */
+.spotlight {
+  background: radial-gradient(
+    ellipse 60% 50% at 50% 0%,
+    rgba(212, 197, 160, 0.08) 0%,
+    transparent 70%
+  );
+}
+
+.spotlight-strong {
+  background: radial-gradient(
+    ellipse 50% 40% at 50% 0%,
+    rgba(212, 197, 160, 0.15) 0%,
+    rgba(212, 197, 160, 0.03) 40%,
+    transparent 70%
+  );
+}
+
+/* Golden glow effects */
+.glow-gold {
+  box-shadow:
+    0 0 20px rgba(212, 197, 160, 0.15),
+    0 0 60px rgba(212, 197, 160, 0.05);
+}
+
+.glow-gold-hover {
+  transition: box-shadow 0.3s ease;
+}
+.glow-gold-hover:hover {
+  box-shadow:
+    0 0 25px rgba(212, 197, 160, 0.25),
+    0 0 80px rgba(212, 197, 160, 0.08);
+}
+
+/* Golden border glow */
+.border-glow {
+  border-color: rgba(212, 197, 160, 0.15);
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+.border-glow:hover {
+  border-color: rgba(212, 197, 160, 0.4);
+  box-shadow: 0 0 30px rgba(212, 197, 160, 0.1);
+}
+
+/* Glass morphism */
+.glass {
+  background: rgba(17, 17, 17, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(212, 197, 160, 0.1);
+}
+
+.glass-strong {
+  background: rgba(17, 17, 17, 0.8);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(212, 197, 160, 0.12);
+}
+
+/* Decorative piano keys pattern */
+.piano-keys {
+  display: flex;
+  height: 48px;
+  overflow: hidden;
+}
+.piano-keys::before {
+  content: "";
+  flex: 1;
+  background: repeating-linear-gradient(
+    to right,
+    #fafafa 0px,
+    #fafafa 28px,
+    #0a0a0a 28px,
+    #0a0a0a 30px,
+    #fafafa 30px,
+    #fafafa 58px,
+    #0a0a0a 58px,
+    #0a0a0a 60px
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 10%,
+    black 90%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 10%,
+    black 90%,
+    transparent
+  );
+  opacity: 0.06;
 }
