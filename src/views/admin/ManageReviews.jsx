@@ -49,60 +49,84 @@ export default function ManageReviews() {
 
   const displayed = showAll ? reviews : reviews.filter((r) => r.reported);
 
-  if (loading) return <div className="loading">Chargement...</div>;
+  if (loading)
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center text-muted">
+        Chargement...
+      </div>
+    );
 
   return (
-    <div className="manage-reviews">
-      <div className="page-header">
-        <h1>Modération des avis</h1>
-        <button className="btn-secondary" onClick={() => setShowAll(!showAll)}>
+    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <h1 className="font-heading text-3xl font-bold text-foreground">
+          Modération des avis
+        </h1>
+        <button
+          className="rounded border border-border px-4 py-2 text-sm text-foreground transition-colors hover:bg-card"
+          onClick={() => setShowAll(!showAll)}
+        >
           {showAll ? "Signalés uniquement" : "Voir tous les avis"}
         </button>
       </div>
 
-      <p className="results-count">
-        {displayed.length} avis{displayed.length > 1 ? "" : ""}
-        {!showAll && " signalé(s)"}
+      <p className="mt-4 text-sm text-muted">
+        {displayed.length} avis{!showAll && " signalé(s)"}
       </p>
 
-      {displayed.map((review) => (
-        <div
-          key={review.id}
-          className={`review-card-admin ${review.reported ? "reported" : ""}`}
-        >
-          <div className="review-header">
-            <StarRating rating={review.rating} />
-            <span>{formatDate(review.createdAt)}</span>
-            <span className="review-author">par {review.clientName}</span>
-          </div>
-          {review.title && <h4>{review.title}</h4>}
-          <p>{review.comment}</p>
-          {review.reported && (
-            <div className="report-info">
-              <strong>Signalé :</strong> {review.reportReason}
+      <div className="mt-6 space-y-4">
+        {displayed.map((review) => (
+          <div
+            key={review.id}
+            className={`rounded-xl border p-5 ${
+              review.reported
+                ? "border-destructive/30 bg-destructive/5"
+                : "border-border/50 bg-card"
+            }`}
+          >
+            <div className="flex flex-wrap items-center gap-3">
+              <StarRating rating={review.rating} />
+              <span className="text-xs text-muted">
+                {formatDate(review.createdAt)}
+              </span>
+              <span className="text-xs text-muted">
+                par {review.clientName}
+              </span>
             </div>
-          )}
-          <div className="review-actions">
-            {review.reported && (
-              <button
-                className="btn-secondary"
-                onClick={() => clearReport(review.id)}
-              >
-                Lever le signalement
-              </button>
+            {review.title && (
+              <h4 className="mt-2 font-semibold text-foreground">
+                {review.title}
+              </h4>
             )}
-            <button
-              className="btn-delete"
-              onClick={() => handleDelete(review.id)}
-            >
-              Supprimer
-            </button>
+            <p className="mt-2 text-sm text-muted">{review.comment}</p>
+            {review.reported && (
+              <div className="mt-3 rounded border border-destructive/20 bg-destructive/10 p-3 text-sm">
+                <strong className="text-destructive">Signalé :</strong>{" "}
+                <span className="text-muted">{review.reportReason}</span>
+              </div>
+            )}
+            <div className="mt-4 flex gap-2">
+              {review.reported && (
+                <button
+                  className="rounded border border-border px-3 py-1.5 text-xs text-foreground transition-colors hover:bg-card"
+                  onClick={() => clearReport(review.id)}
+                >
+                  Lever le signalement
+                </button>
+              )}
+              <button
+                className="rounded border border-destructive/30 px-3 py-1.5 text-xs text-destructive transition-colors hover:bg-destructive/10"
+                onClick={() => handleDelete(review.id)}
+              >
+                Supprimer
+              </button>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
 
       {displayed.length === 0 && (
-        <p className="empty-state">
+        <p className="mt-8 text-center text-sm text-muted">
           {showAll ? "Aucun avis" : "Aucun avis signalé"}
         </p>
       )}
