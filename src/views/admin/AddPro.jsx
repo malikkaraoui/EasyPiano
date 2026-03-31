@@ -104,29 +104,37 @@ export default function AddPro() {
   }
 
   return (
-    <div className="add-pro-page">
+    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
       <h1>
         {isEdit ? "Modifier le professionnel" : "Ajouter un professionnel"}
       </h1>
 
-      <form onSubmit={handleSubmit} className="pro-form">
+      <form onSubmit={handleSubmit} className="mt-8 space-y-6">
         <fieldset>
           <legend>Photo de profil</legend>
-          <div className="photo-upload">
+          <div className="flex flex-col items-center gap-3">
             {photoPreview ? (
-              <img src={photoPreview} alt="Preview" className="photo-preview" />
+              <img
+                src={photoPreview}
+                alt="Preview"
+                className="h-32 w-32 rounded-xl object-cover"
+              />
             ) : (
-              <div className="photo-placeholder">📷</div>
+              <div className="flex h-32 w-32 items-center justify-center rounded-xl bg-card text-4xl">
+                📷
+              </div>
             )}
             <input type="file" accept="image/*" onChange={handlePhoto} />
-            <p className="help-text">Max 2MB, sera compressée à 500KB</p>
+            <p className="text-xs text-muted">
+              Max 2MB, sera compressée à 500KB
+            </p>
           </div>
         </fieldset>
 
         <fieldset>
           <legend>Identité</legend>
-          <div className="form-row">
-            <div className="form-group">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="">
               <label htmlFor="firstName">Prénom</label>
               <input
                 type="text"
@@ -137,7 +145,7 @@ export default function AddPro() {
                 required
               />
             </div>
-            <div className="form-group">
+            <div className="">
               <label htmlFor="lastName">Nom</label>
               <input
                 type="text"
@@ -149,8 +157,8 @@ export default function AddPro() {
               />
             </div>
           </div>
-          <div className="form-row">
-            <div className="form-group">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="">
               <label htmlFor="email">Email</label>
               <input
                 type="email"
@@ -161,7 +169,7 @@ export default function AddPro() {
                 required
               />
             </div>
-            <div className="form-group">
+            <div className="">
               <label htmlFor="phone">Téléphone</label>
               <input
                 type="tel"
@@ -177,7 +185,7 @@ export default function AddPro() {
 
         <fieldset>
           <legend>Profil</legend>
-          <div className="form-group">
+          <div className="">
             <label htmlFor="description">Bio / Description</label>
             <textarea
               id="description"
@@ -188,8 +196,8 @@ export default function AddPro() {
               required
             />
           </div>
-          <div className="form-row">
-            <div className="form-group">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="">
               <label htmlFor="experience">Expérience (années)</label>
               <input
                 type="number"
@@ -201,7 +209,7 @@ export default function AddPro() {
                 required
               />
             </div>
-            <div className="form-group">
+            <div className="">
               <label htmlFor="specialties">
                 Spécialités (séparées par des virgules)
               </label>
@@ -219,8 +227,8 @@ export default function AddPro() {
 
         <fieldset>
           <legend>Contacts</legend>
-          <div className="form-row">
-            <div className="form-group">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="">
               <label htmlFor="linkedinUrl">LinkedIn (URL)</label>
               <input
                 type="url"
@@ -231,7 +239,7 @@ export default function AddPro() {
                 placeholder="https://linkedin.com/in/..."
               />
             </div>
-            <div className="form-group">
+            <div className="">
               <label htmlFor="whatsappNumber">
                 WhatsApp (numéro international)
               </label>
@@ -245,7 +253,7 @@ export default function AddPro() {
               />
             </div>
           </div>
-          <div className="form-group">
+          <div className="">
             <label htmlFor="website">Site web</label>
             <input
               type="url"
@@ -260,7 +268,7 @@ export default function AddPro() {
 
         <fieldset>
           <legend>Localisation</legend>
-          <div className="form-group">
+          <div className="">
             <label htmlFor="address">Adresse</label>
             <input
               type="text"
@@ -270,8 +278,8 @@ export default function AddPro() {
               onChange={handleChange}
             />
           </div>
-          <div className="form-row">
-            <div className="form-group">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="">
               <label htmlFor="city">Ville</label>
               <input
                 type="text"
@@ -282,7 +290,7 @@ export default function AddPro() {
                 required
               />
             </div>
-            <div className="form-group">
+            <div className="">
               <label htmlFor="postalCode">Code postal</label>
               <input
                 type="text"
@@ -293,7 +301,7 @@ export default function AddPro() {
                 required
               />
             </div>
-            <div className="form-group">
+            <div className="">
               <label htmlFor="department">Département</label>
               <input
                 type="text"
@@ -304,7 +312,7 @@ export default function AddPro() {
               />
             </div>
           </div>
-          <div className="form-group">
+          <div className="">
             <label htmlFor="zone">Zone d&apos;intervention (km)</label>
             <input
               type="number"
@@ -319,8 +327,8 @@ export default function AddPro() {
 
         <fieldset>
           <legend>Tarifs</legend>
-          <div className="form-row">
-            <div className="form-group">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="">
               <label htmlFor="basePrice">Prix de base (€)</label>
               <input
                 type="number"
@@ -333,7 +341,7 @@ export default function AddPro() {
                 required
               />
             </div>
-            <div className="form-group">
+            <div className="">
               <label htmlFor="travelFee">Frais de déplacement (€)</label>
               <input
                 type="number"
@@ -350,7 +358,7 @@ export default function AddPro() {
 
         <button
           type="submit"
-          className="btn-primary btn-lg"
+          className="inline-flex h-12 w-full items-center justify-center rounded bg-accent px-8 text-sm font-medium text-background transition-colors hover:bg-accent-hover disabled:opacity-50"
           disabled={submitting}
         >
           {submitting
