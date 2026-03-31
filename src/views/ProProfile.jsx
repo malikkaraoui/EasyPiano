@@ -33,65 +33,99 @@ export default function ProProfile() {
     load();
   }, [proId]);
 
-  if (loading) return <div className="loading">Chargement...</div>;
-  if (!pro) return <div className="not-found">Professionnel introuvable</div>;
+  if (loading)
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center text-muted">
+        Chargement...
+      </div>
+    );
+  if (!pro)
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center text-muted">
+        Professionnel introuvable
+      </div>
+    );
 
   return (
-    <div className="pro-profile">
-      <div className="pro-header">
-        <div className="pro-photo">
+    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
+      {/* Header du profil */}
+      <div className="flex flex-col gap-8 sm:flex-row">
+        <div className="h-48 w-48 shrink-0 overflow-hidden rounded-xl bg-card sm:h-52 sm:w-52">
           {pro.photoURL ? (
-            <img src={pro.photoURL} alt={`${pro.firstName} ${pro.lastName}`} />
+            <img
+              src={pro.photoURL}
+              alt={`${pro.firstName} ${pro.lastName}`}
+              className="h-full w-full object-cover"
+            />
           ) : (
-            <div className="pro-photo-placeholder">🎹</div>
+            <div className="flex h-full w-full items-center justify-center text-6xl">
+              🎹
+            </div>
           )}
         </div>
 
-        <div className="pro-info">
-          <h1>
+        <div className="flex-1">
+          <h1 className="font-heading text-3xl font-bold text-foreground">
             {pro.firstName} {pro.lastName}
           </h1>
-          <div className="pro-rating">
+          <div className="mt-2 flex items-center gap-2">
             <StarRating rating={pro.rating || 0} />
-            <span>
+            <span className="text-sm text-muted">
               {formatRating(pro.rating || 0)} ({pro.reviewCount || 0} avis)
             </span>
           </div>
-          <p className="pro-location">
+          <p className="mt-2 text-sm text-muted">
             📍 {pro.city} ({pro.postalCode}) — Zone : {pro.zone} km
           </p>
-          <p className="pro-experience">
+          <p className="text-sm text-muted">
             {pro.experience} ans d&apos;expérience
           </p>
-          <p className="pro-price">
+          <p className="mt-2 text-lg font-semibold text-accent">
             À partir de {formatPrice(pro.basePrice || 0)}
           </p>
 
-          {user && (
-            <Link href={`/booking/${pro.id}`} className="btn-primary">
-              Réserver un accord
-            </Link>
-          )}
-          {!user && (
-            <Link href="/login" className="btn-primary">
-              Se connecter pour réserver
-            </Link>
-          )}
+          <div className="mt-4">
+            {user ? (
+              <Link
+                href={`/booking/${pro.id}`}
+                className="inline-flex h-10 items-center rounded bg-accent px-6 text-sm font-medium text-background transition-colors hover:bg-accent-hover"
+              >
+                Réserver un accord
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="inline-flex h-10 items-center rounded bg-accent px-6 text-sm font-medium text-background transition-colors hover:bg-accent-hover"
+              >
+                Se connecter pour réserver
+              </Link>
+            )}
+          </div>
         </div>
       </div>
 
-      <div className="pro-details">
-        <section className="pro-bio">
-          <h2>À propos</h2>
-          <p>{pro.description}</p>
+      {/* Détails */}
+      <div className="mt-10 space-y-8">
+        <section>
+          <h2 className="font-heading text-xl font-bold text-foreground">
+            À propos
+          </h2>
+          <p className="mt-3 text-sm leading-relaxed text-muted">
+            {pro.description}
+          </p>
         </section>
 
         {pro.specialties?.length > 0 && (
-          <section className="pro-specialties">
-            <h2>Spécialités</h2>
-            <div className="tags">
+          <section>
+            <h2 className="font-heading text-xl font-bold text-foreground">
+              Spécialités
+            </h2>
+            <div className="mt-3 flex flex-wrap gap-2">
               {pro.specialties.map((s) => (
-                <span key={s} className="tag">
+                <span
+                  key={s}
+                  className="rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-medium text-accent"
+                >
                   {s}
                 </span>
               ))}
@@ -99,16 +133,24 @@ export default function ProProfile() {
           </section>
         )}
 
-        <section className="pro-contact">
-          <h2>Contact</h2>
-          <div className="contact-links">
+        <section>
+          <h2 className="font-heading text-xl font-bold text-foreground">
+            Contact
+          </h2>
+          <div className="mt-3 flex flex-wrap gap-3">
             {pro.email && (
-              <a href={`mailto:${pro.email}`} className="contact-link">
+              <a
+                href={`mailto:${pro.email}`}
+                className="inline-flex items-center gap-1.5 rounded border border-border px-3 py-2 text-sm text-foreground transition-colors hover:bg-card"
+              >
                 ✉️ {pro.email}
               </a>
             )}
             {pro.phone && (
-              <a href={`tel:${pro.phone}`} className="contact-link">
+              <a
+                href={`tel:${pro.phone}`}
+                className="inline-flex items-center gap-1.5 rounded border border-border px-3 py-2 text-sm text-foreground transition-colors hover:bg-card"
+              >
                 📞 {pro.phone}
               </a>
             )}
@@ -117,7 +159,7 @@ export default function ProProfile() {
                 href={pro.linkedinUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="contact-link"
+                className="inline-flex items-center gap-1.5 rounded border border-border px-3 py-2 text-sm text-foreground transition-colors hover:bg-card"
               >
                 💼 LinkedIn
               </a>
@@ -127,7 +169,7 @@ export default function ProProfile() {
                 href={`https://wa.me/${pro.whatsappNumber}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="contact-link"
+                className="inline-flex items-center gap-1.5 rounded border border-border px-3 py-2 text-sm text-foreground transition-colors hover:bg-card"
               >
                 💬 WhatsApp
               </a>
@@ -135,46 +177,68 @@ export default function ProProfile() {
           </div>
         </section>
 
-        <section className="pro-tarifs">
-          <h2>Tarifs</h2>
-          <div className="tarif-grid">
-            <div className="tarif-item">
-              <span>Accord standard</span>
-              <strong>{formatPrice(pro.basePrice || 0)}</strong>
+        <section>
+          <h2 className="font-heading text-xl font-bold text-foreground">
+            Tarifs
+          </h2>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            <div className="flex items-center justify-between rounded-xl border border-border/50 bg-card p-4">
+              <span className="text-sm text-muted">Accord standard</span>
+              <strong className="text-accent">
+                {formatPrice(pro.basePrice || 0)}
+              </strong>
             </div>
             {pro.travelFee > 0 && (
-              <div className="tarif-item">
-                <span>Frais de déplacement</span>
-                <strong>{formatPrice(pro.travelFee)}</strong>
+              <div className="flex items-center justify-between rounded-xl border border-border/50 bg-card p-4">
+                <span className="text-sm text-muted">Frais de déplacement</span>
+                <strong className="text-accent">
+                  {formatPrice(pro.travelFee)}
+                </strong>
               </div>
             )}
           </div>
         </section>
       </div>
 
-      <section className="pro-reviews">
-        <h2>Avis clients ({reviews.length})</h2>
+      {/* Avis */}
+      <section className="mt-12">
+        <h2 className="font-heading text-xl font-bold text-foreground">
+          Avis clients ({reviews.length})
+        </h2>
         {reviews.length === 0 && (
-          <p className="no-reviews">Aucun avis pour le moment</p>
+          <p className="mt-4 text-sm text-muted">Aucun avis pour le moment</p>
         )}
-        {reviews.map((review) => (
-          <div key={review.id} className="review-card">
-            <div className="review-header">
-              <StarRating rating={review.rating} />
-              <span className="review-date">
-                {formatDate(review.createdAt)}
-              </span>
-            </div>
-            {review.title && <h4 className="review-title">{review.title}</h4>}
-            <p className="review-comment">{review.comment}</p>
-            {review.proResponse && (
-              <div className="review-response">
-                <strong>Réponse du professionnel :</strong>
-                <p>{review.proResponse}</p>
+        <div className="mt-4 space-y-4">
+          {reviews.map((review) => (
+            <div
+              key={review.id}
+              className="rounded-xl border border-border/50 bg-card p-5"
+            >
+              <div className="flex items-center justify-between">
+                <StarRating rating={review.rating} />
+                <span className="text-xs text-muted">
+                  {formatDate(review.createdAt)}
+                </span>
               </div>
-            )}
-          </div>
-        ))}
+              {review.title && (
+                <h4 className="mt-2 font-semibold text-foreground">
+                  {review.title}
+                </h4>
+              )}
+              <p className="mt-2 text-sm text-muted">{review.comment}</p>
+              {review.proResponse && (
+                <div className="mt-3 rounded border-l-2 border-accent/50 bg-accent/5 p-3">
+                  <strong className="text-xs text-accent">
+                    Réponse du professionnel :
+                  </strong>
+                  <p className="mt-1 text-sm text-muted">
+                    {review.proResponse}
+                  </p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </section>
     </div>
   );
