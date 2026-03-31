@@ -54,6 +54,15 @@ describe("GET /api/bookings/client", () => {
           createdAt: "2026-04-01",
         }),
       })
+      .mockResolvedValueOnce({ exists: () => false })
+      .mockResolvedValueOnce({
+        exists: () => true,
+        val: () => ({
+          firstName: "Alice",
+          lastName: "Tempo",
+          photoURL: "https://img/1.jpg",
+        }),
+      })
       .mockResolvedValueOnce({
         exists: () => true,
         val: () => ({
@@ -65,6 +74,15 @@ describe("GET /api/bookings/client", () => {
           addressCity: "Genève",
           createdAt: "2026-03-28",
         }),
+      })
+      .mockResolvedValueOnce({ exists: () => false })
+      .mockResolvedValueOnce({
+        exists: () => true,
+        val: () => ({
+          firstName: "Basile",
+          lastName: "Clavecin",
+          photoURL: null,
+        }),
       });
 
     const res = await GET(makeRequest());
@@ -73,6 +91,8 @@ describe("GET /api/bookings/client", () => {
     expect(body.data.items).toHaveLength(2);
     expect(body.data.items[0].date).toBe("2026-04-15"); // trié par date
     expect(body.data.items[1].date).toBe("2026-05-01");
+    expect(body.data.items[0].proName).toBe("Basile Clavecin");
+    expect(body.data.items[1].proPhotoURL).toBe("https://img/1.jpg");
   });
 
   it("ne retourne pas l'adresse chiffrée", async () => {
@@ -94,12 +114,49 @@ describe("GET /api/bookings/client", () => {
           addressEncrypted: "secret_encrypted_data",
           createdAt: "2026-04-01",
         }),
-      });
+      })
+      .mockResolvedValueOnce({ exists: () => false })
+      .mockResolvedValueOnce({ exists: () => false });
 
     const res = await GET(makeRequest());
     const body = await res.json();
 
     expect(body.data.items[0].addressEncrypted).toBeUndefined();
     expect(body.data.items[0].addressCity).toBe("Lausanne");
+  });
+
+  it("indique si un carnet d'entretien existe déjà", async () => {
+    verifyAuth.mockResolvedValue({ uid: "u1" });
+    get
+      .mockResolvedValueOnce({
+        exists: () => true,
+        val: () => ({ b1: true }),
+      })
+      .mockResolvedValueOnce({
+        exists: () => true,
+        val: () => ({
+          proId: "p1",
+          date: "2026-04-15",
+          slot: "morning",
+          status: "completed",
+          price: 15000,
+          addressCity: "Lausanne",
+          createdAt: "2026-04-01",
+        }),
+      })
+      .mockResolvedValueOnce({
+        exists: () => true,
+        val: () => ({ condition: "Bon état" }),
+      })
+      .mockResolvedValueOnce({
+        exists: () => true,
+        val: () => ({ firstName: "Clara", lastName: "Stein", photoURL: null }),
+      });
+
+    const res = await GET(makeRequest());
+    const body = await res.json();
+
+    expect(body.data.items[0].maintenanceReportExists).toBe(true);
+    expect(body.data.items[0].proName).toBe("Clara Stein");
   });
 });

@@ -3,6 +3,11 @@ import { successResponse, errorResponse } from "@/lib/api-response";
 import { ref, get } from "firebase/database";
 import { db } from "@/services/firebase";
 
+function buildProDisplayName(pro = {}) {
+  const fullName = `${pro.firstName || ""} ${pro.lastName || ""}`.trim();
+  return fullName || pro.displayName || "Accordeur EasyPiano";
+}
+
 export async function GET(request) {
   const user = await verifyAuth(request);
   if (!user) return errorResponse("Non autorisé", 401);
@@ -23,6 +28,16 @@ export async function GET(request) {
       const snapshot = await get(ref(db, `bookings/${bookingId}`));
       if (snapshot.exists()) {
         const booking = snapshot.val();
+
+        const [reportSnapshot, proSnapshot] = await Promise.all([
+          get(ref(db, `maintenanceReports/${bookingId}`)),
+          booking.proId
+            ? get(ref(db, `pros/${booking.proId}`))
+            : Promise.resolve(null),
+        ]);
+
+        const pro = proSnapshot?.exists?.() ? proSnapshot.val() : null;
+
         bookings.push({
           bookingId,
           proId: booking.proId,
@@ -32,6 +47,9 @@ export async function GET(request) {
           price: booking.price,
           addressCity: booking.addressCity,
           createdAt: booking.createdAt,
+          maintenanceReportExists: reportSnapshot.exists(),
+          proName: buildProDisplayName(pro || {}),
+          proPhotoURL: pro?.photoURL || null,
         });
       }
     }
