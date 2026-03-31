@@ -46,30 +46,76 @@ describe("HeroSearchBar", () => {
     ).toBeInTheDocument();
   });
 
-  it("affiche des suggestions en tapant une ville", () => {
+  it("affiche des suggestions dès 1 caractère (ville)", () => {
     render(<HeroSearchBar />);
     const input = screen.getByLabelText("Lieu de recherche");
 
-    fireEvent.change(input, { target: { value: "Lau" } });
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: "L" } });
+    expect(screen.getByText("📍 Lausanne")).toBeInTheDocument();
+    expect(screen.getByText("📍 Lucerne")).toBeInTheDocument();
+  });
+
+  it("affiche des suggestions par code postal", () => {
+    render(<HeroSearchBar />);
+    const input = screen.getByLabelText("Lieu de recherche");
+
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: "1000" } });
     expect(screen.getByText("📍 Lausanne")).toBeInTheDocument();
   });
 
-  it("sélectionne une suggestion au clic", () => {
+  it("affiche le code postal et la région dans les suggestions", () => {
     render(<HeroSearchBar />);
     const input = screen.getByLabelText("Lieu de recherche");
 
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: "Gen" } });
+    expect(screen.getByText("1200 · GE")).toBeInTheDocument();
+  });
+
+  it("sélectionne une suggestion au clic avec ville et postal", () => {
+    render(<HeroSearchBar />);
+    const input = screen.getByLabelText("Lieu de recherche");
+
+    fireEvent.focus(input);
     fireEvent.change(input, { target: { value: "Gen" } });
     fireEvent.mouseDown(screen.getByText("📍 Genève"));
 
-    expect(input.value).toBe("Genève");
+    expect(input.value).toBe("Genève (1200)");
   });
 
-  it("ne montre pas de suggestions pour moins de 2 caractères", () => {
+  it("ne montre pas de suggestions pour 0 caractère", () => {
     render(<HeroSearchBar />);
     const input = screen.getByLabelText("Lieu de recherche");
 
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: "" } });
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+  });
+
+  it("navigue avec les flèches clavier", () => {
+    render(<HeroSearchBar />);
+    const input = screen.getByLabelText("Lieu de recherche");
+
+    fireEvent.focus(input);
     fireEvent.change(input, { target: { value: "L" } });
-    expect(screen.queryByText("📍 Lausanne")).not.toBeInTheDocument();
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    fireEvent.keyDown(input, { key: "Enter" });
+
+    expect(input.value).toContain("Lausanne");
+  });
+
+  it("ferme les suggestions avec Escape", () => {
+    render(<HeroSearchBar />);
+    const input = screen.getByLabelText("Lieu de recherche");
+
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: "L" } });
+    expect(screen.getByRole("listbox")).toBeInTheDocument();
+
+    fireEvent.keyDown(input, { key: "Escape" });
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
   });
 
   it("redirige vers /search au submit", () => {
