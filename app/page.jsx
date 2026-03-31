@@ -1,48 +1,18 @@
 import Link from "next/link";
-import { ShieldCheck, Banknote, Lock, Clock, Search } from "lucide-react";
+import { ShieldCheck, Banknote, Lock, Clock } from "lucide-react";
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
 import {
   HeroReveal,
   HeroSearchReveal,
   ScrollIndicator,
 } from "@/components/animations/HeroReveal";
-import { Button } from "@/components/UI/button";
-import { Input } from "@/components/UI/input";
+import { HeroSearchBar } from "@/components/HeroSearchBar";
 
 export const metadata = {
   title: "EasyPiano - Accordeur de Piano en Suisse | Réservation en ligne",
   description:
     "Trouvez et réservez un accordeur de piano qualifié en Suisse. Prix fixe 150 CHF, booking instantané, pros validés physiquement.",
 };
-
-function HeroSearchBar() {
-  return (
-    <form
-      action="/search"
-      method="get"
-      className="mt-10 flex w-full max-w-2xl flex-col gap-3 rounded-xl border border-glow p-2 glass sm:flex-row"
-    >
-      <Input
-        type="text"
-        name="lieu"
-        placeholder="Ville ou code postal"
-        aria-label="Lieu de recherche"
-        className="h-12 flex-1 border-transparent bg-transparent text-foreground placeholder:text-muted focus-visible:ring-accent/50"
-        autoComplete="off"
-      />
-      <Input
-        type="date"
-        name="date"
-        aria-label="Date souhaitée"
-        className="h-12 border-transparent bg-transparent text-foreground focus-visible:ring-accent/50 sm:w-44"
-      />
-      <Button type="submit" size="lg" className="h-12 gap-2 glow-gold">
-        <Search className="h-4 w-4" />
-        Rechercher
-      </Button>
-    </form>
-  );
-}
 
 function StepCard({ number, title, description, delay }) {
   return (

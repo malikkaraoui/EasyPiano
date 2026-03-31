@@ -58,29 +58,37 @@ export default function Search() {
   }, [search, sortBy, pros]);
 
   if (loading)
-    return <div className="loading">Chargement des accordeurs...</div>;
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center text-muted">
+        Chargement des accordeurs...
+      </div>
+    );
 
   return (
-    <div className="search-page">
-      <h1>Trouver un accordeur de piano</h1>
+    <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
+      <h1 className="font-heading text-3xl font-bold text-foreground">
+        Trouver un accordeur de piano
+      </h1>
 
-      <div className="search-controls">
-        <CityPostalAutocomplete
-          value={search}
-          onChange={setSearch}
-          onSelect={(selection) => {
-            const nextValue = [selection.city, selection.postalCode]
-              .filter(Boolean)
-              .join(" ");
-            setSearch(
-              nextValue || selection.city || selection.postalCode || "",
-            );
-          }}
-        />
+      <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center">
+        <div className="flex-1">
+          <CityPostalAutocomplete
+            value={search}
+            onChange={setSearch}
+            onSelect={(selection) => {
+              const nextValue = [selection.city, selection.postalCode]
+                .filter(Boolean)
+                .join(" ");
+              setSearch(
+                nextValue || selection.city || selection.postalCode || "",
+              );
+            }}
+          />
+        </div>
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
-          className="sort-select"
+          className="h-10 rounded border border-border bg-background px-3 text-sm text-foreground"
         >
           <option value="rating">Mieux notés</option>
           <option value="price">Prix croissant</option>
@@ -88,40 +96,45 @@ export default function Search() {
         </select>
       </div>
 
-      <p className="results-count">
+      <p className="mt-4 text-sm text-muted">
         {filtered.length} accordeur{filtered.length > 1 ? "s" : ""} trouvé
         {filtered.length > 1 ? "s" : ""}
       </p>
 
-      <div className="pros-grid">
+      <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map((pro) => (
-          <Link href={`/pro/${pro.id}`} key={pro.id} className="pro-card">
-            <div className="pro-card-photo">
+          <Link
+            href={`/pro/${pro.id}`}
+            key={pro.id}
+            className="group rounded-xl border border-glow p-4 glass transition-all duration-300 hover:-translate-y-1"
+          >
+            <div className="aspect-square overflow-hidden rounded-lg bg-card">
               {pro.photoURL ? (
                 <img
                   src={pro.photoURL}
                   alt={`${pro.firstName} ${pro.lastName}`}
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
               ) : (
-                <div className="pro-card-placeholder">🎹</div>
+                <div className="flex h-full w-full items-center justify-center text-4xl">
+                  🎹
+                </div>
               )}
             </div>
-            <div className="pro-card-info">
-              <h3>
+            <div className="mt-4">
+              <h3 className="font-heading text-lg font-semibold text-foreground">
                 {pro.firstName} {pro.lastName}
               </h3>
-              <p className="pro-card-city">
+              <p className="mt-1 text-sm text-muted">
                 📍 {pro.city} ({pro.postalCode})
               </p>
-              <div className="pro-card-rating">
-                <span className="stars">
-                  {"⭐".repeat(Math.round(pro.rating || 0))}
-                </span>
-                <span className="rating-text">
+              <div className="mt-2 flex items-center gap-2 text-sm">
+                <span>{"⭐".repeat(Math.round(pro.rating || 0))}</span>
+                <span className="text-muted">
                   {formatRating(pro.rating || 0)} ({pro.reviewCount || 0} avis)
                 </span>
               </div>
-              <p className="pro-card-price">
+              <p className="mt-2 font-semibold text-accent">
                 À partir de {formatPrice(pro.basePrice || 0)}
               </p>
             </div>
@@ -130,9 +143,13 @@ export default function Search() {
       </div>
 
       {filtered.length === 0 && (
-        <div className="no-results">
-          <p>Aucun accordeur trouvé pour votre recherche.</p>
-          <p>Essayez avec une autre ville ou un autre code postal.</p>
+        <div className="mt-12 text-center">
+          <p className="text-muted">
+            Aucun accordeur trouvé pour votre recherche.
+          </p>
+          <p className="mt-1 text-sm text-muted">
+            Essayez avec une autre ville ou un autre code postal.
+          </p>
         </div>
       )}
     </div>

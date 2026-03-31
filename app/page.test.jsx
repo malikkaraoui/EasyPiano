@@ -18,6 +18,24 @@ vi.mock("@/components/animations/ScrollReveal", () => ({
   ),
 }));
 
+// Mock HeroReveal animations
+vi.mock("@/components/animations/HeroReveal", () => ({
+  HeroReveal: ({ children }) => <div>{children}</div>,
+  HeroSearchReveal: ({ children }) => <div>{children}</div>,
+  ScrollIndicator: () => null,
+}));
+
+// Mock HeroSearchBar (client component)
+vi.mock("@/components/HeroSearchBar", () => ({
+  HeroSearchBar: () => (
+    <form action="/search">
+      <input aria-label="Lieu de recherche" />
+      <input aria-label="Date souhaitée" />
+      <button>Rechercher</button>
+    </form>
+  ),
+}));
+
 describe("HomePage", () => {
   it("affiche le titre 'On accorde votre piano'", () => {
     render(<HomePage />);
