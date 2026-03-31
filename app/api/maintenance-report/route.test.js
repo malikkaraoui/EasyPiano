@@ -52,7 +52,7 @@ describe("POST /api/maintenance-report", () => {
     get
       .mockResolvedValueOnce({
         exists: () => true,
-        val: () => ({ proId: "p1", clientId: "c1" }),
+        val: () => ({ proId: "p1", clientId: "c1", status: "completed" }),
       })
       .mockResolvedValueOnce({
         exists: () => true,
@@ -69,7 +69,7 @@ describe("POST /api/maintenance-report", () => {
     get
       .mockResolvedValueOnce({
         exists: () => true,
-        val: () => ({ proId: "p1", clientId: "c1" }),
+        val: () => ({ proId: "p1", clientId: "c1", status: "completed" }),
       })
       .mockResolvedValueOnce({
         exists: () => true,
@@ -99,7 +99,7 @@ describe("POST /api/maintenance-report", () => {
     get
       .mockResolvedValueOnce({
         exists: () => true,
-        val: () => ({ proId: "p1", clientId: "c1" }),
+        val: () => ({ proId: "p1", clientId: "c1", status: "completed" }),
       })
       .mockResolvedValueOnce({
         exists: () => true,
@@ -109,6 +109,19 @@ describe("POST /api/maintenance-report", () => {
 
     const res = await POST(makeRequest({ bookingId: "b1", condition: "Bon" }));
     expect(res.status).toBe(400);
+  });
+
+  it("retourne 409 si l'intervention n'est pas encore terminée", async () => {
+    verifyAuth.mockResolvedValue({ uid: "pro1" });
+    get.mockResolvedValueOnce({
+      exists: () => true,
+      val: () => ({ proId: "p1", clientId: "c1", status: "in_progress" }),
+    });
+
+    const res = await POST(makeRequest({ bookingId: "b1", condition: "Bon" }));
+
+    expect(res.status).toBe(409);
+    expect(set).not.toHaveBeenCalled();
   });
 });
 
@@ -156,5 +169,29 @@ describe("GET /api/maintenance-report", () => {
 
     expect(res.status).toBe(200);
     expect(body.data.condition).toBe("Bon état");
+  });
+
+  it("refuse l'accès à un autre pro", async () => {
+    verifyAuth.mockResolvedValue({ uid: "pro2" });
+    get
+      .mockResolvedValueOnce({
+        exists: () => true,
+        val: () => ({
+          clientId: "c1",
+          proId: "p1",
+          condition: "Bon état",
+          recommendations: "RAS",
+        }),
+      })
+      .mockResolvedValueOnce({
+        exists: () => true,
+        val: () => ({ p2: { userId: "pro2" } }),
+      });
+
+    const res = await GET(
+      makeRequest(null, "http://localhost/api/maintenance-report?bookingId=b1"),
+    );
+
+    expect(res.status).toBe(403);
   });
 });

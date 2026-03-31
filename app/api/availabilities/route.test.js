@@ -220,7 +220,16 @@ describe("PUT /api/availabilities", () => {
         exists: () => true,
         val: () => ({ p1: { userId: "u1" } }),
       })
-      .mockResolvedValueOnce({ exists: () => true });
+      .mockResolvedValueOnce({
+        exists: () => true,
+        val: () => ({
+          ...validBody,
+          radiusKm: 50,
+          capacityMorning: 1,
+          capacityAfternoon: 2,
+        }),
+      })
+      .mockResolvedValueOnce({ exists: () => false });
     update.mockResolvedValue();
 
     const res = await PUT(
@@ -229,8 +238,44 @@ describe("PUT /api/availabilities", () => {
     const body = await res.json();
 
     expect(res.status).toBe(200);
+    expect(body.data.id).toBe("a1");
     expect(body.data.zone).toBe("Berne");
     expect(body.data.radiusKm).toBe(30);
+  });
+
+  it("bloque la modification si une réservation confirmée existe", async () => {
+    verifyAuth.mockResolvedValue({ uid: "u1" });
+    get
+      .mockResolvedValueOnce({
+        exists: () => true,
+        val: () => ({ p1: { userId: "u1" } }),
+      })
+      .mockResolvedValueOnce({
+        exists: () => true,
+        val: () => ({
+          ...validBody,
+          radiusKm: 50,
+          capacityMorning: 1,
+          capacityAfternoon: 2,
+        }),
+      })
+      .mockResolvedValueOnce({
+        exists: () => true,
+        val: () => ({ b1: true }),
+      })
+      .mockResolvedValueOnce({
+        exists: () => true,
+        val: () => ({ date: validBody.startDate, status: "confirmed" }),
+      });
+
+    const res = await PUT(
+      makeRequest({ availabilityId: "a1", zone: "Berne", radiusKm: 30 }),
+    );
+    const body = await res.json();
+
+    expect(res.status).toBe(409);
+    expect(body.error).toContain("réservations confirmées");
+    expect(update).not.toHaveBeenCalled();
   });
 });
 
@@ -252,10 +297,16 @@ describe("DELETE /api/availabilities", () => {
 
   it("supprime une disponibilité", async () => {
     verifyAuth.mockResolvedValue({ uid: "u1" });
-    get.mockResolvedValueOnce({
-      exists: () => true,
-      val: () => ({ p1: { userId: "u1" } }),
-    });
+    get
+      .mockResolvedValueOnce({
+        exists: () => true,
+        val: () => ({ p1: { userId: "u1" } }),
+      })
+      .mockResolvedValueOnce({
+        exists: () => true,
+        val: () => validBody,
+      })
+      .mockResolvedValueOnce({ exists: () => false });
     remove.mockResolvedValue();
 
     const res = await DELETE(
@@ -265,5 +316,35 @@ describe("DELETE /api/availabilities", () => {
 
     expect(res.status).toBe(200);
     expect(body.data.deleted).toBe("a1");
+  });
+
+  it("bloque la suppression si une réservation confirmée existe", async () => {
+    verifyAuth.mockResolvedValue({ uid: "u1" });
+    get
+      .mockResolvedValueOnce({
+        exists: () => true,
+        val: () => ({ p1: { userId: "u1" } }),
+      })
+      .mockResolvedValueOnce({
+        exists: () => true,
+        val: () => validBody,
+      })
+      .mockResolvedValueOnce({
+        exists: () => true,
+        val: () => ({ b1: true }),
+      })
+      .mockResolvedValueOnce({
+        exists: () => true,
+        val: () => ({ date: validBody.startDate, status: "confirmed" }),
+      });
+
+    const res = await DELETE(
+      makeRequest(null, "http://localhost/api/availabilities?id=a1"),
+    );
+    const body = await res.json();
+
+    expect(res.status).toBe(409);
+    expect(body.error).toContain("réservations confirmées");
+    expect(remove).not.toHaveBeenCalled();
   });
 });

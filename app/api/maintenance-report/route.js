@@ -7,6 +7,18 @@ import {
 import { ref, get, set } from "firebase/database";
 import { db } from "@/services/firebase";
 
+async function findProByUserId(userId) {
+  const prosSnapshot = await get(ref(db, "pros"));
+  if (!prosSnapshot.exists()) return null;
+
+  const pros = prosSnapshot.val();
+  for (const [proId, proData] of Object.entries(pros)) {
+    if (proData.userId === userId) return { proId, ...proData };
+  }
+
+  return null;
+}
+
 export async function POST(request) {
   const user = await verifyAuth(request);
   if (!user) return errorResponse("Non autorisé", 401);
@@ -27,14 +39,17 @@ export async function POST(request) {
 
     const booking = bookingSnapshot.val();
 
-    // Vérifier que c'est bien le pro du booking
-    const prosSnapshot = await get(ref(db, "pros"));
-    const pros = prosSnapshot.exists() ? prosSnapshot.val() : {};
-    const proEntry = Object.entries(pros).find(
-      ([, p]) => p.userId === user.uid,
-    );
+    if (booking.status !== "completed") {
+      return errorResponse(
+        "Le rapport ne peut être envoyé qu'après une intervention terminée",
+        409,
+      );
+    }
 
-    if (!proEntry || proEntry[0] !== booking.proId) {
+    // Vérifier que c'est bien le pro du booking
+    const proEntry = await findProByUserId(user.uid);
+
+    if (!proEntry || proEntry.proId !== booking.proId) {
       return errorResponse(
         "Seul l'accordeur du RDV peut remplir le rapport",
         403,
@@ -92,10 +107,8 @@ export async function GET(request) {
 
     // Vérifier que l'utilisateur est le client ou le pro
     if (report.clientId !== user.uid) {
-      const prosSnapshot = await get(ref(db, "pros"));
-      const pros = prosSnapshot.exists() ? prosSnapshot.val() : {};
-      const isPro = Object.values(pros).some((p) => p.userId === user.uid);
-      if (!isPro) {
+      const pro = await findProByUserId(user.uid);
+      if (!pro || pro.proId !== report.proId) {
         return errorResponse("Accès refusé", 403);
       }
     }

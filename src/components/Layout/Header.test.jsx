@@ -23,13 +23,13 @@ import { useAuth } from "../../hooks/useAuth";
 
 describe("Header", () => {
   it("affiche le logo EasyPiano", () => {
-    useAuth.mockReturnValue({ user: null, isAdmin: false });
+    useAuth.mockReturnValue({ user: null, isAdmin: false, isPro: false });
     render(<Header />);
     expect(screen.getByText("EasyPiano")).toBeInTheDocument();
   });
 
   it("affiche le lien 'Connexion' quand pas authentifié", () => {
-    useAuth.mockReturnValue({ user: null, isAdmin: false });
+    useAuth.mockReturnValue({ user: null, isAdmin: false, isPro: false });
     render(<Header />);
     expect(screen.getByText("Connexion")).toBeInTheDocument();
     expect(screen.getByText("Connexion").closest("a")).toHaveAttribute(
@@ -42,16 +42,31 @@ describe("Header", () => {
     useAuth.mockReturnValue({
       user: { displayName: "Test", photoURL: null },
       isAdmin: false,
+      isPro: false,
     });
     render(<Header />);
     expect(screen.getByText("Mes rendez-vous")).toBeInTheDocument();
     expect(screen.getByText("Déconnexion")).toBeInTheDocument();
   });
 
+  it("affiche le lien Dashboard pro pour un accordeur", () => {
+    useAuth.mockReturnValue({
+      user: { displayName: "Tomasz", photoURL: null },
+      isAdmin: false,
+      isPro: true,
+    });
+    render(<Header />);
+    expect(screen.getByText("Dashboard pro").closest("a")).toHaveAttribute(
+      "href",
+      "/pro-dashboard",
+    );
+  });
+
   it("affiche le lien Admin quand isAdmin=true", () => {
     useAuth.mockReturnValue({
       user: { displayName: "Admin", photoURL: null },
       isAdmin: true,
+      isPro: false,
     });
     render(<Header />);
     expect(screen.getByText("Admin")).toBeInTheDocument();
@@ -65,6 +80,7 @@ describe("Header", () => {
     useAuth.mockReturnValue({
       user: { displayName: "User", photoURL: null },
       isAdmin: false,
+      isPro: false,
     });
     render(<Header />);
     expect(screen.queryByText("Admin")).not.toBeInTheDocument();
@@ -74,6 +90,7 @@ describe("Header", () => {
     useAuth.mockReturnValue({
       user: { displayName: "User", photoURL: "https://example.com/photo.jpg" },
       isAdmin: false,
+      isPro: false,
     });
     render(<Header />);
     const avatar = screen.getByAltText("User");
@@ -88,6 +105,7 @@ describe("Header", () => {
         photoURL: "https://example.com/photo.jpg",
       },
       isAdmin: false,
+      isPro: false,
     });
     render(<Header />);
 
@@ -97,7 +115,7 @@ describe("Header", () => {
   });
 
   it("contient un nav avec aria-label", () => {
-    useAuth.mockReturnValue({ user: null, isAdmin: false });
+    useAuth.mockReturnValue({ user: null, isAdmin: false, isPro: false });
     render(<Header />);
     expect(screen.getByLabelText("Navigation principale")).toBeInTheDocument();
   });

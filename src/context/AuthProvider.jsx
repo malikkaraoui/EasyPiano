@@ -10,6 +10,8 @@ import { AuthContext } from "./AuthContext";
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isPro, setIsPro] = useState(false);
+  const [proProfile, setProProfile] = useState(null);
   const [loading, setLoading] = useState(isFirebaseConfigured);
 
   useEffect(() => {
@@ -39,11 +41,36 @@ export default function AuthProvider({ children }) {
         try {
           if (firebaseUser) {
             setUser(firebaseUser);
-            const adminSnap = await get(ref(db, `admins/${firebaseUser.uid}`));
+            const [adminSnap, prosSnap] = await Promise.all([
+              get(ref(db, `admins/${firebaseUser.uid}`)),
+              get(ref(db, "pros")),
+            ]);
+
             setIsAdmin(adminSnap.exists());
+
+            if (prosSnap.exists()) {
+              const pros = prosSnap.val();
+              const matchedPro = Object.entries(pros).find(
+                ([, pro]) => pro.userId === firebaseUser.uid,
+              );
+
+              if (matchedPro) {
+                const [proId, profile] = matchedPro;
+                setIsPro(true);
+                setProProfile({ proId, ...profile });
+              } else {
+                setIsPro(false);
+                setProProfile(null);
+              }
+            } else {
+              setIsPro(false);
+              setProProfile(null);
+            }
           } else {
             setUser(null);
             setIsAdmin(false);
+            setIsPro(false);
+            setProProfile(null);
           }
         } finally {
           if (isMounted) {
@@ -62,7 +89,7 @@ export default function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isAdmin, loading }}>
+    <AuthContext.Provider value={{ user, isAdmin, isPro, proProfile, loading }}>
       {children}
     </AuthContext.Provider>
   );

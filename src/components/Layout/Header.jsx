@@ -69,7 +69,7 @@ function UserAvatar({ user }) {
 }
 
 export default function Header() {
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, isPro } = useAuth();
 
   return (
     <header className="glass-strong sticky top-0 z-50">
@@ -120,6 +120,18 @@ export default function Header() {
               )}
               <div className="flex items-center gap-3">
                 <UserAvatar user={user} />
+                {isPro && (
+                  <Link
+                    href="/pro-dashboard"
+                    className="group relative text-sm text-muted transition-colors hover:text-foreground"
+                  >
+                    Dashboard pro
+                    <span
+                      className="absolute -bottom-1 left-0 h-px w-0 bg-accent transition-all duration-300 group-hover:w-full"
+                      aria-hidden="true"
+                    />
+                  </Link>
+                )}
                 <Button variant="ghost" size="sm" onClick={logout}>
                   Déconnexion
                 </Button>
