@@ -70,20 +70,37 @@ export default function Booking() {
     }
   }
 
-  if (loading) return <div className="loading">Chargement...</div>;
-  if (!pro) return <div className="not-found">Professionnel introuvable</div>;
+  if (loading)
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center text-muted">
+        Chargement...
+      </div>
+    );
+  if (!pro)
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center text-muted">
+        Professionnel introuvable
+      </div>
+    );
 
   const total = pro.basePrice + (pro.travelFee || 0);
   const { commission } = calculateCommission(total);
 
   return (
-    <div className="booking-page">
-      <h1>Réserver un accord</h1>
+    <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
+      <h1 className="font-heading text-3xl font-bold text-foreground">
+        Réserver un accord
+      </h1>
 
-      <div className="booking-layout">
-        <form onSubmit={handleSubmit} className="booking-form">
-          <div className="form-group">
-            <label htmlFor="scheduledDate">Date souhaitée</label>
+      <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_380px]">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label
+              htmlFor="scheduledDate"
+              className="mb-1.5 block text-sm font-medium text-foreground"
+            >
+              Date souhaitée
+            </label>
             <input
               type="date"
               id="scheduledDate"
@@ -92,17 +109,24 @@ export default function Booking() {
               onChange={handleChange}
               min={new Date().toISOString().split("T")[0]}
               required
+              className="flex h-10 w-full rounded border border-border bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="scheduledTime">Créneau horaire</label>
+          <div>
+            <label
+              htmlFor="scheduledTime"
+              className="mb-1.5 block text-sm font-medium text-foreground"
+            >
+              Créneau horaire
+            </label>
             <select
               id="scheduledTime"
               name="scheduledTime"
               value={form.scheduledTime}
               onChange={handleChange}
               required
+              className="flex h-10 w-full rounded border border-border bg-background px-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               <option value="">Choisir un créneau</option>
               <option value="08:00">08h00 - 10h00</option>
@@ -112,8 +136,13 @@ export default function Booking() {
             </select>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="address">Adresse</label>
+          <div>
+            <label
+              htmlFor="address"
+              className="mb-1.5 block text-sm font-medium text-foreground"
+            >
+              Adresse
+            </label>
             <input
               type="text"
               id="address"
@@ -122,16 +151,23 @@ export default function Booking() {
               onChange={handleChange}
               placeholder="Votre adresse complète"
               required
+              className="flex h-10 w-full rounded border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="pianoType">Type de piano</label>
+          <div>
+            <label
+              htmlFor="pianoType"
+              className="mb-1.5 block text-sm font-medium text-foreground"
+            >
+              Type de piano
+            </label>
             <select
               id="pianoType"
               name="pianoType"
               value={form.pianoType}
               onChange={handleChange}
+              className="flex h-10 w-full rounded border border-border bg-background px-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               <option value="droit">Piano droit</option>
               <option value="queue">Piano à queue</option>
@@ -139,8 +175,13 @@ export default function Booking() {
             </select>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="pianoModel">Modèle (optionnel)</label>
+          <div>
+            <label
+              htmlFor="pianoModel"
+              className="mb-1.5 block text-sm font-medium text-foreground"
+            >
+              Modèle (optionnel)
+            </label>
             <input
               type="text"
               id="pianoModel"
@@ -148,11 +189,17 @@ export default function Booking() {
               value={form.pianoModel}
               onChange={handleChange}
               placeholder="Ex: Yamaha U1, Steinway B..."
+              className="flex h-10 w-full rounded border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="notes">Notes complémentaires</label>
+          <div>
+            <label
+              htmlFor="notes"
+              className="mb-1.5 block text-sm font-medium text-foreground"
+            >
+              Notes complémentaires
+            </label>
             <textarea
               id="notes"
               name="notes"
@@ -160,12 +207,13 @@ export default function Booking() {
               onChange={handleChange}
               placeholder="Informations supplémentaires..."
               rows={3}
+              className="flex w-full rounded border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             />
           </div>
 
           <button
             type="submit"
-            className="btn-primary btn-lg"
+            className="inline-flex h-12 w-full items-center justify-center rounded bg-accent px-8 text-sm font-medium text-background transition-colors hover:bg-accent-hover disabled:opacity-50"
             disabled={submitting}
           >
             {submitting
@@ -174,31 +222,37 @@ export default function Booking() {
           </button>
         </form>
 
-        <div className="booking-summary">
-          <h2>Récapitulatif</h2>
-          <div className="summary-pro">
-            <strong>
+        <div className="rounded-xl border border-border/50 bg-card p-6 lg:sticky lg:top-24">
+          <h2 className="font-heading text-xl font-bold text-foreground">
+            Récapitulatif
+          </h2>
+          <div className="mt-4 border-b border-border/30 pb-4">
+            <strong className="text-foreground">
               {pro.firstName} {pro.lastName}
             </strong>
-            <p>📍 {pro.city}</p>
+            <p className="mt-1 text-sm text-muted">📍 {pro.city}</p>
           </div>
-          <div className="summary-pricing">
-            <div className="pricing-row">
-              <span>Accord piano</span>
-              <span>{formatPrice(pro.basePrice)}</span>
+          <div className="mt-4 space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-muted">Accord piano</span>
+              <span className="text-foreground">
+                {formatPrice(pro.basePrice)}
+              </span>
             </div>
             {pro.travelFee > 0 && (
-              <div className="pricing-row">
-                <span>Déplacement</span>
-                <span>{formatPrice(pro.travelFee)}</span>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted">Déplacement</span>
+                <span className="text-foreground">
+                  {formatPrice(pro.travelFee)}
+                </span>
               </div>
             )}
-            <div className="pricing-row pricing-total">
-              <span>Total</span>
-              <span>{formatPrice(total)}</span>
+            <div className="flex justify-between border-t border-border/30 pt-2 text-base font-bold">
+              <span className="text-foreground">Total</span>
+              <span className="text-accent">{formatPrice(total)}</span>
             </div>
           </div>
-          <p className="pricing-note">
+          <p className="mt-3 text-xs text-muted">
             Commission plateforme : {formatPrice(commission)} (10%)
           </p>
         </div>
