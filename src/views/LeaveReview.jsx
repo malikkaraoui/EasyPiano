@@ -42,23 +42,32 @@ export default function LeaveReview() {
   }
 
   return (
-    <div className="review-page">
-      <h1>Laisser un avis</h1>
-      <p className="review-subtitle">
+    <div className="mx-auto max-w-lg px-4 py-12 sm:px-6">
+      <h1 className="font-heading text-3xl font-bold text-foreground">
+        Laisser un avis
+      </h1>
+      <p className="mt-2 text-sm text-muted">
         Votre avis aide les autres utilisateurs à choisir leur accordeur
       </p>
 
-      <form onSubmit={handleSubmit} className="review-form">
-        <div className="form-group">
-          <label>Note</label>
+      <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">
+            Note
+          </label>
           <StarRating
             rating={form.rating}
             onChange={(rating) => setForm((prev) => ({ ...prev, rating }))}
           />
         </div>
 
-        <div className="form-group">
-          <label htmlFor="title">Titre (optionnel)</label>
+        <div>
+          <label
+            htmlFor="title"
+            className="mb-1.5 block text-sm font-medium text-foreground"
+          >
+            Titre (optionnel)
+          </label>
           <input
             type="text"
             id="title"
@@ -66,11 +75,17 @@ export default function LeaveReview() {
             value={form.title}
             onChange={handleChange}
             placeholder="Résumez votre expérience en quelques mots"
+            className="flex h-10 w-full rounded border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           />
         </div>
 
-        <div className="form-group">
-          <label htmlFor="comment">Votre commentaire</label>
+        <div>
+          <label
+            htmlFor="comment"
+            className="mb-1.5 block text-sm font-medium text-foreground"
+          >
+            Votre commentaire
+          </label>
           <textarea
             id="comment"
             name="comment"
@@ -79,12 +94,13 @@ export default function LeaveReview() {
             placeholder="Décrivez votre expérience avec cet accordeur..."
             rows={5}
             required
+            className="flex w-full rounded border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           />
         </div>
 
         <button
           type="submit"
-          className="btn-primary"
+          className="inline-flex h-10 w-full items-center justify-center rounded bg-accent px-6 text-sm font-medium text-background transition-colors hover:bg-accent-hover disabled:opacity-50"
           disabled={submitting || form.rating === 0}
         >
           {submitting ? "Envoi en cours..." : "Publier mon avis"}
