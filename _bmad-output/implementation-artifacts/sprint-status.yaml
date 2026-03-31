@@ -143,10 +143,10 @@ development_status:
   # ═══════════════════════════════════════════════════════
 
   # Epic 13: Features Avancées & Expansion
-  epic-13: backlog
-  13-1-rebooking-1-clic: backlog
-  13-2-remplacement-automatique-pro: backlog
-  13-3-analytics-avances: backlog
-  13-4-pricing-dynamique-zone: backlog
-  13-5-programme-affiliation: backlog
+  epic-13: in-progress
+  13-1-rebooking-1-clic: review
+  13-2-remplacement-automatique-pro: review
+  13-3-analytics-avances: review
+  13-4-pricing-dynamique-zone: review
+  13-5-programme-affiliation: review
   epic-13-retrospective: optional
