@@ -3,20 +3,15 @@
 // eslint-disable-next-line no-unused-vars -- motion.div used as JSX namespace
 import { motion } from "framer-motion";
 
-const WHITE_KEYS = 28;
+const WHITE_KEYS = 52;
 const BLACK_KEY_PATTERN = [1, 1, 0, 1, 1, 1, 0]; // C#, D#, -, F#, G#, A#, -
 
 function PianoKeys() {
   return (
     <div
-      className="relative mx-auto h-24 w-full max-w-5xl select-none overflow-hidden sm:h-28"
+      className="relative h-24 w-full select-none overflow-hidden sm:h-28"
       aria-hidden="true"
-      style={{
-        maskImage:
-          "linear-gradient(to right, transparent, black 6%, black 94%, transparent)",
-        WebkitMaskImage:
-          "linear-gradient(to right, transparent, black 6%, black 94%, transparent)",
-      }}
+      style={{}}
     >
       {/* Touches blanches — vue de face, rectangles verticaux visibles */}
       <div className="absolute inset-0 flex justify-center">
