@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { PianoKeys } from "@/components/PianoKeys";
 
 export default function Footer() {
   return (
     <footer className="relative bg-background">
-      <div className="piano-keys" aria-hidden="true" />
+      <PianoKeys />
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
         <div className="grid gap-8 sm:grid-cols-3">
           <div>

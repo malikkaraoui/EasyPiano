@@ -7,6 +7,7 @@ import {
   ScrollIndicator,
 } from "@/components/animations/HeroReveal";
 import { HeroSearchBar } from "@/components/HeroSearchBar";
+import { PianoKeys } from "@/components/PianoKeys";
 
 export const metadata = {
   title: "EasyPiano - Accordeur de Piano en Suisse | Réservation en ligne",
@@ -32,15 +33,15 @@ function StepCard({ number, title, description, delay }) {
 
 function TrustCard({ icon, title, description, delay }) {
   return (
-    <ScrollReveal delay={delay}>
-      <div className="group rounded-xl border border-glow p-6 glass transition-all duration-300 hover:-translate-y-1">
-        <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-accent transition-transform duration-300 group-hover:scale-110 group-hover:bg-accent/20">
+    <ScrollReveal delay={delay} className="h-full">
+      <div className="group flex h-full flex-col rounded-xl border border-glow p-6 glass transition-all duration-300 hover:-translate-y-1">
+        <div className="mb-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent transition-transform duration-300 group-hover:scale-110 group-hover:bg-accent/20">
           {icon}
         </div>
         <h3 className="font-heading text-lg font-semibold text-foreground">
           {title}
         </h3>
-        <p className="mt-2 text-sm text-muted">{description}</p>
+        <p className="mt-2 flex-1 text-sm text-muted">{description}</p>
       </div>
     </ScrollReveal>
   );
@@ -64,10 +65,9 @@ export default function HomePage() {
           </HeroSearchReveal>
           <ScrollIndicator />
         </HeroReveal>
-        <div
-          className="piano-keys absolute bottom-0 left-0 right-0"
-          aria-hidden="true"
-        />
+        <div className="absolute bottom-0 left-0 right-0">
+          <PianoKeys />
+        </div>
       </section>
 
       {/* Comment ça marche */}
