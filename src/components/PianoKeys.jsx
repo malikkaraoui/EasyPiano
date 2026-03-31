@@ -9,7 +9,7 @@ const BLACK_KEY_PATTERN = [1, 1, 0, 1, 1, 1, 0]; // C#, D#, -, F#, G#, A#, -
 function PianoKeys() {
   return (
     <div
-      className="relative h-20 w-full select-none overflow-hidden sm:h-24"
+      className="relative h-12 w-full select-none overflow-hidden sm:h-14"
       aria-hidden="true"
     >
       {/* Touches blanches — face avant vue du bas */}
@@ -21,9 +21,9 @@ function PianoKeys() {
             style={{ width: `${100 / WHITE_KEYS}%` }}
           >
             {/* Face avant de la touche (le gros rectangle visible) */}
-            <div className="absolute inset-x-px bottom-0 top-[30%] rounded-b-sm bg-gradient-to-b from-[#1e1e1e] to-[#151515]" />
+            <div className="absolute inset-x-px bottom-0 top-[30%] rounded-b-sm bg-gradient-to-b from-[#161616] to-[#111]" />
             {/* Surface du dessus (la partie plate, en perspective = fine bande) */}
-            <div className="absolute inset-x-px top-[22%] h-[8%] bg-gradient-to-b from-[#252525] to-[#1e1e1e]" />
+            <div className="absolute inset-x-px top-[22%] h-[8%] bg-gradient-to-b from-[#1a1a1a] to-[#161616]" />
             {/* Ligne sombre entre les touches */}
             <div className="absolute right-0 bottom-0 top-[22%] w-px bg-[#0a0a0a]" />
             {/* Léger reflet sur le bord gauche */}
