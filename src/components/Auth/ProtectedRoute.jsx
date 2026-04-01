@@ -14,7 +14,12 @@ export default function ProtectedRoute({ children }) {
     }
   }, [user, loading, router]);
 
-  if (loading) return <div className="loading">Chargement...</div>;
+  if (loading)
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center text-muted">
+        Chargement...
+      </div>
+    );
   if (!user) return null;
 
   return children;

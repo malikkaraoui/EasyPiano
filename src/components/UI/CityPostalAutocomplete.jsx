@@ -55,7 +55,7 @@ export default function CityPostalAutocomplete({ value, onChange, onSelect }) {
   }, []);
 
   return (
-    <div className="search-input-wrapper" ref={rootRef}>
+    <div className="relative" ref={rootRef}>
       <input
         type="text"
         placeholder="Rechercher par ville, code postal ou nom..."
@@ -64,34 +64,40 @@ export default function CityPostalAutocomplete({ value, onChange, onSelect }) {
         onFocus={() => {
           if (suggestions.length > 0) setOpen(true);
         }}
-        className="search-input"
+        className="flex h-10 w-full rounded border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         autoComplete="off"
       />
 
       {loading && (
-        <div className="search-loading-indicator" aria-hidden="true" />
+        <div
+          className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin rounded-full border-2 border-muted border-t-accent"
+          aria-hidden="true"
+        />
       )}
 
       {open && suggestions.length > 0 && (
-        <ul className="search-suggestions" role="listbox">
+        <ul
+          className="absolute left-0 right-0 top-full z-50 mt-1 max-h-64 overflow-y-auto rounded-lg border border-border bg-card py-1 shadow-xl"
+          role="listbox"
+        >
           {suggestions.map((item, index) => (
             <li
               key={`${item.city}-${item.postalCode}-${item.countryCode}-${index}`}
             >
               <button
                 type="button"
-                className="search-suggestion-item"
+                className="flex w-full items-center justify-between px-4 py-2.5 text-left text-sm text-foreground transition-colors hover:bg-accent/10"
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => {
                   onSelect(item);
                   setOpen(false);
                 }}
               >
-                <span className="search-suggestion-main">
+                <span className="font-medium">
                   {item.city || item.postalCode}
                 </span>
-                <span className="search-suggestion-meta">
-                  {[item.postalCode, item.country].filter(Boolean).join(" • ")}
+                <span className="text-xs text-muted">
+                  {[item.postalCode, item.country].filter(Boolean).join(" · ")}
                 </span>
               </button>
             </li>

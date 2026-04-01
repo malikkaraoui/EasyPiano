@@ -10,7 +10,10 @@ export default function ConfigBanner() {
   if (isFirebaseConfigured && isStripeConfigured) return null;
 
   return (
-    <div className="config-banner" role="alert">
+    <div
+      className="border-b border-yellow-600/30 bg-yellow-900/20 px-4 py-2 text-center text-xs text-yellow-200"
+      role="alert"
+    >
       <strong>Configuration incomplète :</strong>{" "}
       {!isFirebaseConfigured && <span>Firebase non configuré.</span>}
       {!isFirebaseConfigured && !isStripeConfigured && <span> </span>}
