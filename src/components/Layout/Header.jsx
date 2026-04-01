@@ -119,7 +119,9 @@ export default function Header() {
                 </Link>
               )}
               <div className="flex items-center gap-3">
-                <UserAvatar user={user} />
+                <Link href="/profile">
+                  <UserAvatar user={user} />
+                </Link>
                 {isPro && (
                   <Link
                     href="/pro-dashboard"
