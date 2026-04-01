@@ -89,7 +89,7 @@ export default function Header() {
         >
           <Link
             href="/search"
-            className="group relative hidden text-sm text-muted transition-colors hover:text-foreground sm:block"
+            className="group relative hidden rounded-lg px-3 py-1.5 text-sm text-muted transition-all duration-200 hover:bg-card hover:text-foreground active:scale-[0.97] active:bg-card/80 sm:block"
           >
             Trouver un accordeur
             <span
@@ -102,7 +102,7 @@ export default function Header() {
             <>
               <Link
                 href="/dashboard"
-                className="group relative text-sm text-muted transition-colors hover:text-foreground"
+                className="group relative rounded-lg px-3 py-1.5 text-sm text-muted transition-all duration-200 hover:bg-card hover:text-foreground active:scale-[0.97] active:bg-card/80"
               >
                 Mes rendez-vous
                 <span
@@ -113,7 +113,7 @@ export default function Header() {
               {isAdmin && (
                 <Link
                   href="/admin"
-                  className="text-sm text-accent transition-colors hover:text-accent-hover"
+                  className="rounded-lg px-3 py-1.5 text-sm text-accent transition-all duration-200 hover:bg-accent/10 hover:text-accent-hover active:scale-[0.97] active:bg-accent/5"
                 >
                   Admin
                 </Link>
@@ -125,7 +125,7 @@ export default function Header() {
                 {isPro && (
                   <Link
                     href="/pro-dashboard"
-                    className="group relative text-sm text-muted transition-colors hover:text-foreground"
+                    className="group relative rounded-lg px-3 py-1.5 text-sm text-muted transition-all duration-200 hover:bg-card hover:text-foreground active:scale-[0.97] active:bg-card/80"
                   >
                     Dashboard pro
                     <span

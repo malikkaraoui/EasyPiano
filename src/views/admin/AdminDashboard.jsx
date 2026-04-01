@@ -95,7 +95,7 @@ export default function AdminDashboard() {
       <div className="mt-10 grid gap-4 sm:grid-cols-2">
         <Link
           href="/admin/pros"
-          className="group rounded-xl border border-border/50 bg-card p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/30 hover:shadow-lg"
+          className="group rounded-xl border border-border/50 bg-card p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/30 hover:shadow-lg active:translate-y-0 active:shadow-sm"
         >
           <h3 className="font-heading text-lg font-semibold text-foreground group-hover:text-accent">
             Gérer les professionnels
@@ -106,7 +106,7 @@ export default function AdminDashboard() {
         </Link>
         <Link
           href="/admin/bookings"
-          className="group rounded-xl border border-border/50 bg-card p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/30 hover:shadow-lg"
+          className="group rounded-xl border border-border/50 bg-card p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/30 hover:shadow-lg active:translate-y-0 active:shadow-sm"
         >
           <h3 className="font-heading text-lg font-semibold text-foreground group-hover:text-accent">
             Réservations
@@ -117,7 +117,7 @@ export default function AdminDashboard() {
         </Link>
         <Link
           href="/admin/reviews"
-          className="group rounded-xl border border-border/50 bg-card p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/30 hover:shadow-lg"
+          className="group rounded-xl border border-border/50 bg-card p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/30 hover:shadow-lg active:translate-y-0 active:shadow-sm"
         >
           <h3 className="font-heading text-lg font-semibold text-foreground group-hover:text-accent">
             Avis
@@ -126,7 +126,7 @@ export default function AdminDashboard() {
         </Link>
         <Link
           href="/admin/transactions"
-          className="group rounded-xl border border-border/50 bg-card p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/30 hover:shadow-lg"
+          className="group rounded-xl border border-border/50 bg-card p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/30 hover:shadow-lg active:translate-y-0 active:shadow-sm"
         >
           <h3 className="font-heading text-lg font-semibold text-foreground group-hover:text-accent">
             Transactions

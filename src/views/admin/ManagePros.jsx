@@ -58,7 +58,7 @@ export default function ManagePros() {
         </h1>
         <Link
           href="/admin/pros/add"
-          className="inline-flex h-10 items-center rounded bg-accent px-4 text-sm font-medium text-background transition-colors hover:bg-accent-hover"
+          className="inline-flex h-10 items-center rounded-lg bg-accent shadow-sm px-4 text-sm font-medium text-background transition-colors hover:bg-accent-hover hover:shadow-md active:scale-[0.97] active:shadow-none"
         >
           + Ajouter un pro
         </Link>
@@ -138,12 +138,12 @@ export default function ManagePros() {
                 <td className="flex gap-2 p-3">
                   <Link
                     href={`/admin/pros/edit/${pro.id}`}
-                    className="rounded border border-border px-2 py-1 text-xs text-foreground transition-colors hover:bg-card"
+                    className="rounded border border-border px-2 py-1 text-xs text-foreground transition-all duration-200 hover:bg-card active:scale-[0.97] active:bg-card/80"
                   >
                     Modifier
                   </Link>
                   <button
-                    className="rounded border border-destructive/30 px-2 py-1 text-xs text-destructive transition-colors hover:bg-destructive/10"
+                    className="rounded border border-destructive/30 px-2 py-1 text-xs text-destructive transition-all duration-200 hover:bg-destructive/10 active:scale-[0.97]"
                     onClick={() => handleDelete(pro)}
                   >
                     Supprimer

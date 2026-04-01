@@ -156,7 +156,7 @@ export default function HomePage() {
             </p>
             <Link
               href="/login"
-              className="mt-6 inline-flex h-12 items-center gap-2 rounded border border-accent bg-transparent px-8 text-sm font-medium text-accent transition-all duration-300 glow-gold-hover hover:bg-accent hover:text-background"
+              className="mt-6 inline-flex h-12 items-center gap-2 rounded-lg border border-accent bg-transparent px-8 text-sm font-medium text-accent shadow-sm transition-all duration-200 glow-gold-hover hover:bg-accent hover:text-background hover:shadow-md active:scale-[0.97] active:shadow-none"
             >
               Devenez accordeur
             </Link>

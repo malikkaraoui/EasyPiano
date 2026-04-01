@@ -63,7 +63,7 @@ export default function ManageReviews() {
           Modération des avis
         </h1>
         <button
-          className="rounded border border-border px-4 py-2 text-sm text-foreground transition-colors hover:bg-card"
+          className="rounded border border-border px-4 py-2 text-sm text-foreground transition-all duration-200 hover:bg-card active:scale-[0.97] active:bg-card/80"
           onClick={() => setShowAll(!showAll)}
         >
           {showAll ? "Signalés uniquement" : "Voir tous les avis"}
@@ -108,14 +108,14 @@ export default function ManageReviews() {
             <div className="mt-4 flex gap-2">
               {review.reported && (
                 <button
-                  className="rounded border border-border px-3 py-1.5 text-xs text-foreground transition-colors hover:bg-card"
+                  className="rounded border border-border px-3 py-1.5 text-xs text-foreground transition-all duration-200 hover:bg-card active:scale-[0.97] active:bg-card/80"
                   onClick={() => clearReport(review.id)}
                 >
                   Lever le signalement
                 </button>
               )}
               <button
-                className="rounded border border-destructive/30 px-3 py-1.5 text-xs text-destructive transition-colors hover:bg-destructive/10"
+                className="rounded border border-destructive/30 px-3 py-1.5 text-xs text-destructive transition-all duration-200 hover:bg-destructive/10 active:scale-[0.97]"
                 onClick={() => handleDelete(review.id)}
               >
                 Supprimer

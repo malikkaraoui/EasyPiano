@@ -100,7 +100,7 @@ export default function LeaveReview() {
 
         <button
           type="submit"
-          className="inline-flex h-10 w-full items-center justify-center rounded bg-accent px-6 text-sm font-medium text-background transition-colors hover:bg-accent-hover disabled:opacity-50"
+          className="inline-flex h-10 w-full items-center justify-center rounded-lg bg-accent shadow-sm px-6 text-sm font-medium text-background transition-colors hover:bg-accent-hover hover:shadow-md active:scale-[0.97] active:shadow-none disabled:opacity-50"
           disabled={submitting || form.rating === 0}
         >
           {submitting ? "Envoi en cours..." : "Publier mon avis"}

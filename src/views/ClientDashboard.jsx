@@ -293,7 +293,7 @@ export default function ClientDashboard() {
           </p>
           <Link
             href="/search"
-            className="mt-4 inline-flex h-10 items-center rounded bg-accent px-6 text-sm font-medium text-background transition-colors hover:bg-accent-hover"
+            className="mt-4 inline-flex h-10 items-center rounded-lg bg-accent shadow-sm px-6 text-sm font-medium text-background transition-colors hover:bg-accent-hover hover:shadow-md active:scale-[0.97] active:shadow-none"
           >
             Trouver un accordeur
           </Link>

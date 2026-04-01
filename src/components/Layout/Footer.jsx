@@ -27,7 +27,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/search"
-                  className="text-sm text-muted transition-colors hover:text-foreground"
+                  className="inline-block rounded px-1.5 py-0.5 text-sm text-muted transition-all duration-200 hover:bg-card hover:text-foreground active:scale-[0.97] active:bg-card/80"
                 >
                   Trouver un accordeur
                 </Link>
@@ -35,7 +35,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/login"
-                  className="text-sm text-muted transition-colors hover:text-foreground"
+                  className="inline-block rounded px-1.5 py-0.5 text-sm text-muted transition-all duration-200 hover:bg-card hover:text-foreground active:scale-[0.97] active:bg-card/80"
                 >
                   Connexion
                 </Link>
@@ -43,7 +43,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/login"
-                  className="text-sm text-accent transition-colors hover:text-accent-hover"
+                  className="inline-block rounded px-1.5 py-0.5 text-sm text-accent transition-all duration-200 hover:bg-accent/10 hover:text-accent-hover active:scale-[0.97] active:bg-accent/5"
                 >
                   Devenez accordeur
                 </Link>
@@ -58,7 +58,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="#"
-                  className="text-sm text-muted transition-colors hover:text-foreground"
+                  className="inline-block rounded px-1.5 py-0.5 text-sm text-muted transition-all duration-200 hover:bg-card hover:text-foreground active:scale-[0.97] active:bg-card/80"
                 >
                   Mentions légales
                 </Link>
