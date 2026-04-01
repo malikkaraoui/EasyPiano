@@ -6,7 +6,7 @@ export default function StarRating({ rating, max = 5, onChange }) {
     stars.push(
       <span
         key={i}
-        className={`star ${filled ? "star-filled" : "star-empty"} ${onChange ? "star-clickable" : ""}`}
+        className={`text-lg ${filled ? "text-accent" : "text-border"} ${onChange ? "cursor-pointer transition-transform hover:scale-125" : ""}`}
         onClick={onChange ? () => onChange(i) : undefined}
         role={onChange ? "button" : undefined}
         tabIndex={onChange ? 0 : undefined}
@@ -19,5 +19,5 @@ export default function StarRating({ rating, max = 5, onChange }) {
     );
   }
 
-  return <div className="star-rating">{stars}</div>;
+  return <div className="flex gap-0.5">{stars}</div>;
 }
