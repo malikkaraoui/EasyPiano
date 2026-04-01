@@ -33,7 +33,11 @@ function ProfileForm() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ displayName, phone, isB2B }),
+        body: JSON.stringify({
+          displayName,
+          phone: phone.trim() ? `+41${phone.replace(/\s/g, "")}` : "",
+          isB2B,
+        }),
       });
 
       const data = await res.json();
@@ -114,13 +118,34 @@ function ProfileForm() {
           >
             Téléphone
           </label>
-          <Input
-            id="phone"
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="+41 79 123 45 67"
-          />
+          <div className="flex gap-2">
+            <div className="flex h-10 items-center gap-1.5 rounded border border-border bg-card px-3 text-sm text-muted">
+              <span role="img" aria-label="Suisse">
+                🇨🇭
+              </span>
+              <span>+41</span>
+            </div>
+            <Input
+              id="phone"
+              type="tel"
+              value={phone}
+              onChange={(e) => {
+                let raw = e.target.value.replace(/\D/g, "");
+                if (raw.startsWith("41")) raw = raw.slice(2);
+                if (raw.startsWith("0")) raw = raw.slice(1);
+                if (raw.length > 9) raw = raw.slice(0, 9);
+                const parts = [];
+                if (raw.length > 0) parts.push(raw.slice(0, 2));
+                if (raw.length > 2) parts.push(raw.slice(2, 5));
+                if (raw.length > 5) parts.push(raw.slice(5, 7));
+                if (raw.length > 7) parts.push(raw.slice(7, 9));
+                setPhone(parts.join(" "));
+              }}
+              placeholder="79 123 45 67"
+              maxLength={12}
+            />
+          </div>
+          <p className="mt-1 text-xs text-muted">Format : +41 CC CCC CC CC</p>
         </div>
 
         <div className="flex items-center gap-3">
