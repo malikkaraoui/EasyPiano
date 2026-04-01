@@ -145,7 +145,6 @@ function ProfileForm() {
               maxLength={12}
             />
           </div>
-          <p className="mt-1 text-xs text-muted">Format : +41 CC CCC CC CC</p>
         </div>
 
         <div className="flex items-center gap-3">
