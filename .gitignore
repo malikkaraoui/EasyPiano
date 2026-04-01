@@ -57,3 +57,4 @@ backups/
 
 # Claude worktrees
 .claude/worktrees/
+.vercel
