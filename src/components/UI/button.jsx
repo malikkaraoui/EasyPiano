@@ -1,6 +1,7 @@
 import { forwardRef } from "react";
 import { cva } from "class-variance-authority";
 import {
+  interactiveButtonToneClasses,
   interactiveSurfaceBaseClasses,
   interactiveSurfaceToneClasses,
 } from "@/components/UI/interactive-surface";
@@ -11,8 +12,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          "bg-accent text-background shadow-sm hover:bg-accent-hover hover:shadow-md active:bg-accent active:shadow-none",
+        default: interactiveButtonToneClasses.primary,
         secondary:
           "border border-border bg-transparent text-foreground shadow-sm hover:border-accent/50 hover:bg-card hover:shadow-md active:bg-card/80 active:shadow-none",
         destructive:

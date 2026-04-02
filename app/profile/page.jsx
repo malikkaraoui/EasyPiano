@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Loader2, Save } from "lucide-react";
 import { useAuth } from "@hooks/useAuth";
 import ProtectedRoute from "@components/Auth/ProtectedRoute";
 import { Button } from "@/components/UI/button";
@@ -160,9 +161,22 @@ function ProfileForm() {
           </label>
         </div>
 
-        <Button type="submit" disabled={saving} className="w-full">
-          {saving ? "Enregistrement..." : "Enregistrer"}
-        </Button>
+        <div className="flex justify-end border-t border-border/80 pt-6">
+          <Button
+            type="submit"
+            size="lg"
+            disabled={saving}
+            aria-busy={saving}
+            className="w-full sm:min-w-48 sm:w-auto"
+          >
+            {saving ? (
+              <Loader2 aria-hidden="true" className="h-4 w-4 animate-spin" />
+            ) : (
+              <Save aria-hidden="true" className="h-4 w-4" />
+            )}
+            <span>{saving ? "Enregistrement..." : "Enregistrer"}</span>
+          </Button>
+        </div>
       </form>
     </div>
   );

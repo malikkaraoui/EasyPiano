@@ -84,6 +84,15 @@ describe("ProfilePage", () => {
     ).toBeInTheDocument();
   });
 
+  it("rend le bouton Enregistrer comme une vraie action principale", () => {
+    render(<ProfilePage />);
+    expect(screen.getByRole("button", { name: /enregistrer/i })).toHaveClass(
+      "w-full",
+      "sm:min-w-48",
+      "sm:w-auto",
+    );
+  });
+
   it("appelle l'API au submit du formulaire", async () => {
     globalThis.fetch = vi.fn().mockResolvedValue({
       json: () => Promise.resolve({ success: true, data: {} }),
@@ -114,6 +123,44 @@ describe("ProfilePage", () => {
 
     const alert = await screen.findByRole("alert");
     expect(alert).toHaveTextContent(/succès/i);
+  });
+
+  it("affiche l'état d'enregistrement pendant la sauvegarde", async () => {
+    let resolveRequest;
+    globalThis.fetch = vi.fn(
+      () =>
+        new Promise((resolve) => {
+          resolveRequest = resolve;
+        }),
+    );
+
+    render(<ProfilePage />);
+
+    fireEvent.submit(
+      screen.getByRole("button", { name: /enregistrer/i }).closest("form"),
+    );
+
+    const savingButton = screen.getByRole("button", {
+      name: /enregistrement/i,
+    });
+
+    expect(savingButton).toBeDisabled();
+    expect(savingButton).toHaveAttribute("aria-busy", "true");
+
+    await waitFor(() => {
+      expect(globalThis.fetch).toHaveBeenCalledTimes(1);
+      expect(resolveRequest).toBeTypeOf("function");
+    });
+
+    resolveRequest({
+      json: () => Promise.resolve({ success: true, data: {} }),
+    });
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole("button", { name: /enregistrer/i }),
+      ).not.toBeDisabled();
+    });
   });
 
   it("indique que l'email ne peut pas être modifié", () => {
