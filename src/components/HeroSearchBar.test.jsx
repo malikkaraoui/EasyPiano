@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { HeroSearchBar } from "./HeroSearchBar";
 
 const mockPush = vi.fn();
@@ -46,42 +46,49 @@ describe("HeroSearchBar", () => {
     ).toBeInTheDocument();
   });
 
-  it("affiche des suggestions dès 1 caractère (ville)", () => {
+  it("affiche des suggestions dès 1 caractère (ville)", async () => {
     render(<HeroSearchBar />);
     const input = screen.getByLabelText("Lieu de recherche");
 
     fireEvent.focus(input);
-    fireEvent.change(input, { target: { value: "Lau" } });
-    expect(screen.getAllByText("📍 Lausanne").length).toBeGreaterThanOrEqual(1);
+    fireEvent.change(input, { target: { value: "L" } });
+
+    expect((await screen.findAllByText("Lausanne")).length).toBeGreaterThan(0);
   });
 
-  it("affiche des suggestions par code postal", () => {
+  it("affiche des suggestions par code postal", async () => {
     render(<HeroSearchBar />);
     const input = screen.getByLabelText("Lieu de recherche");
 
     fireEvent.focus(input);
     fireEvent.change(input, { target: { value: "1000" } });
-    expect(screen.getByText("📍 Lausanne")).toBeInTheDocument();
+
+    expect(await screen.findByText("Lausanne")).toBeInTheDocument();
   });
 
-  it("affiche le code postal et la région dans les suggestions", () => {
+  it("affiche le code postal et la région dans les suggestions", async () => {
     render(<HeroSearchBar />);
     const input = screen.getByLabelText("Lieu de recherche");
 
     fireEvent.focus(input);
     fireEvent.change(input, { target: { value: "Genève" } });
-    expect(screen.getByText("1201 · GE")).toBeInTheDocument();
+
+    expect(await screen.findByText("1201 · GE")).toBeInTheDocument();
   });
 
-  it("sélectionne une suggestion au clic avec ville et postal", () => {
+  it("sélectionne une suggestion au clic avec ville et postal", async () => {
     render(<HeroSearchBar />);
     const input = screen.getByLabelText("Lieu de recherche");
 
     fireEvent.focus(input);
     fireEvent.change(input, { target: { value: "Genève" } });
-    fireEvent.mouseDown(screen.getAllByText("📍 Genève")[0]);
 
-    expect(input.value).toBe("Genève (1201)");
+    const geneveSuggestion = (await screen.findAllByText("Genève"))[0].closest(
+      "button",
+    );
+    fireEvent.click(geneveSuggestion);
+
+    expect(input.value).toBe("Genève 1201");
   });
 
   it("ne montre pas de suggestions pour 0 caractère", () => {
@@ -93,42 +100,71 @@ describe("HeroSearchBar", () => {
     expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
   });
 
-  it("navigue avec les flèches clavier", () => {
+  it("navigue avec les flèches clavier", async () => {
     render(<HeroSearchBar />);
     const input = screen.getByLabelText("Lieu de recherche");
 
     fireEvent.focus(input);
-    fireEvent.change(input, { target: { value: "L" } });
+    fireEvent.change(input, { target: { value: "Laus" } });
+    await screen.findByRole("listbox");
+
     fireEvent.keyDown(input, { key: "ArrowDown" });
     fireEvent.keyDown(input, { key: "Enter" });
 
-    expect(input.value).toContain("Lausanne");
+    expect(input.value).toBe("Lausanne 1000");
   });
 
-  it("ferme les suggestions avec Escape", () => {
+  it("ferme les suggestions avec Escape", async () => {
     render(<HeroSearchBar />);
     const input = screen.getByLabelText("Lieu de recherche");
 
     fireEvent.focus(input);
     fireEvent.change(input, { target: { value: "L" } });
-    expect(screen.getByRole("listbox")).toBeInTheDocument();
+    await screen.findByRole("listbox");
 
     fireEvent.keyDown(input, { key: "Escape" });
-    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+    });
   });
 
   it("redirige vers /search au submit", () => {
     mockPush.mockClear();
     render(<HeroSearchBar />);
     const input = screen.getByLabelText("Lieu de recherche");
-    fireEvent.change(input, { target: { value: "Lausanne" } });
+    fireEvent.change(input, { target: { value: "Lausanne 1000" } });
 
     fireEvent.submit(
       screen.getByRole("button", { name: /rechercher/i }).closest("form"),
     );
 
     expect(mockPush).toHaveBeenCalledWith(
-      expect.stringContaining("/search?lieu=Lausanne"),
+      expect.stringContaining("/search?lieu=Lausanne+1000"),
     );
+  });
+
+  it("peut être réutilisé en mode page avec un submit contrôlé", () => {
+    const onSubmit = vi.fn();
+
+    render(
+      <HeroSearchBar
+        variant="page"
+        locationValue="Genève 1201"
+        dateValue="2026-11-11"
+        onLocationChange={vi.fn()}
+        onDateChange={vi.fn()}
+        onSubmit={onSubmit}
+      />,
+    );
+
+    fireEvent.submit(
+      screen.getByRole("button", { name: /rechercher/i }).closest("form"),
+    );
+
+    expect(onSubmit).toHaveBeenCalledWith({
+      location: "Genève 1201",
+      date: "2026-11-11",
+    });
   });
 });

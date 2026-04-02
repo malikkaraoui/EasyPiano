@@ -1,141 +1,155 @@
 "use client";
 
-import { useState, useRef, useMemo } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
+import CityPostalAutocomplete from "@/components/UI/CityPostalAutocomplete";
 import { Button } from "@/components/UI/button";
-import LOCATIONS from "@/data/swiss-locations.json";
+import { Input } from "@/components/UI/input";
+import { cn } from "@/lib/utils";
 
-const normalize = (str) =>
-  str
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+const DEFAULT_SEARCH_SORT = "rating";
 
-function HeroSearchBar() {
+function useControllableValue(controlledValue, defaultValue, onChange) {
+  const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue);
+
+  const value = controlledValue ?? uncontrolledValue;
+
+  function setValue(nextValue) {
+    if (controlledValue === undefined) {
+      setUncontrolledValue(nextValue);
+    }
+    onChange?.(nextValue);
+  }
+
+  return [value, setValue];
+}
+
+function formatLocationValue(selection) {
+  return [selection.city, selection.postalCode]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+}
+
+function buildSearchHref({
+  location,
+  date,
+  sortBy,
+  includeSort = false,
+  basePath = "/search",
+}) {
+  const params = new URLSearchParams();
+
+  if (location?.trim()) params.set("lieu", location.trim());
+  if (date?.trim()) params.set("date", date.trim());
+  if (includeSort && sortBy && sortBy !== DEFAULT_SEARCH_SORT) {
+    params.set("sort", sortBy);
+  }
+
+  const query = params.toString();
+  return query ? `${basePath}?${query}` : basePath;
+}
+
+function SharedSearchBar({
+  variant = "hero",
+  locationValue,
+  defaultLocationValue = "",
+  onLocationChange,
+  dateValue,
+  defaultDateValue = "",
+  onDateChange,
+  onSubmit,
+  showDate = true,
+  submitLabel = "Rechercher",
+  className,
+}) {
   const router = useRouter();
-  const [lieu, setLieu] = useState("");
-  const [date, setDate] = useState("");
-  const [isFocused, setIsFocused] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(-1);
-  const listRef = useRef(null);
+  const [location, setLocation] = useControllableValue(
+    locationValue,
+    defaultLocationValue,
+    onLocationChange,
+  );
+  const [date, setDate] = useControllableValue(
+    dateValue,
+    defaultDateValue,
+    onDateChange,
+  );
 
   const today = new Date().toISOString().split("T")[0];
 
-  const suggestions = useMemo(() => {
-    if (lieu.length < 1) return [];
-    const query = normalize(lieu);
-    return LOCATIONS.filter(
-      (loc) =>
-        normalize(loc.city).startsWith(query) || loc.postal.startsWith(query),
-    ).slice(0, 5);
-  }, [lieu]);
-
-  const showSuggestions = isFocused && suggestions.length > 0;
-
-  function selectSuggestion(loc) {
-    setLieu(`${loc.city} (${loc.postal})`);
-    setIsFocused(false);
-    setSelectedIndex(-1);
-  }
-
-  function handleKeyDown(e) {
-    if (!showSuggestions) return;
-
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setSelectedIndex((prev) =>
-        prev < suggestions.length - 1 ? prev + 1 : 0,
-      );
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setSelectedIndex((prev) =>
-        prev > 0 ? prev - 1 : suggestions.length - 1,
-      );
-    } else if (e.key === "Enter" && selectedIndex >= 0) {
-      e.preventDefault();
-      selectSuggestion(suggestions[selectedIndex]);
-    } else if (e.key === "Escape") {
-      setIsFocused(false);
-    }
-  }
-
   function handleSubmit(e) {
     e.preventDefault();
-    const params = new URLSearchParams();
-    if (lieu) params.set("lieu", lieu);
-    if (date) params.set("date", date);
-    router.push(`/search?${params.toString()}`);
+
+    const values = {
+      location: location?.trim() || "",
+      date: date?.trim() || "",
+    };
+
+    if (onSubmit) {
+      onSubmit(values);
+      return;
+    }
+
+    router.push(buildSearchHref(values));
   }
+
+  const isHero = variant === "hero";
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="mx-auto mt-10 flex w-full max-w-2xl flex-col gap-3 rounded-xl border border-glow p-2 glass sm:flex-row"
+      className={cn(
+        isHero
+          ? "mx-auto mt-10 flex w-full max-w-2xl flex-col gap-3 rounded-xl border border-glow p-2 glass sm:flex-row"
+          : "flex w-full flex-col gap-3 rounded-xl border border-glow p-2 glass sm:flex-row",
+        className,
+      )}
     >
-      <div className="relative flex-1">
-        <input
-          type="text"
-          name="lieu"
-          value={lieu}
-          onChange={(e) => setLieu(e.target.value)}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setTimeout(() => setIsFocused(false), 200)}
-          onKeyDown={handleKeyDown}
-          placeholder="Ville ou code postal"
-          aria-label="Lieu de recherche"
-          autoComplete="off"
-          role="combobox"
-          aria-expanded={showSuggestions}
-          aria-autocomplete="list"
-          className="flex h-12 w-full rounded border-transparent bg-transparent px-3 py-2 text-sm text-foreground placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
-        />
-        {showSuggestions && (
-          <ul
-            ref={listRef}
-            role="listbox"
-            className="absolute left-0 right-0 top-full z-50 mt-1 max-h-64 overflow-y-auto rounded-lg border border-border bg-card py-1 shadow-xl"
-          >
-            {suggestions.map((loc, i) => (
-              <li
-                key={`${loc.city}-${loc.postal}`}
-                role="option"
-                aria-selected={i === selectedIndex}
-              >
-                <button
-                  type="button"
-                  onMouseDown={() => selectSuggestion(loc)}
-                  className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-sm transition-colors ${
-                    i === selectedIndex
-                      ? "bg-accent/15 text-foreground"
-                      : "text-foreground hover:bg-accent/10"
-                  }`}
-                >
-                  <span>📍 {loc.city}</span>
-                  <span className="text-xs text-muted">
-                    {loc.postal} · {loc.region}
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
+      <CityPostalAutocomplete
+        value={location}
+        onChange={setLocation}
+        onSelect={(selection) => setLocation(formatLocationValue(selection))}
+        placeholder="Ville ou code postal"
+        ariaLabel="Lieu de recherche"
+        className="flex-1"
+        inputClassName={cn(
+          "h-12 rounded-lg",
+          isHero
+            ? "border-transparent bg-transparent focus-visible:ring-accent/50 focus-visible:ring-offset-0"
+            : "border-border bg-background/70",
         )}
-      </div>
-      <input
-        type="date"
-        name="date"
-        value={date}
-        onChange={(e) => setDate(e.target.value)}
-        min={today}
-        aria-label="Date souhaitée"
-        className="flex h-12 rounded border-transparent bg-transparent px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 sm:w-44"
       />
-      <Button type="submit" size="lg" className="h-12 gap-2 glow-gold">
+
+      {showDate && (
+        <Input
+          type="date"
+          name="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          min={today}
+          aria-label="Date souhaitée"
+          className={cn(
+            "h-12 rounded-lg sm:w-44",
+            isHero
+              ? "border-transparent bg-transparent focus-visible:ring-accent/50 focus-visible:ring-offset-0"
+              : "border-border bg-background/70",
+          )}
+        />
+      )}
+
+      <Button
+        type="submit"
+        size="lg"
+        className={cn("h-12 gap-2", isHero ? "glow-gold" : "sm:min-w-40")}
+      >
         <Search className="h-4 w-4" />
-        Rechercher
+        {submitLabel}
       </Button>
     </form>
   );
 }
 
-export { HeroSearchBar };
+const HeroSearchBar = SharedSearchBar;
+
+export { HeroSearchBar, SharedSearchBar, buildSearchHref, DEFAULT_SEARCH_SORT };

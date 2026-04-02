@@ -8,7 +8,7 @@ const normalize = (str) =>
 
 export async function searchCityOrPostal(query, limit = 5) {
   const q = normalize(String(query || "").trim());
-  if (q.length < 2) return [];
+  if (q.length < 1) return [];
 
   const isPostalQuery = /^\d+$/.test(q);
   const seen = new Set();
@@ -29,6 +29,7 @@ export async function searchCityOrPostal(query, limit = 5) {
     .map((loc) => ({
       city: loc.city,
       postalCode: loc.postal,
+      region: loc.region,
       countryCode: "ch",
       country: "Suisse",
     }));
