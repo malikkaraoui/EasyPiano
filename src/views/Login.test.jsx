@@ -57,7 +57,7 @@ describe("Login", () => {
   it("affiche les champs email et mot de passe", () => {
     render(<Login />);
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/mot de passe/i)).toBeInTheDocument();
+    expect(screen.getByLabelText("Mot de passe")).toBeInTheDocument();
   });
 
   it("affiche le bouton 'Se connecter'", () => {
@@ -122,7 +122,7 @@ describe("Login", () => {
     fireEvent.change(screen.getByLabelText(/email/i), {
       target: { value: "test@test.com" },
     });
-    fireEvent.change(screen.getByLabelText(/mot de passe/i), {
+    fireEvent.change(screen.getByLabelText("Mot de passe"), {
       target: { value: "password123" },
     });
     fireEvent.submit(
@@ -149,7 +149,7 @@ describe("Login", () => {
     fireEvent.change(screen.getByLabelText(/email/i), {
       target: { value: "marie@test.com" },
     });
-    fireEvent.change(screen.getByLabelText(/mot de passe/i), {
+    fireEvent.change(screen.getByLabelText("Mot de passe"), {
       target: { value: "secret123" },
     });
     fireEvent.submit(
@@ -173,7 +173,7 @@ describe("Login", () => {
     fireEvent.change(screen.getByLabelText(/email/i), {
       target: { value: "test@test.com" },
     });
-    fireEvent.change(screen.getByLabelText(/mot de passe/i), {
+    fireEvent.change(screen.getByLabelText("Mot de passe"), {
       target: { value: "wrong" },
     });
     fireEvent.submit(
