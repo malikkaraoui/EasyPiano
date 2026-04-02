@@ -1,9 +1,13 @@
 import { useState } from "react";
+import { DEFAULT_SEARCH_SORT } from "@/lib/search";
 
-export function useSearchFormState(initialState) {
-  const [location, setLocation] = useState(initialState.location || "");
-  const [date, setDate] = useState(initialState.date || "");
-  const [sortBy, setSortBy] = useState(initialState.sortBy || "rating");
+export function useSearchFormState(initialState = {}) {
+  const initialLocation = initialState.location || "";
+  const initialDate = initialState.date || "";
+  const initialSortBy = initialState.sortBy || DEFAULT_SEARCH_SORT;
+  const [location, setLocation] = useState(initialLocation);
+  const [date, setDate] = useState(initialDate);
+  const [sortBy, setSortBy] = useState(initialSortBy);
 
   return {
     location,

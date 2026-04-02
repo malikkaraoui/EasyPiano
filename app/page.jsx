@@ -77,7 +77,7 @@ export default function HomePage() {
         </ScrollReveal>
         {/* Golden connector line */}
         <div
-          className="absolute left-1/2 top-[55%] hidden h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-accent/30 to-transparent sm:block"
+          className="absolute left-1/2 top-[55%] hidden h-px w-3/4 -translate-x-1/2 bg-linear-to-r from-transparent via-accent/30 to-transparent sm:block"
           aria-hidden="true"
         />
         <div className="grid gap-12 sm:grid-cols-3">
@@ -142,7 +142,7 @@ export default function HomePage() {
       {/* CTA Devenez accordeur */}
       <section className="relative px-4 py-24 sm:px-6">
         <div
-          className="mx-auto mb-12 h-px w-24 bg-gradient-to-r from-transparent via-accent to-transparent"
+          className="mx-auto mb-12 h-px w-24 bg-linear-to-r from-transparent via-accent to-transparent"
           aria-hidden="true"
         />
         <ScrollReveal>

@@ -6,9 +6,8 @@ import { Search } from "lucide-react";
 import CityPostalAutocomplete from "@/components/UI/CityPostalAutocomplete";
 import { Button } from "@/components/UI/button";
 import { Input } from "@/components/UI/input";
+import { buildSearchHref } from "@/lib/search";
 import { cn } from "@/lib/utils";
-
-const DEFAULT_SEARCH_SORT = "rating";
 
 function useControllableValue(controlledValue, defaultValue, onChange) {
   const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue);
@@ -32,26 +31,7 @@ function formatLocationValue(selection) {
     .trim();
 }
 
-function buildSearchHref({
-  location,
-  date,
-  sortBy,
-  includeSort = false,
-  basePath = "/search",
-}) {
-  const params = new URLSearchParams();
-
-  if (location?.trim()) params.set("lieu", location.trim());
-  if (date?.trim()) params.set("date", date.trim());
-  if (includeSort && sortBy && sortBy !== DEFAULT_SEARCH_SORT) {
-    params.set("sort", sortBy);
-  }
-
-  const query = params.toString();
-  return query ? `${basePath}?${query}` : basePath;
-}
-
-function SharedSearchBar({
+function HeroSearchBar({
   variant = "hero",
   locationValue,
   defaultLocationValue = "",
@@ -150,6 +130,4 @@ function SharedSearchBar({
   );
 }
 
-const HeroSearchBar = SharedSearchBar;
-
-export { HeroSearchBar, SharedSearchBar, buildSearchHref, DEFAULT_SEARCH_SORT };
+export { HeroSearchBar };

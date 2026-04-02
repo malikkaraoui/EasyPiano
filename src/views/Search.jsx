@@ -4,50 +4,31 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { MapPin, Star } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import {
-  HeroSearchBar,
-  buildSearchHref,
-  DEFAULT_SEARCH_SORT,
-} from "@components/HeroSearchBar";
+import { HeroSearchBar } from "@components/HeroSearchBar";
 import { useSearchFormState } from "@/hooks/useSearchFormState";
+import {
+  SEARCH_SORT_OPTIONS,
+  buildSearchHref,
+  filterAndSortProfessionals,
+  getSearchFormStateFromParams,
+} from "@/lib/search";
 import { getActiveProfessionals } from "../services/database";
 import { formatPrice, formatRating } from "../utils/format";
 
-const SEARCH_SORT_OPTIONS = [
-  { value: "rating", label: "Mieux notés" },
-  { value: "price", label: "Prix croissant" },
-  { value: "reviews", label: "Plus d'avis" },
-];
-
-function normalizeSearchValue(value) {
-  return String(value || "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[(),]/g, " ");
-}
-
-function isSupportedSort(sortBy) {
-  return SEARCH_SORT_OPTIONS.some((option) => option.value === sortBy);
-}
-
 export default function Search() {
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [pros, setPros] = useState([]);
   const [loading, setLoading] = useState(true);
-  const initialLocation = searchParams.get("lieu") || "";
-  const initialDate = searchParams.get("date") || "";
-  const initialSort = isSupportedSort(searchParams.get("sort"))
-    ? searchParams.get("sort")
-    : DEFAULT_SEARCH_SORT;
-  const { location, date, sortBy, setLocation, setDate, setSortBy } =
-    useSearchFormState({
-      location: initialLocation,
-      date: initialDate,
-      sortBy: initialSort,
-    });
+  const initialFilters = useMemo(
+    () => getSearchFormStateFromParams(searchParams),
+    [searchParams],
+  );
+  const searchStateKey = [
+    initialFilters.location,
+    initialFilters.date,
+    initialFilters.sortBy,
+  ].join("|");
 
   useEffect(() => {
     let isMounted = true;
@@ -70,37 +51,31 @@ export default function Search() {
     };
   }, []);
 
-  const filtered = useMemo(() => {
-    const terms = normalizeSearchValue(location)
-      .trim()
-      .split(/\s+/)
-      .filter(Boolean);
+  if (loading)
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center text-muted">
+        Chargement des accordeurs...
+      </div>
+    );
 
-    const results = pros.filter((pro) => {
-      if (terms.length === 0) return true;
+  return (
+    <SearchContent
+      key={searchStateKey}
+      initialFilters={initialFilters}
+      pathname={pathname}
+      pros={pros}
+    />
+  );
+}
 
-      const city = normalizeSearchValue(pro.city);
-      const postalCode = normalizeSearchValue(String(pro.postalCode || ""));
-      const fullName = normalizeSearchValue(
-        `${pro.firstName || ""} ${pro.lastName || ""}`,
-      );
-
-      return terms.every(
-        (term) =>
-          city.includes(term) ||
-          postalCode.startsWith(term) ||
-          fullName.includes(term),
-      );
-    });
-
-    return results.sort((a, b) => {
-      if (sortBy === "price") return (a.basePrice || 0) - (b.basePrice || 0);
-      if (sortBy === "reviews") {
-        return (b.reviewCount || 0) - (a.reviewCount || 0);
-      }
-      return (b.rating || 0) - (a.rating || 0);
-    });
-  }, [location, sortBy, pros]);
+function SearchContent({ initialFilters, pathname, pros }) {
+  const router = useRouter();
+  const { location, date, sortBy, setLocation, setDate, setSortBy } =
+    useSearchFormState(initialFilters);
+  const filtered = useMemo(
+    () => filterAndSortProfessionals(pros, { location, sortBy }),
+    [location, sortBy, pros],
+  );
 
   function handleSearchSubmit(nextFilters) {
     router.push(
@@ -127,13 +102,6 @@ export default function Search() {
       }),
     );
   }
-
-  if (loading)
-    return (
-      <div className="flex min-h-[50vh] items-center justify-center text-muted">
-        Chargement des accordeurs...
-      </div>
-    );
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
