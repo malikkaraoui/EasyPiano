@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@hooks/useAuth";
 import ProtectedRoute from "@components/Auth/ProtectedRoute";
@@ -29,16 +29,22 @@ const COUNTRY_OPTIONS = [
 function BecomeProForm() {
   const { user } = useAuth();
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
   const [bio, setBio] = useState("");
-  const [email, setEmail] = useState(user?.email || "");
+  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [country, setCountry] = useState("");
   const [languages, setLanguages] = useState([]);
   const [videoURL, setVideoURL] = useState("");
+
+  useEffect(() => {
+    setMounted(true);
+    if (user?.email) setEmail(user.email);
+  }, [user]);
 
   function toggleLanguage(code) {
     setLanguages((prev) =>
@@ -80,6 +86,14 @@ function BecomeProForm() {
     } finally {
       setSubmitting(false);
     }
+  }
+
+  if (!mounted) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center text-muted">
+        Chargement...
+      </div>
+    );
   }
 
   if (success) {
