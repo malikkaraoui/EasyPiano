@@ -1,10 +1,13 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { CheckCircle, Calendar, ArrowRight } from "lucide-react";
+import { CheckCircle, Calendar, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/UI/button";
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
+
+const COUNTDOWN_SECONDS = 5;
 
 function generateICS({ date, slot, proName }) {
   const slotStart = slot === "morning" ? "09:00" : "14:00";
@@ -34,9 +37,57 @@ function generateICS({ date, slot, proName }) {
   URL.revokeObjectURL(url);
 }
 
+function LoadingScreen({ secondsLeft, progress }) {
+  return (
+    <div className="flex min-h-[60vh] flex-col items-center justify-center px-4">
+      <Loader2
+        className="h-12 w-12 animate-spin text-accent"
+        strokeWidth={1.5}
+      />
+
+      <h2 className="mt-6 font-heading text-xl font-semibold text-foreground">
+        Traitement de votre paiement...
+      </h2>
+      <p className="mt-2 text-sm text-muted">
+        Confirmation dans {secondsLeft} seconde{secondsLeft > 1 ? "s" : ""}
+      </p>
+
+      <div className="mt-8 h-2 w-64 overflow-hidden rounded-full bg-border/30">
+        <div
+          className="h-full rounded-full bg-accent transition-all duration-1000 ease-linear"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function ConfirmationContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
+  const [isLoading, setIsLoading] = useState(true);
+  const [secondsLeft, setSecondsLeft] = useState(COUNTDOWN_SECONDS);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSecondsLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          setIsLoading(false);
+          return 0;
+        }
+        return prev - 1;
+      });
+      setProgress((prev) => Math.min(prev + 100 / COUNTDOWN_SECONDS, 100));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  if (isLoading) {
+    return <LoadingScreen secondsLeft={secondsLeft} progress={progress} />;
+  }
 
   return (
     <div className="mx-auto max-w-lg px-4 py-20 text-center">
