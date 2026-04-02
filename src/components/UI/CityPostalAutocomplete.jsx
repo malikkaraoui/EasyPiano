@@ -25,9 +25,14 @@ export default function CityPostalAutocomplete({
   const [isFocused, setIsFocused] = useState(false);
   const rootRef = useRef(null);
 
+  function setMenuOpen(nextOpen) {
+    setOpen(nextOpen);
+    onOpenChange?.(nextOpen);
+  }
+
   useEffect(() => {
     if (!isFocused) {
-      setOpen(false);
+      setMenuOpen(false);
       setActiveIndex(-1);
       return undefined;
     }
@@ -35,7 +40,7 @@ export default function CityPostalAutocomplete({
     const q = value?.trim() || "";
     if (q.length < minQueryLength) {
       setSuggestions([]);
-      setOpen(false);
+      setMenuOpen(false);
       setActiveIndex(-1);
       return undefined;
     }
@@ -48,14 +53,14 @@ export default function CityPostalAutocomplete({
         const result = await searchCityOrPostal(q, 5);
         if (!cancelled) {
           setSuggestions(result);
-          setOpen(result.length > 0);
+          setMenuOpen(result.length > 0);
           setActiveIndex(-1);
         }
       } catch (error) {
         console.error("Erreur auto-complétion:", error);
         if (!cancelled) {
           setSuggestions([]);
-          setOpen(false);
+          setMenuOpen(false);
           setActiveIndex(-1);
         }
       } finally {
@@ -71,13 +76,9 @@ export default function CityPostalAutocomplete({
   }, [value, minQueryLength, isFocused]);
 
   useEffect(() => {
-    onOpenChange?.(open);
-  }, [open, onOpenChange]);
-
-  useEffect(() => {
     const onDocMouseDown = (event) => {
       if (rootRef.current && !rootRef.current.contains(event.target)) {
-        setOpen(false);
+        setMenuOpen(false);
         setActiveIndex(-1);
         setIsFocused(false);
       }
@@ -89,7 +90,7 @@ export default function CityPostalAutocomplete({
 
   function handleSelect(item) {
     onSelect(item);
-    setOpen(false);
+    setMenuOpen(false);
     setActiveIndex(-1);
     setIsFocused(false);
   }
@@ -120,7 +121,7 @@ export default function CityPostalAutocomplete({
     }
 
     if (event.key === "Escape") {
-      setOpen(false);
+      setMenuOpen(false);
       setActiveIndex(-1);
       setIsFocused(false);
     }
@@ -137,7 +138,7 @@ export default function CityPostalAutocomplete({
         onKeyDown={handleKeyDown}
         onFocus={() => {
           setIsFocused(true);
-          if (suggestions.length > 0) setOpen(true);
+          if (suggestions.length > 0) setMenuOpen(true);
         }}
         autoComplete="off"
         role="combobox"
@@ -156,7 +157,7 @@ export default function CityPostalAutocomplete({
       {open && suggestions.length > 0 && (
         <ul
           className={cn(
-            "surface-solid-strong absolute left-0 right-0 top-full z-[80] mt-2 max-h-64 overflow-y-auto rounded-xl border border-border/90 py-1 shadow-[0_24px_48px_rgba(0,0,0,0.52)]",
+            "surface-solid-strong absolute left-0 right-0 top-full z-80 mt-2 max-h-64 overflow-y-auto rounded-xl border border-border/90 py-1 shadow-[0_24px_48px_rgba(0,0,0,0.52)]",
             listClassName,
           )}
           role="listbox"
