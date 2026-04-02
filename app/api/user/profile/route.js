@@ -1,14 +1,16 @@
 import { verifyAuth } from "@/services/auth-server";
 import { successResponse, errorResponse } from "@/lib/api-response";
-import { ref, get, update } from "firebase/database";
-import { db } from "@/services/firebase";
+import { getAdminDb } from "@/services/firebase-admin-db";
 
 export async function GET(request) {
   const user = await verifyAuth(request);
   if (!user) return errorResponse("Non autorisé", 401);
 
   try {
-    const snapshot = await get(ref(db, `users/${user.uid}`));
+    const db = getAdminDb();
+    if (!db) return errorResponse("Base de données non disponible", 500);
+
+    const snapshot = await db.ref(`users/${user.uid}`).once("value");
     if (!snapshot.exists()) return errorResponse("Profil non trouvé", 404);
 
     return successResponse(snapshot.val());
@@ -23,6 +25,9 @@ export async function POST(request) {
   if (!user) return errorResponse("Non autorisé", 401);
 
   try {
+    const db = getAdminDb();
+    if (!db) return errorResponse("Base de données non disponible", 500);
+
     const body = await request.json();
     const allowedFields = ["displayName", "phone", "isB2B"];
     const updates = {};
@@ -38,7 +43,7 @@ export async function POST(request) {
     }
 
     updates.updatedAt = new Date().toISOString();
-    await update(ref(db, `users/${user.uid}`), updates);
+    await db.ref(`users/${user.uid}`).update(updates);
 
     return successResponse(updates);
   } catch (error) {

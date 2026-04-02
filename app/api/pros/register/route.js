@@ -1,13 +1,15 @@
 import { verifyAuth } from "@/services/auth-server";
 import { successResponse, errorResponse } from "@/lib/api-response";
-import { ref, push, set } from "firebase/database";
-import { db } from "@/services/firebase";
+import { getAdminDb } from "@/services/firebase-admin-db";
 
 export async function POST(request) {
   const user = await verifyAuth(request);
   if (!user) return errorResponse("Non autorisé", 401);
 
   try {
+    const db = getAdminDb();
+    if (!db) return errorResponse("Base de données non disponible", 500);
+
     const body = await request.json();
 
     const requiredFields = ["bio", "email", "country", "languages"];
@@ -21,7 +23,7 @@ export async function POST(request) {
       return errorResponse("Au moins une langue est requise", 400);
     }
 
-    const proRef = push(ref(db, "pros"));
+    const proRef = db.ref("pros").push();
     const proData = {
       userId: user.uid,
       bio: body.bio,
@@ -46,7 +48,7 @@ export async function POST(request) {
       createdAt: new Date().toISOString(),
     };
 
-    await set(proRef, proData);
+    await proRef.set(proData);
 
     return successResponse({ proId: proRef.key, status: "pending" }, 201);
   } catch (error) {

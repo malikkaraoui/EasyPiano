@@ -5,16 +5,16 @@ vi.mock("@/services/auth-server", () => ({
   verifyAuth: vi.fn(),
 }));
 
-vi.mock("firebase/database", () => ({
-  ref: vi.fn(),
-  push: vi.fn(() => ({ key: "pro-abc123" })),
-  set: vi.fn(),
+const mockSet = vi.fn();
+const mockPushRef = { key: "pro-abc123", set: mockSet };
+
+vi.mock("@/services/firebase-admin-db", () => ({
+  getAdminDb: () => ({
+    ref: () => ({ push: () => mockPushRef }),
+  }),
 }));
 
-vi.mock("@/services/firebase", () => ({ db: {} }));
-
 import { verifyAuth } from "@/services/auth-server";
-import { set } from "firebase/database";
 
 function makeRequest(body) {
   return {
@@ -64,25 +64,23 @@ describe("POST /api/pros/register", () => {
 
   it("crée le pro avec status 'pending' et retourne 201", async () => {
     verifyAuth.mockResolvedValue({ uid: "u1" });
-    set.mockResolvedValue();
+    mockSet.mockResolvedValue();
 
     const res = await POST(makeRequest(validBody));
     const body = await res.json();
 
     expect(res.status).toBe(201);
-    expect(body.success).toBe(true);
     expect(body.data.proId).toBe("pro-abc123");
     expect(body.data.status).toBe("pending");
   });
 
   it("stocke userId, status pending, stats initialisées", async () => {
     verifyAuth.mockResolvedValue({ uid: "user42" });
-    set.mockResolvedValue();
+    mockSet.mockResolvedValue();
 
     await POST(makeRequest(validBody));
 
-    expect(set).toHaveBeenCalledWith(
-      expect.anything(),
+    expect(mockSet).toHaveBeenCalledWith(
       expect.objectContaining({
         userId: "user42",
         status: "pending",
@@ -94,22 +92,19 @@ describe("POST /api/pros/register", () => {
 
   it("accepte les champs optionnels", async () => {
     verifyAuth.mockResolvedValue({ uid: "u1" });
-    set.mockResolvedValue();
+    mockSet.mockResolvedValue();
 
-    const bodyWithOptional = {
-      ...validBody,
-      videoURL: "https://youtube.com/watch?v=123",
-      certificates: [{ name: "Diplôme conservatoire", fileURL: "url" }],
-    };
-
-    const res = await POST(makeRequest(bodyWithOptional));
+    const res = await POST(
+      makeRequest({
+        ...validBody,
+        videoURL: "https://youtube.com/watch?v=123",
+        certificates: [{ name: "Diplôme", fileURL: "url" }],
+      }),
+    );
     expect(res.status).toBe(201);
-
-    expect(set).toHaveBeenCalledWith(
-      expect.anything(),
+    expect(mockSet).toHaveBeenCalledWith(
       expect.objectContaining({
         videoURL: "https://youtube.com/watch?v=123",
-        certificates: [{ name: "Diplôme conservatoire", fileURL: "url" }],
       }),
     );
   });

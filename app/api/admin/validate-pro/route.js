@@ -1,12 +1,14 @@
 import { verifyAuth } from "@/services/auth-server";
 import { successResponse, errorResponse } from "@/lib/api-response";
-import { ref, get, update } from "firebase/database";
-import { db } from "@/services/firebase";
+import { getAdminDb } from "@/services/firebase-admin-db";
 
 export async function POST(request) {
   const user = await verifyAuth(request);
   if (!user) return errorResponse("Non autorisé", 401);
   if (user.role !== "admin") return errorResponse("Accès refusé", 403);
+
+  const db = getAdminDb();
+  if (!db) return errorResponse("Base de données non disponible", 500);
 
   try {
     const body = await request.json();
@@ -20,8 +22,7 @@ export async function POST(request) {
       return errorResponse("Action invalide (validate ou refuse)", 400);
     }
 
-    const proRef = ref(db, `pros/${proId}`);
-    const snapshot = await get(proRef);
+    const snapshot = await db.ref(`pros/${proId}`).once("value");
     if (!snapshot.exists()) {
       return errorResponse("Professionnel non trouvé", 404);
     }
@@ -47,12 +48,10 @@ export async function POST(request) {
       updates.refusalReason = reason;
     }
 
-    await update(proRef, updates);
+    await db.ref(`pros/${proId}`).update(updates);
 
     if (action === "validate") {
-      const indexRef = ref(db, `indexes/pros_by_status/validated/${proId}`);
-      const { set: fbSet } = await import("firebase/database");
-      await fbSet(indexRef, true);
+      await db.ref(`indexes/pros_by_status/validated/${proId}`).set(true);
     }
 
     return successResponse({
