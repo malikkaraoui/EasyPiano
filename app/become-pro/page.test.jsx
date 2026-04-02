@@ -76,12 +76,15 @@ describe("BecomeProPage", () => {
   it("permet de sélectionner/désélectionner une langue", () => {
     render(<BecomeProPage />);
     const frInput = screen.getByLabelText("Français");
+    const frChip = frInput.closest("label");
 
     fireEvent.click(frInput);
     expect(frInput).toBeChecked();
+    expect(frChip).toHaveClass("bg-white", "text-black", "border-white");
 
     fireEvent.click(frInput);
     expect(frInput).not.toBeChecked();
+    expect(frChip).not.toHaveClass("bg-white", "text-black", "border-white");
   });
 
   it("permet de sélectionner plusieurs langues", () => {

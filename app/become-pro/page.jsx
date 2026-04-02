@@ -233,7 +233,7 @@ function BecomeProForm() {
                   htmlFor={inputId}
                   className={`cursor-pointer rounded-full border px-3 py-2 text-sm font-medium transition-colors focus-within:outline-none focus-within:ring-2 focus-within:ring-accent ${
                     selected
-                      ? "border-accent bg-accent text-background"
+                      ? "border-white bg-white text-black shadow-sm"
                       : "border-border surface-solid text-foreground hover:border-accent hover:text-accent"
                   }`}
                 >
