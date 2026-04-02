@@ -42,13 +42,13 @@ describe("Footer", () => {
   it("applique les états interactifs partagés aux liens du footer", () => {
     render(<Footer />);
     expect(screen.getByText("Trouver un accordeur").closest("a")).toHaveClass(
-      "hover:bg-card",
-      "active:bg-card/80",
+      "hover:bg-accent/12",
+      "active:bg-accent/18",
       "focus-visible:ring-2",
     );
     expect(screen.getByText("Devenez accordeur").closest("a")).toHaveClass(
-      "hover:bg-accent/10",
-      "active:bg-accent/5",
+      "hover:bg-accent/14",
+      "active:bg-accent/20",
       "focus-visible:ring-2",
     );
   });

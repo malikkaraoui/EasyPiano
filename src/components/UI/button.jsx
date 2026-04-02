@@ -1,5 +1,9 @@
 import { forwardRef } from "react";
 import { cva } from "class-variance-authority";
+import {
+  interactiveSurfaceBaseClasses,
+  interactiveSurfaceToneClasses,
+} from "@/components/UI/interactive-surface";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
@@ -13,8 +17,10 @@ const buttonVariants = cva(
           "border border-border bg-transparent text-foreground shadow-sm hover:border-accent/50 hover:bg-card hover:shadow-md active:bg-card/80 active:shadow-none",
         destructive:
           "bg-destructive text-foreground shadow-sm hover:bg-destructive/90 hover:shadow-md active:bg-destructive/80 active:shadow-none",
-        ghost:
-          "border border-transparent bg-transparent text-muted hover:border-border/80 hover:bg-card hover:text-foreground hover:shadow-sm active:border-border/60 active:bg-card/80 active:text-foreground active:shadow-none",
+        ghost: cn(
+          interactiveSurfaceBaseClasses,
+          interactiveSurfaceToneClasses.muted,
+        ),
         link: "text-accent underline-offset-4 hover:underline active:text-accent-hover",
       },
       size: {

@@ -75,14 +75,17 @@ function HeroSearchBar({
   }
 
   const isHero = variant === "hero";
+  const sharedSearchFieldClasses = isHero
+    ? "border-border/70 bg-background/88 shadow-[0_14px_30px_rgba(0,0,0,0.24)] focus-visible:ring-accent/60 focus-visible:ring-offset-0"
+    : "border-border/90 bg-background shadow-[0_16px_32px_rgba(0,0,0,0.34)] focus-visible:ring-accent focus-visible:ring-offset-0";
 
   return (
     <form
       onSubmit={handleSubmit}
       className={cn(
         isHero
-          ? "mx-auto mt-10 flex w-full max-w-2xl flex-col gap-3 rounded-xl border border-glow p-2 glass sm:flex-row"
-          : "flex w-full flex-col gap-3 rounded-xl border border-glow p-2 glass sm:flex-row",
+          ? "relative isolate z-20 mx-auto mt-10 flex w-full max-w-2xl flex-col gap-3 rounded-xl border border-glow p-2 glass sm:flex-row"
+          : "relative isolate z-20 flex w-full flex-col gap-3 rounded-xl border border-glow p-2 glass sm:flex-row",
         className,
       )}
     >
@@ -93,12 +96,7 @@ function HeroSearchBar({
         placeholder="Ville ou code postal"
         ariaLabel="Lieu de recherche"
         className="flex-1"
-        inputClassName={cn(
-          "h-12 rounded-lg",
-          isHero
-            ? "border-transparent bg-transparent focus-visible:ring-accent/50 focus-visible:ring-offset-0"
-            : "border-border bg-background/70",
-        )}
+        inputClassName={cn("h-12 rounded-lg", sharedSearchFieldClasses)}
       />
 
       {showDate && (
@@ -109,12 +107,7 @@ function HeroSearchBar({
           onChange={(e) => setDate(e.target.value)}
           min={today}
           aria-label="Date souhaitée"
-          className={cn(
-            "h-12 rounded-lg sm:w-44",
-            isHero
-              ? "border-transparent bg-transparent focus-visible:ring-accent/50 focus-visible:ring-offset-0"
-              : "border-border bg-background/70",
-          )}
+          className={cn("h-12 rounded-lg sm:w-44", sharedSearchFieldClasses)}
         />
       )}
 

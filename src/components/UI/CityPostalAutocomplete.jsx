@@ -127,7 +127,7 @@ export default function CityPostalAutocomplete({
   }
 
   return (
-    <div className={cn("relative", className)} ref={rootRef}>
+    <div className={cn("relative isolate", className)} ref={rootRef}>
       <Input
         type="text"
         placeholder={placeholder}
@@ -156,7 +156,7 @@ export default function CityPostalAutocomplete({
       {open && suggestions.length > 0 && (
         <ul
           className={cn(
-            "absolute left-0 right-0 top-full z-50 mt-1 max-h-64 overflow-y-auto rounded-lg border border-border bg-card py-1 shadow-xl",
+            "absolute left-0 right-0 top-full z-[60] mt-2 max-h-64 overflow-y-auto rounded-xl border border-border/90 bg-background py-1 shadow-[0_24px_48px_rgba(0,0,0,0.52)]",
             listClassName,
           )}
           role="listbox"
@@ -170,10 +170,10 @@ export default function CityPostalAutocomplete({
               <button
                 type="button"
                 className={cn(
-                  "flex w-full items-center justify-between px-4 py-2.5 text-left text-sm text-foreground transition-colors",
+                  "flex w-full items-center justify-between px-4 py-2.5 text-left text-sm text-foreground transition-colors duration-150",
                   index === activeIndex
-                    ? "bg-accent/15 text-foreground"
-                    : "hover:bg-accent/10",
+                    ? "bg-accent/18 text-foreground"
+                    : "hover:bg-accent/12",
                   optionClassName,
                 )}
                 onMouseDown={(e) => e.preventDefault()}

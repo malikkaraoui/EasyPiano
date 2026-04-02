@@ -48,13 +48,13 @@ describe("Header", () => {
     expect(screen.getByText("Mes rendez-vous")).toBeInTheDocument();
     expect(screen.getByText("Déconnexion")).toBeInTheDocument();
     expect(screen.getByText("Mes rendez-vous").closest("a")).toHaveClass(
-      "hover:bg-card",
-      "active:bg-card/80",
+      "hover:bg-accent/12",
+      "active:bg-accent/18",
       "focus-visible:ring-2",
     );
     expect(screen.getByText("Déconnexion")).toHaveClass(
-      "hover:bg-card",
-      "active:bg-card/80",
+      "hover:bg-accent/12",
+      "active:bg-accent/18",
       "focus-visible:ring-2",
     );
   });
