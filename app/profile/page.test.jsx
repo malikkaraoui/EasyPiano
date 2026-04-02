@@ -24,9 +24,23 @@ vi.mock("@/components/UI/input", () => ({
 
 import { useAuth } from "@hooks/useAuth";
 
+const profileData = {
+  displayName: "Jean Dupont",
+  phone: "+41791234567",
+  isB2B: false,
+  email: "test@example.com",
+};
+
+function mockFetchProfile() {
+  globalThis.fetch = vi.fn().mockResolvedValue({
+    json: () => Promise.resolve({ success: true, data: profileData }),
+  });
+}
+
 describe("ProfilePage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockFetchProfile();
     useAuth.mockReturnValue({
       user: {
         uid: "u1",
@@ -52,10 +66,12 @@ describe("ProfilePage", () => {
     expect(emailInput.value).toBe("test@example.com");
   });
 
-  it("affiche le champ nom pré-rempli", () => {
+  it("affiche le champ nom pré-rempli", async () => {
     render(<ProfilePage />);
     const nameInput = screen.getByLabelText(/nom complet/i);
-    expect(nameInput.value).toBe("Jean Dupont");
+    await waitFor(() => {
+      expect(nameInput.value).toBe("Jean Dupont");
+    });
   });
 
   it("affiche le champ téléphone", () => {
@@ -94,11 +110,12 @@ describe("ProfilePage", () => {
   });
 
   it("appelle l'API au submit du formulaire", async () => {
-    globalThis.fetch = vi.fn().mockResolvedValue({
-      json: () => Promise.resolve({ success: true, data: {} }),
+    render(<ProfilePage />);
+
+    await waitFor(() => {
+      expect(globalThis.fetch).toHaveBeenCalledTimes(1);
     });
 
-    render(<ProfilePage />);
     fireEvent.submit(
       screen.getByRole("button", { name: /enregistrer/i }).closest("form"),
     );
@@ -112,11 +129,12 @@ describe("ProfilePage", () => {
   });
 
   it("affiche un message de succès après mise à jour", async () => {
-    globalThis.fetch = vi.fn().mockResolvedValue({
-      json: () => Promise.resolve({ success: true, data: {} }),
+    render(<ProfilePage />);
+
+    await waitFor(() => {
+      expect(globalThis.fetch).toHaveBeenCalledTimes(1);
     });
 
-    render(<ProfilePage />);
     fireEvent.submit(
       screen.getByRole("button", { name: /enregistrer/i }).closest("form"),
     );
@@ -126,6 +144,12 @@ describe("ProfilePage", () => {
   });
 
   it("affiche l'état d'enregistrement pendant la sauvegarde", async () => {
+    render(<ProfilePage />);
+
+    await waitFor(() => {
+      expect(globalThis.fetch).toHaveBeenCalledTimes(1);
+    });
+
     let resolveRequest;
     globalThis.fetch = vi.fn(
       () =>
@@ -133,8 +157,6 @@ describe("ProfilePage", () => {
           resolveRequest = resolve;
         }),
     );
-
-    render(<ProfilePage />);
 
     fireEvent.submit(
       screen.getByRole("button", { name: /enregistrer/i }).closest("form"),

@@ -13,12 +13,44 @@ function ProfileForm() {
   const [phone, setPhone] = useState("");
   const [isB2B, setIsB2B] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [loadingProfile, setLoadingProfile] = useState(true);
   const [message, setMessage] = useState(null);
 
   useEffect(() => {
-    if (user) {
-      setDisplayName(user.displayName || "");
+    if (!user) return;
+
+    async function loadProfile() {
+      try {
+        const token = await user.getIdToken();
+        const res = await fetch("/api/user/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        if (data.success && data.data) {
+          setDisplayName(data.data.displayName || user.displayName || "");
+          if (data.data.phone) {
+            let raw = data.data.phone.replace(/\D/g, "");
+            if (raw.startsWith("41")) raw = raw.slice(2);
+            if (raw.startsWith("0")) raw = raw.slice(1);
+            const parts = [];
+            if (raw.length > 0) parts.push(raw.slice(0, 2));
+            if (raw.length > 2) parts.push(raw.slice(2, 5));
+            if (raw.length > 5) parts.push(raw.slice(5, 7));
+            if (raw.length > 7) parts.push(raw.slice(7, 9));
+            setPhone(parts.join(" "));
+          }
+          setIsB2B(data.data.isB2B || false);
+        } else {
+          setDisplayName(user.displayName || "");
+        }
+      } catch {
+        setDisplayName(user.displayName || "");
+      } finally {
+        setLoadingProfile(false);
+      }
     }
+
+    loadProfile();
   }, [user]);
 
   async function handleSubmit(e) {
@@ -74,6 +106,10 @@ function ProfileForm() {
         >
           {message.text}
         </p>
+      )}
+
+      {loadingProfile && (
+        <p className="mt-4 text-sm text-muted">Chargement du profil...</p>
       )}
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-6">
