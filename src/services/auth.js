@@ -33,7 +33,7 @@ function shouldFallbackToRedirect(error) {
 
   return (
     GOOGLE_REDIRECT_FALLBACK_CODES.has(error?.code) ||
-    /Cross-Origin-Opener-Policy|COOP|opener/i.test(message)
+    /Cross-Origin-Opener-Policy|COOP|opener|Illegal url/i.test(message)
   );
 }
 
