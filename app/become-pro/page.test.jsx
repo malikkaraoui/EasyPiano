@@ -75,13 +75,25 @@ describe("BecomeProPage", () => {
 
   it("permet de sélectionner/désélectionner une langue", () => {
     render(<BecomeProPage />);
-    const frBtn = screen.getByText("Français");
+    const frInput = screen.getByLabelText("Français");
 
-    fireEvent.click(frBtn);
-    expect(frBtn.className).toContain("bg-accent");
+    fireEvent.click(frInput);
+    expect(frInput).toBeChecked();
 
-    fireEvent.click(frBtn);
-    expect(frBtn.className).not.toContain("bg-accent");
+    fireEvent.click(frInput);
+    expect(frInput).not.toBeChecked();
+  });
+
+  it("permet de sélectionner plusieurs langues", () => {
+    render(<BecomeProPage />);
+    const frInput = screen.getByLabelText("Français");
+    const enInput = screen.getByLabelText("Anglais");
+
+    fireEvent.click(frInput);
+    fireEvent.click(enInput);
+
+    expect(frInput).toBeChecked();
+    expect(enInput).toBeChecked();
   });
 
   it("affiche le bouton 'Soumettre ma candidature'", () => {
@@ -136,7 +148,7 @@ describe("BecomeProPage", () => {
     fireEvent.change(screen.getByLabelText(/pays de résidence/i), {
       target: { value: "PL" },
     });
-    fireEvent.click(screen.getByText("Français"));
+    fireEvent.click(screen.getByLabelText("Français"));
     fireEvent.change(screen.getByLabelText(/indicatif/i), {
       target: { value: "+48" },
     });

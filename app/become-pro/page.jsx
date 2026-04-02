@@ -52,10 +52,14 @@ function BecomeProForm() {
     if (user?.email) setEmail(user.email);
   }, [user]);
 
-  function toggleLanguage(code) {
-    setLanguages((prev) =>
-      prev.includes(code) ? prev.filter((l) => l !== code) : [...prev, code],
-    );
+  function setLanguageSelection(code, checked) {
+    setLanguages((prev) => {
+      if (checked) {
+        return prev.includes(code) ? prev : [...prev, code];
+      }
+
+      return prev.filter((languageCode) => languageCode !== code);
+    });
   }
 
   async function handleSubmit(e) {
@@ -214,22 +218,44 @@ function BecomeProForm() {
           <legend className="mb-2 text-sm font-medium text-foreground">
             Langues parlées *
           </legend>
-          <div className="flex flex-wrap gap-2">
-            {LANGUAGE_OPTIONS.map((lang) => (
-              <button
-                key={lang.code}
-                type="button"
-                onClick={() => toggleLanguage(lang.code)}
-                className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
-                  languages.includes(lang.code)
-                    ? "border-accent bg-accent text-background"
-                    : "border-border text-muted hover:border-accent hover:text-foreground"
-                }`}
-              >
-                {lang.label}
-              </button>
-            ))}
+          <div
+            className="flex flex-wrap gap-2"
+            role="group"
+            aria-label="Langues parlées"
+          >
+            {LANGUAGE_OPTIONS.map((lang) => {
+              const selected = languages.includes(lang.code);
+              const inputId = `language-${lang.code}`;
+
+              return (
+                <label
+                  key={lang.code}
+                  htmlFor={inputId}
+                  className={`cursor-pointer rounded-full border px-3 py-2 text-sm font-medium transition-colors focus-within:outline-none focus-within:ring-2 focus-within:ring-accent ${
+                    selected
+                      ? "border-accent bg-accent text-background"
+                      : "border-border surface-solid text-foreground hover:border-accent hover:text-accent"
+                  }`}
+                >
+                  <input
+                    id={inputId}
+                    type="checkbox"
+                    name="languages"
+                    value={lang.code}
+                    checked={selected}
+                    onChange={(e) =>
+                      setLanguageSelection(lang.code, e.target.checked)
+                    }
+                    className="sr-only"
+                  />
+                  <span>{lang.label}</span>
+                </label>
+              );
+            })}
           </div>
+          <p className="mt-2 text-xs text-muted">
+            Vous pouvez sélectionner une ou plusieurs langues.
+          </p>
         </fieldset>
 
         <div>
