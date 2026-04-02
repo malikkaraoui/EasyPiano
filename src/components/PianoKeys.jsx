@@ -409,15 +409,15 @@ function getPressedKeysAtTime(globalTimeMs, threshold = 0.12) {
 
 function getWhiteMotionConfig(index) {
   return {
-    travelY: 0.46 + (index % 5) * 0.05,
-    opacityDrop: 0.018 + (index % 4) * 0.006,
+    travelY: 8 + (index % 5) * 1.2,
+    opacityDrop: 0.12 + (index % 4) * 0.03,
   };
 }
 
 function getBlackMotionConfig(index) {
   return {
-    heightDrop: 0.72 + (index % 3) * 0.08,
-    opacityDrop: 0.024 + (index % 2) * 0.008,
+    heightDrop: 6 + (index % 3) * 1.5,
+    opacityDrop: 0.15 + (index % 2) * 0.04,
   };
 }
 
@@ -460,12 +460,12 @@ function WhiteKey({ index, keyWidth, shouldReduceMotion, time }) {
 function BlackKey({ index, keyWidth, shouldReduceMotion, time }) {
   const config = getBlackMotionConfig(index);
 
-  const height = useTransform(time, (latest) => {
+  const y = useTransform(time, (latest) => {
     if (shouldReduceMotion) {
-      return "45%";
+      return 0;
     }
 
-    return `${45 - getKeyPressStrength(latest, index, true) * config.heightDrop}%`;
+    return getKeyPressStrength(latest, index, true) * config.heightDrop;
   });
 
   const opacity = useTransform(time, (latest) => {
@@ -482,7 +482,8 @@ function BlackKey({ index, keyWidth, shouldReduceMotion, time }) {
       style={{
         left: `${(index + 0.62) * keyWidth}%`,
         width: `${keyWidth * 0.65}%`,
-        height,
+        height: "45%",
+        y,
         opacity,
       }}
     >
@@ -506,7 +507,7 @@ function PianoKeys() {
 
   return (
     <div
-      className="relative h-12 w-full select-none overflow-hidden sm:h-14"
+      className="relative h-16 w-full select-none overflow-hidden sm:h-20"
       aria-hidden="true"
     >
       {/* Touches blanches — face avant vue du bas */}
