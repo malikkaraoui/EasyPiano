@@ -4,46 +4,7 @@ import { useState, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import { Button } from "@/components/UI/button";
-
-const LOCATIONS = [
-  { city: "Lausanne", postal: "1000", region: "VD" },
-  { city: "Genève", postal: "1200", region: "GE" },
-  { city: "Zürich", postal: "8000", region: "ZH" },
-  { city: "Berne", postal: "3000", region: "BE" },
-  { city: "Bâle", postal: "4000", region: "BS" },
-  { city: "Lucerne", postal: "6000", region: "LU" },
-  { city: "Montreux", postal: "1820", region: "VD" },
-  { city: "Neuchâtel", postal: "2000", region: "NE" },
-  { city: "Fribourg", postal: "1700", region: "FR" },
-  { city: "Sion", postal: "1950", region: "VS" },
-  { city: "Nyon", postal: "1260", region: "VD" },
-  { city: "Morges", postal: "1110", region: "VD" },
-  { city: "Vevey", postal: "1800", region: "VD" },
-  { city: "Yverdon-les-Bains", postal: "1400", region: "VD" },
-  { city: "Renens", postal: "1020", region: "VD" },
-  { city: "La Chaux-de-Fonds", postal: "2300", region: "NE" },
-  { city: "Bienne", postal: "2500", region: "BE" },
-  { city: "Thoune", postal: "3600", region: "BE" },
-  { city: "Winterthour", postal: "8400", region: "ZH" },
-  { city: "Saint-Gall", postal: "9000", region: "SG" },
-  { city: "Lugano", postal: "6900", region: "TI" },
-  { city: "Delémont", postal: "2800", region: "JU" },
-  { city: "Martigny", postal: "1920", region: "VS" },
-  { city: "Bulle", postal: "1630", region: "FR" },
-  { city: "Aigle", postal: "1860", region: "VD" },
-  { city: "Pully", postal: "1009", region: "VD" },
-  { city: "Meyrin", postal: "1217", region: "GE" },
-  { city: "Carouge", postal: "1227", region: "GE" },
-  { city: "Lyon", postal: "69000", region: "FR" },
-  { city: "Paris", postal: "75000", region: "FR" },
-  { city: "Annecy", postal: "74000", region: "FR" },
-  { city: "Mulhouse", postal: "68000", region: "FR" },
-  { city: "Strasbourg", postal: "67000", region: "FR" },
-  { city: "München", postal: "80331", region: "DE" },
-  { city: "Berlin", postal: "10115", region: "DE" },
-  { city: "Frankfurt", postal: "60311", region: "DE" },
-  { city: "Stuttgart", postal: "70173", region: "DE" },
-];
+import LOCATIONS from "@/data/swiss-locations.json";
 
 function HeroSearchBar() {
   const router = useRouter();
