@@ -6,6 +6,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { logout } from "../../services/auth";
 import { Button } from "@/components/UI/button";
 import { Avatar, AvatarFallback } from "@/components/UI/avatar";
+import { InteractiveLink } from "@/components/UI/interactive-link";
 
 function getAvatarFallbackLabel(user) {
   const source = user?.displayName || user?.email || "EasyPiano";
@@ -87,52 +88,34 @@ export default function Header() {
           className="flex items-center gap-4"
           aria-label="Navigation principale"
         >
-          <Link
-            href="/search"
-            className="group relative hidden rounded-lg px-3 py-1.5 text-sm text-muted transition-all duration-200 hover:bg-card hover:text-foreground active:scale-[0.97] active:bg-card/80 sm:block"
-          >
+          <InteractiveLink href="/search" className="hidden sm:inline-flex">
             Trouver un accordeur
-            <span
-              className="absolute -bottom-1 left-0 h-px w-0 bg-accent transition-all duration-300 group-hover:w-full"
-              aria-hidden="true"
-            />
-          </Link>
+          </InteractiveLink>
 
           {user ? (
             <>
-              <Link
-                href="/dashboard"
-                className="group relative rounded-lg px-3 py-1.5 text-sm text-muted transition-all duration-200 hover:bg-card hover:text-foreground active:scale-[0.97] active:bg-card/80"
-              >
+              <InteractiveLink href="/dashboard" className="inline-flex">
                 Mes rendez-vous
-                <span
-                  className="absolute -bottom-1 left-0 h-px w-0 bg-accent transition-all duration-300 group-hover:w-full"
-                  aria-hidden="true"
-                />
-              </Link>
+              </InteractiveLink>
               {isAdmin && (
-                <Link
-                  href="/admin"
-                  className="rounded-lg px-3 py-1.5 text-sm text-accent transition-all duration-200 hover:bg-accent/10 hover:text-accent-hover active:scale-[0.97] active:bg-accent/5"
-                >
+                <InteractiveLink href="/admin" tone="accent">
                   Admin
-                </Link>
+                </InteractiveLink>
               )}
-              <div className="flex items-center gap-3">
-                <Link href="/profile">
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/profile"
+                  className="rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:opacity-90 active:scale-[0.97]"
+                >
                   <UserAvatar user={user} />
                 </Link>
                 {isPro && (
-                  <Link
+                  <InteractiveLink
                     href="/pro-dashboard"
-                    className="group relative rounded-lg px-3 py-1.5 text-sm text-muted transition-all duration-200 hover:bg-card hover:text-foreground active:scale-[0.97] active:bg-card/80"
+                    className="inline-flex"
                   >
                     Dashboard pro
-                    <span
-                      className="absolute -bottom-1 left-0 h-px w-0 bg-accent transition-all duration-300 group-hover:w-full"
-                      aria-hidden="true"
-                    />
-                  </Link>
+                  </InteractiveLink>
                 )}
                 <Button variant="ghost" size="sm" onClick={logout}>
                   Déconnexion
@@ -140,12 +123,13 @@ export default function Header() {
               </div>
             </>
           ) : (
-            <Link
+            <InteractiveLink
               href="/login"
-              className="inline-flex h-9 items-center rounded border border-accent/30 bg-transparent px-3 text-xs font-medium text-foreground transition-all duration-200 hover:border-accent hover:bg-accent hover:text-background hover:shadow-[0_0_15px_rgba(212,197,160,0.2)] active:scale-95 active:shadow-none"
+              tone="accent"
+              className="min-h-9 px-3 text-xs"
             >
               Connexion
-            </Link>
+            </InteractiveLink>
           )}
         </nav>
       </div>

@@ -34,6 +34,23 @@ describe("Footer", () => {
   it("affiche l'email de contact", () => {
     render(<Footer />);
     expect(screen.getByText("contact@easypiano.ch")).toBeInTheDocument();
+    expect(
+      screen.getByText("contact@easypiano.ch").closest("a"),
+    ).toHaveAttribute("href", "mailto:contact@easypiano.ch");
+  });
+
+  it("applique les états interactifs partagés aux liens du footer", () => {
+    render(<Footer />);
+    expect(screen.getByText("Trouver un accordeur").closest("a")).toHaveClass(
+      "hover:bg-card",
+      "active:bg-card/80",
+      "focus-visible:ring-2",
+    );
+    expect(screen.getByText("Devenez accordeur").closest("a")).toHaveClass(
+      "hover:bg-accent/10",
+      "active:bg-accent/5",
+      "focus-visible:ring-2",
+    );
   });
 
   it("affiche 'Mentions légales'", () => {

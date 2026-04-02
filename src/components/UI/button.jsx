@@ -3,7 +3,7 @@ import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 active:scale-[0.97]",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 active:scale-[0.97]",
   {
     variants: {
       variant: {
@@ -14,7 +14,7 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-foreground shadow-sm hover:bg-destructive/90 hover:shadow-md active:bg-destructive/80 active:shadow-none",
         ghost:
-          "text-muted hover:bg-card hover:text-foreground active:bg-card/80",
+          "border border-transparent bg-transparent text-muted hover:border-border/80 hover:bg-card hover:text-foreground hover:shadow-sm active:border-border/60 active:bg-card/80 active:text-foreground active:shadow-none",
         link: "text-accent underline-offset-4 hover:underline active:text-accent-hover",
       },
       size: {

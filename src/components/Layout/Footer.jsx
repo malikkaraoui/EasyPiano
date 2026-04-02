@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { PianoKeys } from "@/components/PianoKeys";
+import { InteractiveLink } from "@/components/UI/interactive-link";
 
 export default function Footer() {
   return (
@@ -25,28 +26,19 @@ export default function Footer() {
             </h3>
             <ul className="mt-3 space-y-2">
               <li>
-                <Link
-                  href="/search"
-                  className="inline-block rounded px-1.5 py-0.5 text-sm text-muted transition-all duration-200 hover:bg-card hover:text-foreground active:scale-[0.97] active:bg-card/80"
-                >
+                <InteractiveLink href="/search" size="footer">
                   Trouver un accordeur
-                </Link>
+                </InteractiveLink>
               </li>
               <li>
-                <Link
-                  href="/login"
-                  className="inline-block rounded px-1.5 py-0.5 text-sm text-muted transition-all duration-200 hover:bg-card hover:text-foreground active:scale-[0.97] active:bg-card/80"
-                >
+                <InteractiveLink href="/login" size="footer">
                   Connexion
-                </Link>
+                </InteractiveLink>
               </li>
               <li>
-                <Link
-                  href="/login"
-                  className="inline-block rounded px-1.5 py-0.5 text-sm text-accent transition-all duration-200 hover:bg-accent/10 hover:text-accent-hover active:scale-[0.97] active:bg-accent/5"
-                >
+                <InteractiveLink href="/login" tone="accent" size="footer">
                   Devenez accordeur
-                </Link>
+                </InteractiveLink>
               </li>
             </ul>
           </div>
@@ -54,14 +46,19 @@ export default function Footer() {
           <div>
             <h3 className="text-sm font-semibold text-foreground">Contact</h3>
             <ul className="mt-3 space-y-2">
-              <li className="text-sm text-muted">contact@easypiano.ch</li>
               <li>
-                <Link
-                  href="#"
-                  className="inline-block rounded px-1.5 py-0.5 text-sm text-muted transition-all duration-200 hover:bg-card hover:text-foreground active:scale-[0.97] active:bg-card/80"
+                <InteractiveLink
+                  href="mailto:contact@easypiano.ch"
+                  size="footer"
+                  aria-label="Envoyer un e-mail à contact@easypiano.ch"
                 >
+                  contact@easypiano.ch
+                </InteractiveLink>
+              </li>
+              <li>
+                <InteractiveLink href="#" size="footer">
                   Mentions légales
-                </Link>
+                </InteractiveLink>
               </li>
             </ul>
           </div>
