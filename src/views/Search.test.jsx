@@ -25,6 +25,25 @@ vi.mock("../services/database", () => ({
   getActiveProfessionals: vi.fn(),
 }));
 
+vi.mock("@services/locationSearch", () => ({
+  searchCityOrPostal: vi.fn().mockResolvedValue([
+    {
+      city: "Genève",
+      postalCode: "1201",
+      region: "GE",
+      countryCode: "ch",
+      country: "Suisse",
+    },
+    {
+      city: "Genestrerio",
+      postalCode: "6852",
+      region: "TI",
+      countryCode: "ch",
+      country: "Suisse",
+    },
+  ]),
+}));
+
 describe("Search view", () => {
   beforeEach(() => {
     vi.clearAllMocks();
