@@ -48,6 +48,35 @@ export async function deleteProfessional(proId) {
   await remove(ref(db, `professionals/${proId}`));
 }
 
+// --- Pro Applications (table "pros") ---
+
+export async function getProApplications(status = null) {
+  const snapshot = await get(ref(db, "pros"));
+  if (!snapshot.exists()) return [];
+  const data = snapshot.val();
+  const all = Object.entries(data).map(([id, pro]) => ({ id, ...pro }));
+  if (status) return all.filter((p) => p.status === status);
+  return all;
+}
+
+export async function validateProApplication(proId, adminUid) {
+  await update(ref(db, `pros/${proId}`), {
+    status: "validated",
+    validatedAt: new Date().toISOString(),
+    validatedBy: adminUid,
+  });
+  await set(ref(db, `indexes/pros_by_status/validated/${proId}`), true);
+}
+
+export async function refuseProApplication(proId, adminUid, reason) {
+  await update(ref(db, `pros/${proId}`), {
+    status: "refused",
+    validatedAt: new Date().toISOString(),
+    validatedBy: adminUid,
+    refusalReason: reason,
+  });
+}
+
 // --- Bookings ---
 
 export async function createBooking(bookingData) {
