@@ -26,7 +26,7 @@ export default function CityPostalAutocomplete({
     const timer = setTimeout(async () => {
       try {
         setLoading(true);
-        const result = await searchCityOrPostal(q, 8);
+        const result = await searchCityOrPostal(q, 5);
         if (!cancelled) {
           setSuggestions(result);
           setOpen(result.length > 0);
