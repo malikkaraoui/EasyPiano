@@ -1,9 +1,11 @@
+import { isValidPhoneNumber } from "../lib/phone";
+
 export function validateEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 export function validatePhone(phone) {
-  return /^(\+33|0)[1-9](\d{2}){4}$/.test(phone.replace(/\s/g, ""));
+  return isValidPhoneNumber(phone);
 }
 
 export function validatePostalCode(code) {

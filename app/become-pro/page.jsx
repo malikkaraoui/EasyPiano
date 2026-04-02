@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@hooks/useAuth";
 import ProtectedRoute from "@components/Auth/ProtectedRoute";
+import { PhoneNumberField } from "@/components/UI/phone-number-field";
+import { usePhoneNumberState } from "@/hooks/usePhoneNumberState";
 import { Button } from "@/components/UI/button";
 import { Input } from "@/components/UI/input";
 
@@ -36,10 +38,14 @@ function BecomeProForm() {
 
   const [bio, setBio] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
   const [country, setCountry] = useState("");
   const [languages, setLanguages] = useState([]);
   const [videoURL, setVideoURL] = useState("");
+  const {
+    value: phoneInputValue,
+    setValue: setPhoneInputValue,
+    phoneValue,
+  } = usePhoneNumberState();
 
   useEffect(() => {
     setMounted(true);
@@ -68,7 +74,7 @@ function BecomeProForm() {
         body: JSON.stringify({
           bio,
           email,
-          phone,
+          phone: phoneValue,
           country,
           languages,
           videoURL,
@@ -173,21 +179,13 @@ function BecomeProForm() {
           />
         </div>
 
-        <div>
-          <label
-            htmlFor="phone"
-            className="mb-1.5 block text-sm font-medium text-foreground"
-          >
-            Téléphone
-          </label>
-          <Input
-            id="phone"
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="+48 123 456 789"
-          />
-        </div>
+        <PhoneNumberField
+          id="become-pro-phone"
+          label="Téléphone"
+          value={phoneInputValue}
+          onValueChange={setPhoneInputValue}
+          hint="Utilisez le même module de saisie que dans votre profil : un champ pour l'indicatif, un champ pour le numéro."
+        />
 
         <div>
           <label

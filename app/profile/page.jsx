@@ -4,17 +4,24 @@ import { useState, useEffect } from "react";
 import { Loader2, Save } from "lucide-react";
 import { useAuth } from "@hooks/useAuth";
 import ProtectedRoute from "@components/Auth/ProtectedRoute";
+import { usePhoneNumberState } from "@/hooks/usePhoneNumberState";
 import { Button } from "@/components/UI/button";
 import { Input } from "@/components/UI/input";
+import { PhoneNumberField } from "@/components/UI/phone-number-field";
 
 function ProfileForm() {
   const { user } = useAuth();
   const [displayName, setDisplayName] = useState("");
-  const [phone, setPhone] = useState("");
   const [isB2B, setIsB2B] = useState(false);
   const [saving, setSaving] = useState(false);
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [message, setMessage] = useState(null);
+  const {
+    value: phoneInputValue,
+    setValue: setPhoneInputValue,
+    setStoredPhone,
+    phoneValue,
+  } = usePhoneNumberState();
 
   useEffect(() => {
     if (!user) return;
@@ -28,30 +35,22 @@ function ProfileForm() {
         const data = await res.json();
         if (data.success && data.data) {
           setDisplayName(data.data.displayName || user.displayName || "");
-          if (data.data.phone) {
-            let raw = data.data.phone.replace(/\D/g, "");
-            if (raw.startsWith("41")) raw = raw.slice(2);
-            if (raw.startsWith("0")) raw = raw.slice(1);
-            const parts = [];
-            if (raw.length > 0) parts.push(raw.slice(0, 2));
-            if (raw.length > 2) parts.push(raw.slice(2, 5));
-            if (raw.length > 5) parts.push(raw.slice(5, 7));
-            if (raw.length > 7) parts.push(raw.slice(7, 9));
-            setPhone(parts.join(" "));
-          }
+          setStoredPhone(data.data.phone || "");
           setIsB2B(data.data.isB2B || false);
         } else {
           setDisplayName(user.displayName || "");
+          setStoredPhone("");
         }
       } catch {
         setDisplayName(user.displayName || "");
+        setStoredPhone("");
       } finally {
         setLoadingProfile(false);
       }
     }
 
     loadProfile();
-  }, [user]);
+  }, [setStoredPhone, user]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -68,7 +67,7 @@ function ProfileForm() {
         },
         body: JSON.stringify({
           displayName,
-          phone: phone.trim() ? `+41${phone.replace(/\s/g, "")}` : "",
+          phone: phoneValue,
           isB2B,
         }),
       });
@@ -148,41 +147,13 @@ function ProfileForm() {
           />
         </div>
 
-        <div>
-          <label
-            htmlFor="phone"
-            className="mb-1.5 block text-sm font-medium text-foreground"
-          >
-            Téléphone
-          </label>
-          <div className="flex gap-2">
-            <div className="flex h-10 items-center gap-1.5 rounded border border-border bg-card px-3 text-sm text-muted">
-              <span role="img" aria-label="Suisse">
-                🇨🇭
-              </span>
-              <span>+41</span>
-            </div>
-            <Input
-              id="phone"
-              type="tel"
-              value={phone}
-              onChange={(e) => {
-                let raw = e.target.value.replace(/\D/g, "");
-                if (raw.startsWith("41")) raw = raw.slice(2);
-                if (raw.startsWith("0")) raw = raw.slice(1);
-                if (raw.length > 9) raw = raw.slice(0, 9);
-                const parts = [];
-                if (raw.length > 0) parts.push(raw.slice(0, 2));
-                if (raw.length > 2) parts.push(raw.slice(2, 5));
-                if (raw.length > 5) parts.push(raw.slice(5, 7));
-                if (raw.length > 7) parts.push(raw.slice(7, 9));
-                setPhone(parts.join(" "));
-              }}
-              placeholder="79 123 45 67"
-              maxLength={12}
-            />
-          </div>
-        </div>
+        <PhoneNumberField
+          id="profile-phone"
+          label="Téléphone"
+          value={phoneInputValue}
+          onValueChange={setPhoneInputValue}
+          hint="Renseignez l'indicatif international et le numéro local sans le 0 initial."
+        />
 
         <div className="flex items-center gap-3">
           <input

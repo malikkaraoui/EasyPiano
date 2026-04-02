@@ -55,15 +55,16 @@ describe("validateEmail", () => {
 });
 
 describe("validatePhone", () => {
-  it("accepts valid French phones", () => {
-    expect(validatePhone("0612345678")).toBe(true);
-    expect(validatePhone("+33612345678")).toBe(true);
-    expect(validatePhone("06 12 34 56 78")).toBe(true);
+  it("accepts valid international phones", () => {
+    expect(validatePhone("0791234567")).toBe(true);
+    expect(validatePhone("+41791234567")).toBe(true);
+    expect(validatePhone("+48 601 234 567")).toBe(true);
   });
 
   it("rejects invalid phones", () => {
     expect(validatePhone("123")).toBe(false);
     expect(validatePhone("abcdefghij")).toBe(false);
+    expect(validatePhone("+41 12")).toBe(false);
   });
 });
 

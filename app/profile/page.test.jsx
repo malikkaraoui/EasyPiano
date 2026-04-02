@@ -37,6 +37,13 @@ function mockFetchProfile() {
   });
 }
 
+async function renderProfilePageAndWait() {
+  render(<ProfilePage />);
+  await waitFor(() => {
+    expect(globalThis.fetch).toHaveBeenCalledTimes(1);
+  });
+}
+
 describe("ProfilePage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -52,56 +59,55 @@ describe("ProfilePage", () => {
     });
   });
 
-  it("affiche le titre 'Mon profil'", () => {
-    render(<ProfilePage />);
+  it("affiche le titre 'Mon profil'", async () => {
+    await renderProfilePageAndWait();
     expect(
       screen.getByRole("heading", { name: /mon profil/i }),
     ).toBeInTheDocument();
   });
 
-  it("affiche le champ email en lecture seule", () => {
-    render(<ProfilePage />);
+  it("affiche le champ email en lecture seule", async () => {
+    await renderProfilePageAndWait();
     const emailInput = screen.getByLabelText(/email/i);
     expect(emailInput).toBeDisabled();
     expect(emailInput.value).toBe("test@example.com");
   });
 
   it("affiche le champ nom pré-rempli", async () => {
-    render(<ProfilePage />);
+    await renderProfilePageAndWait();
     const nameInput = screen.getByLabelText(/nom complet/i);
-    await waitFor(() => {
-      expect(nameInput.value).toBe("Jean Dupont");
-    });
+    expect(nameInput.value).toBe("Jean Dupont");
   });
 
-  it("affiche le champ téléphone", () => {
-    render(<ProfilePage />);
-    expect(screen.getByLabelText(/téléphone/i)).toBeInTheDocument();
+  it("affiche le champ téléphone", async () => {
+    await renderProfilePageAndWait();
+    expect(screen.getByLabelText(/indicatif/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^numéro$/i)).toBeInTheDocument();
   });
 
-  it("affiche le toggle B2B", () => {
-    render(<ProfilePage />);
+  it("affiche le toggle B2B", async () => {
+    await renderProfilePageAndWait();
     const checkbox = screen.getByLabelText(/professionnel/i);
     expect(checkbox).toBeInTheDocument();
     expect(checkbox.checked).toBe(false);
   });
 
-  it("le toggle B2B change d'état au clic", () => {
-    render(<ProfilePage />);
+  it("le toggle B2B change d'état au clic", async () => {
+    await renderProfilePageAndWait();
     const checkbox = screen.getByLabelText(/professionnel/i);
     fireEvent.click(checkbox);
     expect(checkbox.checked).toBe(true);
   });
 
-  it("affiche le bouton 'Enregistrer'", () => {
-    render(<ProfilePage />);
+  it("affiche le bouton 'Enregistrer'", async () => {
+    await renderProfilePageAndWait();
     expect(
       screen.getByRole("button", { name: /enregistrer/i }),
     ).toBeInTheDocument();
   });
 
-  it("rend le bouton Enregistrer comme une vraie action principale", () => {
-    render(<ProfilePage />);
+  it("rend le bouton Enregistrer comme une vraie action principale", async () => {
+    await renderProfilePageAndWait();
     expect(screen.getByRole("button", { name: /enregistrer/i })).toHaveClass(
       "w-full",
       "sm:min-w-48",
@@ -110,11 +116,7 @@ describe("ProfilePage", () => {
   });
 
   it("appelle l'API au submit du formulaire", async () => {
-    render(<ProfilePage />);
-
-    await waitFor(() => {
-      expect(globalThis.fetch).toHaveBeenCalledTimes(1);
-    });
+    await renderProfilePageAndWait();
 
     fireEvent.submit(
       screen.getByRole("button", { name: /enregistrer/i }).closest("form"),
@@ -128,12 +130,32 @@ describe("ProfilePage", () => {
     });
   });
 
-  it("affiche un message de succès après mise à jour", async () => {
-    render(<ProfilePage />);
+  it("normalise le téléphone avec indicatif et numéro séparés", async () => {
+    await renderProfilePageAndWait();
+
+    fireEvent.change(screen.getByLabelText(/indicatif/i), {
+      target: { value: "+41" },
+    });
+    fireEvent.change(screen.getByLabelText(/^numéro$/i), {
+      target: { value: "0791234567" },
+    });
+
+    fireEvent.submit(
+      screen.getByRole("button", { name: /enregistrer/i }).closest("form"),
+    );
 
     await waitFor(() => {
-      expect(globalThis.fetch).toHaveBeenCalledTimes(1);
+      expect(globalThis.fetch).toHaveBeenCalledTimes(2);
     });
+
+    const requestOptions = globalThis.fetch.mock.calls[1][1];
+    expect(JSON.parse(requestOptions.body)).toEqual(
+      expect.objectContaining({ phone: "+41791234567" }),
+    );
+  });
+
+  it("affiche un message de succès après mise à jour", async () => {
+    await renderProfilePageAndWait();
 
     fireEvent.submit(
       screen.getByRole("button", { name: /enregistrer/i }).closest("form"),
@@ -144,11 +166,7 @@ describe("ProfilePage", () => {
   });
 
   it("affiche l'état d'enregistrement pendant la sauvegarde", async () => {
-    render(<ProfilePage />);
-
-    await waitFor(() => {
-      expect(globalThis.fetch).toHaveBeenCalledTimes(1);
-    });
+    await renderProfilePageAndWait();
 
     let resolveRequest;
     globalThis.fetch = vi.fn(
@@ -185,8 +203,8 @@ describe("ProfilePage", () => {
     });
   });
 
-  it("indique que l'email ne peut pas être modifié", () => {
-    render(<ProfilePage />);
+  it("indique que l'email ne peut pas être modifié", async () => {
+    await renderProfilePageAndWait();
     expect(
       screen.getByText(/email ne peut pas être modifié/i),
     ).toBeInTheDocument();
