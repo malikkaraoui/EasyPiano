@@ -48,6 +48,7 @@ Thumbs.db
 *.pfx
 credentials.json
 service-account*.json
+*service-account*.json
 firebase-adminsdk*.json
 .env.*
 !.env.example
