@@ -14,7 +14,10 @@ function getFirebaseAdmin() {
 
   try {
     const serviceAccount = JSON.parse(credential);
-    initializeApp({ credential: cert(serviceAccount) });
+    initializeApp({
+      credential: cert(serviceAccount),
+      databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
+    });
     return { auth: getAuth() };
   } catch (error) {
     console.error(
