@@ -1,8 +1,11 @@
 import {
+  createUserWithEmailAndPassword,
   getRedirectResult,
+  signInWithEmailAndPassword,
   signInWithPopup,
   signInWithRedirect,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 import { ref, set, get, update } from "firebase/database";
 import { auth, googleProvider, db } from "./firebase";
@@ -98,6 +101,29 @@ export async function completeGoogleRedirectLogin() {
   }
 
   return syncUserProfile(result.user);
+}
+
+export async function registerWithEmail(email, password, displayName) {
+  if (!auth || !db) {
+    throw new Error("Firebase Auth n'est pas configuré.");
+  }
+
+  const result = await createUserWithEmailAndPassword(auth, email, password);
+  if (displayName) {
+    await updateProfile(result.user, { displayName });
+  }
+  await syncUserProfile(result.user);
+  return result.user;
+}
+
+export async function loginWithEmail(email, password) {
+  if (!auth || !db) {
+    throw new Error("Firebase Auth n'est pas configuré.");
+  }
+
+  const result = await signInWithEmailAndPassword(auth, email, password);
+  await syncUserProfile(result.user);
+  return result.user;
 }
 
 export async function logout() {
