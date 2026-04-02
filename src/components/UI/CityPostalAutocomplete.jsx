@@ -156,7 +156,7 @@ export default function CityPostalAutocomplete({
       {open && suggestions.length > 0 && (
         <ul
           className={cn(
-            "absolute left-0 right-0 top-full z-[60] mt-2 max-h-64 overflow-y-auto rounded-xl border border-border/90 bg-background py-1 shadow-[0_24px_48px_rgba(0,0,0,0.52)]",
+            "surface-solid-strong absolute left-0 right-0 top-full z-[80] mt-2 max-h-64 overflow-y-auto rounded-xl border border-border/90 py-1 shadow-[0_24px_48px_rgba(0,0,0,0.52)]",
             listClassName,
           )}
           role="listbox"

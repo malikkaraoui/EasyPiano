@@ -133,3 +133,16 @@
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(212, 197, 160, 0.12);
 }
+
+/* Solid surfaces for form controls and overlays */
+.surface-solid {
+  background-color: var(--card);
+  background-image: linear-gradient(var(--card), var(--card));
+  background-clip: padding-box;
+}
+
+.surface-solid-strong {
+  background-color: var(--background);
+  background-image: linear-gradient(var(--background), var(--background));
+  background-clip: padding-box;
+}

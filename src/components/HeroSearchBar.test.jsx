@@ -172,14 +172,14 @@ describe("HeroSearchBar", () => {
     render(<HeroSearchBar variant="page" />);
 
     const input = screen.getByLabelText("Lieu de recherche");
-    expect(input).toHaveClass("bg-background");
+    expect(input).toHaveClass("surface-solid", "surface-solid-strong");
 
     fireEvent.focus(input);
     fireEvent.change(input, { target: { value: "Gene" } });
 
     const listbox = await screen.findByRole("listbox");
     expect(listbox).toHaveClass(
-      "bg-background",
+      "surface-solid-strong",
       "shadow-[0_24px_48px_rgba(0,0,0,0.52)]",
     );
   });

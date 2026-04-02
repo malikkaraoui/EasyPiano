@@ -70,6 +70,7 @@ export default function Search() {
 
 function SearchContent({ initialFilters, pathname, pros }) {
   const router = useRouter();
+  const [isLocationMenuOpen, setIsLocationMenuOpen] = useState(false);
   const { location, date, sortBy, setLocation, setDate, setSortBy } =
     useSearchFormState(initialFilters);
   const filtered = useMemo(
@@ -115,20 +116,25 @@ function SearchContent({ initialFilters, pathname, pros }) {
           locationValue={location}
           dateValue={date}
           onLocationChange={setLocation}
+          onLocationMenuOpenChange={setIsLocationMenuOpen}
           onDateChange={setDate}
           onSubmit={handleSearchSubmit}
         />
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-muted">
-            {filtered.length} accordeur{filtered.length > 1 ? "s" : ""} trouvé
-            {filtered.length > 1 ? "s" : ""}
-          </p>
+          {!isLocationMenuOpen ? (
+            <p className="text-sm text-muted">
+              {filtered.length} accordeur{filtered.length > 1 ? "s" : ""} trouvé
+              {filtered.length > 1 ? "s" : ""}
+            </p>
+          ) : (
+            <div aria-hidden="true" className="h-5" />
+          )}
 
           <select
             value={sortBy}
             onChange={handleSortChange}
-            className="h-12 rounded-lg border border-border bg-background px-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="surface-solid-strong h-12 rounded-lg border border-border px-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             {SEARCH_SORT_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
@@ -183,7 +189,7 @@ function SearchContent({ initialFilters, pathname, pros }) {
         ))}
       </div>
 
-      {filtered.length === 0 && (
+      {filtered.length === 0 && !isLocationMenuOpen && (
         <div className="mt-12 text-center">
           <p className="text-muted">
             Aucun accordeur trouvé pour votre recherche.

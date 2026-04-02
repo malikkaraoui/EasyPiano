@@ -36,6 +36,7 @@ function HeroSearchBar({
   locationValue,
   defaultLocationValue = "",
   onLocationChange,
+  onLocationMenuOpenChange,
   dateValue,
   defaultDateValue = "",
   onDateChange,
@@ -76,8 +77,8 @@ function HeroSearchBar({
 
   const isHero = variant === "hero";
   const sharedSearchFieldClasses = isHero
-    ? "border-border/70 bg-background/88 shadow-[0_14px_30px_rgba(0,0,0,0.24)] focus-visible:ring-accent/60 focus-visible:ring-offset-0"
-    : "border-border/90 bg-background shadow-[0_16px_32px_rgba(0,0,0,0.34)] focus-visible:ring-accent focus-visible:ring-offset-0";
+    ? "surface-solid border-border/70 shadow-[0_14px_30px_rgba(0,0,0,0.24)] focus-visible:ring-accent/60 focus-visible:ring-offset-0"
+    : "surface-solid-strong border-border/90 shadow-[0_16px_32px_rgba(0,0,0,0.34)] focus-visible:ring-accent focus-visible:ring-offset-0";
 
   return (
     <form
@@ -93,6 +94,7 @@ function HeroSearchBar({
         value={location}
         onChange={setLocation}
         onSelect={(selection) => setLocation(formatLocationValue(selection))}
+        onOpenChange={onLocationMenuOpenChange}
         placeholder="Ville ou code postal"
         ariaLabel="Lieu de recherche"
         className="flex-1"

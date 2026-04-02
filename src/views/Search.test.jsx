@@ -147,4 +147,23 @@ describe("Search view", () => {
     expect(screen.getByText("Bruno Durand")).toBeInTheDocument();
     expect(screen.queryByText("Alice Martin")).not.toBeInTheDocument();
   });
+
+  it("masque le vide-state pendant l'autocomplétion de localisation", async () => {
+    getActiveProfessionals.mockResolvedValue([]);
+
+    render(<Search />);
+
+    await screen.findByText("0 accordeur trouvé");
+
+    const input = screen.getByLabelText("Lieu de recherche");
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: "Gene" } });
+
+    await screen.findByRole("listbox");
+
+    expect(screen.queryByText("0 accordeur trouvé")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Aucun accordeur trouvé pour votre recherche."),
+    ).not.toBeInTheDocument();
+  });
 });
