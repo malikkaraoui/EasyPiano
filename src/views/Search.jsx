@@ -12,6 +12,7 @@ export default function Search() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("rating");
+  const [suggestionsOpen, setSuggestionsOpen] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -75,6 +76,7 @@ export default function Search() {
           <CityPostalAutocomplete
             value={search}
             onChange={setSearch}
+            onOpenChange={setSuggestionsOpen}
             onSelect={(selection) => {
               const nextValue = [selection.city, selection.postalCode]
                 .filter(Boolean)
@@ -96,10 +98,12 @@ export default function Search() {
         </select>
       </div>
 
-      <p className="mt-4 text-sm text-muted">
-        {filtered.length} accordeur{filtered.length > 1 ? "s" : ""} trouvé
-        {filtered.length > 1 ? "s" : ""}
-      </p>
+      {!suggestionsOpen && (
+        <p className="mt-4 text-sm text-muted">
+          {filtered.length} accordeur{filtered.length > 1 ? "s" : ""} trouvé
+          {filtered.length > 1 ? "s" : ""}
+        </p>
+      )}
 
       <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map((pro) => (
@@ -142,7 +146,7 @@ export default function Search() {
         ))}
       </div>
 
-      {filtered.length === 0 && (
+      {filtered.length === 0 && !suggestionsOpen && (
         <div className="mt-12 text-center">
           <p className="text-muted">
             Aucun accordeur trouvé pour votre recherche.

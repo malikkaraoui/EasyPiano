@@ -3,7 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { searchCityOrPostal } from "@services/locationSearch";
 
-export default function CityPostalAutocomplete({ value, onChange, onSelect }) {
+export default function CityPostalAutocomplete({
+  value,
+  onChange,
+  onSelect,
+  onOpenChange,
+}) {
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [open, setOpen] = useState(false);
@@ -42,6 +47,10 @@ export default function CityPostalAutocomplete({ value, onChange, onSelect }) {
       clearTimeout(timer);
     };
   }, [value]);
+
+  useEffect(() => {
+    onOpenChange?.(open);
+  }, [open, onOpenChange]);
 
   useEffect(() => {
     const onDocMouseDown = (event) => {
