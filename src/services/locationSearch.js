@@ -1,9 +1,13 @@
 import SWISS_LOCATIONS from "@/data/swiss-locations.json";
 
+const normalize = (str) =>
+  str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
 export async function searchCityOrPostal(query, limit = 5) {
-  const q = String(query || "")
-    .trim()
-    .toLowerCase();
+  const q = normalize(String(query || "").trim());
   if (q.length < 2) return [];
 
   const isPostalQuery = /^\d+$/.test(q);
@@ -13,7 +17,7 @@ export async function searchCityOrPostal(query, limit = 5) {
     if (isPostalQuery) {
       return loc.postal.startsWith(q);
     }
-    return loc.city.toLowerCase().startsWith(q);
+    return normalize(loc.city).startsWith(q);
   })
     .filter((loc) => {
       const key = `${loc.city}|${loc.postal}`;

@@ -6,6 +6,12 @@ import { Search } from "lucide-react";
 import { Button } from "@/components/UI/button";
 import LOCATIONS from "@/data/swiss-locations.json";
 
+const normalize = (str) =>
+  str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
 function HeroSearchBar() {
   const router = useRouter();
   const [lieu, setLieu] = useState("");
@@ -18,12 +24,11 @@ function HeroSearchBar() {
 
   const suggestions = useMemo(() => {
     if (lieu.length < 1) return [];
-    const query = lieu.toLowerCase();
+    const query = normalize(lieu);
     return LOCATIONS.filter(
       (loc) =>
-        loc.city.toLowerCase().startsWith(query) ||
-        loc.postal.startsWith(query),
-    ).slice(0, 8);
+        normalize(loc.city).startsWith(query) || loc.postal.startsWith(query),
+    ).slice(0, 5);
   }, [lieu]);
 
   const showSuggestions = isFocused && suggestions.length > 0;
