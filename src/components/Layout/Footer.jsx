@@ -36,7 +36,7 @@ export default function Footer() {
                 </InteractiveLink>
               </li>
               <li>
-                <InteractiveLink href="/login" tone="accent" size="footer">
+                <InteractiveLink href="/become-pro" tone="accent" size="footer">
                   Devenez accordeur
                 </InteractiveLink>
               </li>
