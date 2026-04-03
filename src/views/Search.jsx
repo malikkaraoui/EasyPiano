@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { MapPin, Star } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { ChipSelect } from "@/components/UI/ChipSelect";
 import { HeroSearchBar } from "@components/HeroSearchBar";
 import { useSearchFormState } from "@/hooks/useSearchFormState";
 import {
@@ -90,8 +91,13 @@ function SearchContent({ initialFilters, pathname, pros }) {
     );
   }
 
-  function handleSortChange(event) {
-    const nextSort = event.target.value;
+  const sortChipOptions = useMemo(
+    () =>
+      SEARCH_SORT_OPTIONS.map((opt) => ({ code: opt.value, label: opt.label })),
+    [],
+  );
+
+  function handleSortToggle(nextSort) {
     setSortBy(nextSort);
     router.replace(
       buildSearchHref({
@@ -131,17 +137,13 @@ function SearchContent({ initialFilters, pathname, pros }) {
             <div aria-hidden="true" className="h-5" />
           )}
 
-          <select
-            value={sortBy}
-            onChange={handleSortChange}
-            className="surface-solid-strong h-12 rounded-lg border border-border px-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-          >
-            {SEARCH_SORT_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+          <ChipSelect
+            options={sortChipOptions}
+            selected={sortBy}
+            onToggle={handleSortToggle}
+            multi={false}
+            name="search-sort"
+          />
         </div>
       </div>
 

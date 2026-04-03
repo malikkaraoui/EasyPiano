@@ -7,7 +7,9 @@ import ProtectedRoute from "@components/Auth/ProtectedRoute";
 import { PhoneNumberField } from "@/components/UI/phone-number-field";
 import { usePhoneNumberState } from "@/hooks/usePhoneNumberState";
 import { Button } from "@/components/UI/button";
+import { ChipSelect } from "@/components/UI/ChipSelect";
 import { Input } from "@/components/UI/input";
+import { useChipSelect } from "@/hooks/useChipSelect";
 
 const LANGUAGE_OPTIONS = [
   { code: "fr", label: "Français" },
@@ -39,7 +41,10 @@ function BecomeProForm() {
   const [bio, setBio] = useState("");
   const [email, setEmail] = useState("");
   const [country, setCountry] = useState("");
-  const [languages, setLanguages] = useState([]);
+  const { selected: languages, toggle: toggleLanguage } = useChipSelect({
+    initial: [],
+    multi: true,
+  });
   const [videoURL, setVideoURL] = useState("");
   const {
     value: phoneInputValue,
@@ -51,16 +56,6 @@ function BecomeProForm() {
     setMounted(true);
     if (user?.email) setEmail(user.email);
   }, [user]);
-
-  function setLanguageSelection(code, checked) {
-    setLanguages((prev) => {
-      if (checked) {
-        return prev.includes(code) ? prev : [...prev, code];
-      }
-
-      return prev.filter((languageCode) => languageCode !== code);
-    });
-  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -214,49 +209,16 @@ function BecomeProForm() {
           </select>
         </div>
 
-        <fieldset>
-          <legend className="mb-2 text-sm font-medium text-foreground">
-            Langues parlées *
-          </legend>
-          <div
-            className="flex flex-wrap gap-2"
-            role="group"
-            aria-label="Langues parlées"
-          >
-            {LANGUAGE_OPTIONS.map((lang) => {
-              const selected = languages.includes(lang.code);
-              const inputId = `language-${lang.code}`;
-
-              return (
-                <label
-                  key={lang.code}
-                  htmlFor={inputId}
-                  className={`cursor-pointer rounded-full border px-3 py-2 text-sm font-medium transition-colors focus-within:outline-none focus-within:ring-2 focus-within:ring-accent ${
-                    selected
-                      ? "border-white bg-white text-black shadow-sm"
-                      : "border-border surface-solid text-foreground hover:border-accent hover:text-accent"
-                  }`}
-                >
-                  <input
-                    id={inputId}
-                    type="checkbox"
-                    name="languages"
-                    value={lang.code}
-                    checked={selected}
-                    onChange={(e) =>
-                      setLanguageSelection(lang.code, e.target.checked)
-                    }
-                    className="sr-only"
-                  />
-                  <span>{lang.label}</span>
-                </label>
-              );
-            })}
-          </div>
-          <p className="mt-2 text-xs text-muted">
-            Vous pouvez sélectionner une ou plusieurs langues.
-          </p>
-        </fieldset>
+        <ChipSelect
+          options={LANGUAGE_OPTIONS}
+          selected={languages}
+          onToggle={toggleLanguage}
+          multi
+          name="languages"
+          legend="Langues parlées *"
+          hint="Vous pouvez sélectionner une ou plusieurs langues."
+          disabled={submitting}
+        />
 
         <div>
           <label

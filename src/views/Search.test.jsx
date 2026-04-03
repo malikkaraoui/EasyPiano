@@ -86,7 +86,8 @@ describe("Search view", () => {
       "Lausanne 1000",
     );
     expect(screen.getByLabelText("Date souhaitée")).toHaveValue("2026-11-11");
-    expect(screen.getByDisplayValue("Prix croissant")).toBeInTheDocument();
+    const priceRadio = screen.getByRole("radio", { name: "Prix croissant" });
+    expect(priceRadio).toBeChecked();
     expect(screen.getByText("Alice Martin")).toBeInTheDocument();
     expect(screen.queryByText("Bruno Durand")).not.toBeInTheDocument();
   });
@@ -109,9 +110,7 @@ describe("Search view", () => {
     render(<Search />);
 
     await screen.findByText("Alice Martin");
-    fireEvent.change(screen.getByDisplayValue("Prix croissant"), {
-      target: { value: "reviews" },
-    });
+    fireEvent.click(screen.getByRole("radio", { name: "Plus d'avis" }));
 
     await waitFor(() => {
       expect(mockReplace).toHaveBeenCalledWith(
@@ -162,7 +161,8 @@ describe("Search view", () => {
     });
 
     expect(screen.getByLabelText("Date souhaitée")).toHaveValue("2027-01-10");
-    expect(screen.getByDisplayValue("Plus d'avis")).toBeInTheDocument();
+    const reviewsRadio = screen.getByRole("radio", { name: "Plus d'avis" });
+    expect(reviewsRadio).toBeChecked();
     expect(screen.getByText("Bruno Durand")).toBeInTheDocument();
     expect(screen.queryByText("Alice Martin")).not.toBeInTheDocument();
   });
